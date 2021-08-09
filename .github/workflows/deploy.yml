@@ -1,0 +1,45 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Deploy Repository
+on:
+  push:
+    branches: [ development ]
+  repository_dispatch:
+      types: 'Deploy Repository'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install dependencies with Yarn
+      run: yarn --frozen-lockfile
+    - name: Run Linting
+      run: yarn lint
+    - name: Generate Site
+      run: yarn generate
+    - name: Setup Credentials
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "${{ github.action }}+github-actions[bot]@users.noreply.github.com"
+        git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+    - name: Deploy Site
+      run:  |
+        git --work-tree dist checkout --orphan master-${{ github.sha }}
+        git --work-tree dist add --all
+        git --work-tree dist commit -m "deployment of ${{ github.sha }}"
+        git push origin HEAD:master --force
+        git checkout -f development
+        git branch -D master-${{ github.sha }}
