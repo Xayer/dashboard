@@ -1,10 +1,10 @@
 <template>
-    <h1>Dashboard</h1>
+  <Nuxt />
 </template>
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 @Component({})
-export default class Frontpage extends Vue {
+export default class Layout extends Vue {
     
 }
 </script>
