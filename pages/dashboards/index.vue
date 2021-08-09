@@ -1,5 +1,6 @@
 <template>
     <div v-if="$route.query.id">
+      <NuxtLink to="/dashboards">Back</NuxtLink>
       Dashboard {{ $route.query.id }}
     </div>
     <div v-else>
