@@ -53,5 +53,22 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-  }
+  },
+  generate: {
+    routes() {
+      const routes = [];
+
+      routes.push({
+        component: `~/pages/dashboards/_id`,
+        route: `/dashboards`,
+      });
+
+      routes.push({
+        component: `~/pages/dashboards/_id/edit`,
+        route: `/dashboards/edit`,
+      });
+      
+      return routes;
+    },
+  },
 }

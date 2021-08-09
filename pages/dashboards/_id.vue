@@ -1,5 +1,5 @@
 <template>
-    <div>Dashboard {{ id }}</div>
+    <div>Dashboard {{ this.$route.path }}</div>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
