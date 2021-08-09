@@ -1,9 +1,9 @@
 <template>
     <div v-if="$route.query.id">
-      Edit Dashboard {{ $route.query.id }}
+      Dashboard {{ $route.query.id }}
     </div>
     <div v-else>
-      Edit Dashboard List
+      Dashboard List
       <ul>
         <li v-for="id in 10" :key="id">
           <NuxtLink :to="{ path: 'dashboards', query: { id }}">
@@ -16,7 +16,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 @Component({})
-export default class EditDashboard extends Vue {
+export default class Dashboard extends Vue {
     created(){
       
     }
