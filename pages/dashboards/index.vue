@@ -5,21 +5,29 @@
     </div>
     <div v-else>
       Dashboard List
-      <ul>
-        <li v-for="id in 10" :key="id">
-          <NuxtLink :to="{ path: '/dashboards', query: { id }}">
-            Dashboard {{ id }}
-          </NuxtLink>
-        </li>
-      </ul>
+      <Card v-for="id in 10" :key="id">
+        <template #title>
+          Dashboard {{ id }}
+        </template>
+        <template #action>
+          <Button @click="link(id)">Dashboard {{ id }}</Button>
+        </template>
+      </Card>
     </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
-@Component({})
+import Card from '@/components/molecules/card.vue';
+import Button from '@/components/atoms/button.vue';
+@Component({
+  components: {
+    Card,
+    Button,
+  }
+})
 export default class Dashboard extends Vue {
-    created(){
-      
+    link(id: number){
+      this.$router.push({ path: '/dashboards', query: { id: id.toString() }});
     }
 }
 </script>
