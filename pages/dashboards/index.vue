@@ -10,7 +10,7 @@
           Dashboard {{ id }}
         </template>
         <template #action>
-          <Button @click="link(id)">Dashboard {{ id }}</Button>
+          <Button class="primary" @click="link(id)">Dashboard {{ id }}</Button>
         </template>
       </Card>
     </div>
