@@ -1,9 +1,7 @@
 <template>
-    <div>Settings {{ this.slug }}</div>
+  <div>Settings</div>
 </template>
 <script lang="ts">
-import { Vue } from 'nuxt-property-decorator';
-export default class Settings extends Vue {
-    
-}
+import { Vue } from 'nuxt-property-decorator'
+export default class Settings extends Vue {}
 </script>
