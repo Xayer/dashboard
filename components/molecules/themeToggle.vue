@@ -41,8 +41,22 @@ export default class ThemesWidget extends Vue {
 	  
 	@Watch('theme')
   	// eslint-disable-next-line class-methods-use-this
-  	updateTheme (theme: string) {
-  		document.body.className = theme;
+  	updateTheme (themeName: string) {
+		  if(!process.browser) {
+			  return;
+		  }
+		  // document.body.className = theme;
+		  const currentTheme = this.availableThemes.find((theme) => theme.name === themeName);
+		  if(currentTheme?.icon) { this.themeIcon = currentTheme?.icon; }
+		  
+		  const documentRoot = document.querySelector(':root');
+		  if(documentRoot) {
+			  // clean up existing variables
+			  documentRoot.removeAttribute('style');
+			  Object.entries(currentTheme?.variables || {}).forEach(([key, value]) => {
+				documentRoot.style.setProperty(key, value);
+			  });
+		  }
   	}
 
 }

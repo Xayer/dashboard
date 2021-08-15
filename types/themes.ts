@@ -1,4 +1,5 @@
 export interface Theme {
 	name: string;
-	icon: string;
+    icon: string;
+    variables?: Record<string,string>;
 }
