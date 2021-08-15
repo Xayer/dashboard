@@ -1,11 +1,19 @@
 <template>
   <main>
+    <nav>
+      <ThemeToggle />
+    </nav>
     <Nuxt />
   </main>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
-@Component({})
+import { ThemeToggle} from '@/components/molecules';
+@Component({
+  components: {
+    ThemeToggle,
+  }
+})
 export default class Layout extends Vue {
     created() {
       this.$store.dispatch('userSettings/validate');
@@ -63,5 +71,17 @@ export default class Layout extends Vue {
     &:hover {
       --link-color: var(--link-hover);
     }
+  }
+
+  nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    width: 100vw;
+    box-sizing: border-box;
   }
 </style>
