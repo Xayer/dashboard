@@ -7,7 +7,10 @@
 import { Component, Vue } from 'nuxt-property-decorator';
 @Component({})
 export default class Layout extends Vue {
-    
+    created() {
+      this.$store.dispatch('userSettings/validate');
+		  this.$store.dispatch('userSettings/loadExistingSettings');
+    }
 }
 </script>
 <style lang="scss">

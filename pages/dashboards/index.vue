@@ -17,8 +17,8 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
-import Card from '@/components/molecules/card.vue';
-import Button from '@/components/atoms/button.vue';
+import { Card }  from '@/components/molecules';
+import { Button } from '@/components/atoms';
 @Component({
   components: {
     Card,
