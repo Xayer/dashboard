@@ -19,7 +19,7 @@ jobs:
       NUXT_ENV_SETTINGS_ENDPOINT: ${{ secrets.SETTINGS_ENDPOINT }}
     strategy:
       matrix:
-        node-version: [10.x]
+        node-version: [12.x]
 
     steps:
     - uses: actions/checkout@v2
