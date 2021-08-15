@@ -48,8 +48,8 @@ export default class ThemesWidget extends Vue {
 		  // document.body.className = theme;
 		  const currentTheme = this.availableThemes.find((theme) => theme.name === themeName);
 		  if(currentTheme?.icon) { this.themeIcon = currentTheme?.icon; }
-		  
-		  const documentRoot = document.querySelector(':root');
+
+		  const documentRoot = document.querySelector<HTMLElement>(':root');
 		  if(documentRoot) {
 			  // clean up existing variables
 			  documentRoot.removeAttribute('style');
