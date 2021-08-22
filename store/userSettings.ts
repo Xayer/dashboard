@@ -202,14 +202,15 @@ const actions = {
     })
 
     const localSettings = {
-      boards: [
-        {
-          name: 'Dashboard',
-          widgets: JSON.parse(
-            localStorage.getItem(widgetsLocalStorageKey) || JSON.stringify([])
-          ),
-        },
-      ],
+      boards: JSON.parse(
+        localStorage.getItem(dasboardsLocalStorageKey) ||
+          JSON.stringify([
+            {
+              name: 'Dasboard',
+              widgets: [],
+            },
+          ])
+      ),
       settings: [
         {
           key: menuShownStorageKey,
