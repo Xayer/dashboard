@@ -137,9 +137,9 @@ export default class Dashboard extends Vue {
 
   editDashboard() {
     this.$router.push({
-      name: 'dashboard-edit',
-      params: {
-        id: this.$route.params.id,
+      path: '/dashboards/edit',
+      query: {
+        id: this.$route.query.id,
       },
     })
   }

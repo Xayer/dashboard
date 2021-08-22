@@ -98,4 +98,9 @@ h6 {
   margin: 0;
   padding: 0;
 }
+
+.m-r { margin-right: calc(var(--padding) / 2); }
+.m-b { margin-bottom: calc(var(--padding) / 2); }
+.m-t { margin-top: calc(var(--padding) / 2); }
+.m-l { margin-left: calc(var(--padding) / 2); }
 </style>
