@@ -60,10 +60,12 @@
                 <i class="bi bi-x-circle"></i>
               </span>
             </div>
-            <component
-              :is="widgetSettingsComponent(item.type)"
-              v-model="DashboardWidgets[itemIndex].settings"
-            />
+            <Sidebar>
+				<component
+					:is="widgetSettingsComponent(item.type)"
+					v-model="DashboardWidgets[itemIndex].settings"
+				/>
+			</Sidebar>
           </WidgetWrapper>
         </grid-item>
       </grid-layout>
@@ -80,6 +82,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Watch } from 'nuxt-property-decorator'
 import { Select, Button } from '@/components/atoms'
+import { Sidebar } from '@/components/molecules'
 import WidgetSettings from '@/components/widgets/settings.vue'
 // import HueGroupSettings from '@/components/widgets/hue/group/settings.vue';
 import WeatherSettings from '@/components/widgets/weather/settings.vue'
@@ -97,6 +100,7 @@ import { Board } from '~/types/dashboards'
     WidgetSettings,
     Select,
     Button,
+	Sidebar,
     Weather: WeatherSettings,
     // HueGroup: HueGroupSettings,
     WidgetWrapper,
