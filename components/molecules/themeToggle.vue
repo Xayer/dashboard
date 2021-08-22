@@ -1,7 +1,7 @@
 <template>
-	<div class="theme" @click="toggleTheme">
-		<i class="bi" :class="themeIcon"></i>
-	</div>
+    <div class="theme" @click="toggleTheme">
+        <i class="bi" :class="themeIcon"></i>
+    </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from 'nuxt-property-decorator'
@@ -9,19 +9,21 @@ import { mapGetters } from 'vuex'
 import { Theme } from '@/types/themes'
 
 @Component({
-	computed: {
-		...mapGetters({
-			theme: 'themes/theme',
-			availableThemes: 'themes/themes',
-		}),
-	},
+    computed: {
+        ...mapGetters({
+            theme: 'themes/theme',
+            availableThemes: 'themes/themes',
+        }),
+    },
 })
 export default class ThemesWidget extends Vue {
   availableThemes!: Theme[]
 
   theme!: string
 
-  themeIcon!: string
+  get themeIcon() {
+    return this.$store.getters ? `bi-${this.$store.getters['themes/themeIcon']}` : null;
+  }
 
   setTheme(theme: string) {
     this.$store.dispatch('themes/setTheme', theme)
