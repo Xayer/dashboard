@@ -34,7 +34,8 @@ export default class Layout extends Vue {
   --accent-secondary: var(--accent-100);
 
   --font-display: 'Poppins', sans-serif;
-  --font-weight: 600;
+  --weight-normal: 600;
+  --weight-bold: 700;
 
   /** General Global styling options */
   --padding: 25px;
@@ -55,11 +56,13 @@ html {
   --layout-bg: var(--accent-0);
   background: var(--layout-bg);
   font-family: var(--font-display);
-  font-weight: var(--font-weight);
+  font-weight: var(--weight-normal);
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+input { font-family: var(--font-display); }
 
 main {
   padding: var(--padding);
@@ -94,7 +97,7 @@ h4,
 h5,
 h6 {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: var(--weight-bold);
   margin: 0;
   padding: 0;
 }

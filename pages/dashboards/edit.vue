@@ -1,29 +1,31 @@
 <template>
   <div>
     <client-only v-if="currentBoard">
-      <!-- <portal to="page-title">Edit Dashboard</portal> -->
-      <!-- <portal to="page-actions"> -->
-      <Button key="view-dashboard" class="m-r m-b" @click="viewDashboard"
-        >View Dashboard</Button
-      >
-      <span v-show="errorMessage" key="dashboardErrors" class="error m-b">{{
-        errorMessage
-      }}</span>
-      <Select
-        key="selectDashboardWidgets"
-        v-model="selectedWidget"
-        class="m-b"
-        :options="widgetOptions"
-      />
-      <Button key="addWidget" class="m-l m-b" @click="addWidget"
-        >Add Widget</Button
-      >
-      <Button
-        key="saveDashboard"
-        class="primary m-l m-b"
-        @click="saveWidgetLayout"
-        >Save Dashboard</Button
-      >
+      <header>
+        <!-- <portal to="page-title">Edit Dashboard</portal> -->
+        <!-- <portal to="page-actions"> -->
+        <Button key="view-dashboard" class="m-r m-b" @click="viewDashboard"
+          >View Dashboard</Button
+        >
+        <span v-show="errorMessage" key="dashboardErrors" class="error m-b">{{
+          errorMessage
+        }}</span>
+        <Select
+          key="selectDashboardWidgets"
+          v-model="selectedWidget"
+          class="m-b"
+          :options="widgetOptions"
+        />
+        <Button key="addWidget" class="m-l m-b" @click="addWidget"
+          >Add Widget</Button
+        >
+        <Button
+          key="saveDashboard"
+          class="primary m-l m-b"
+          @click="saveWidgetLayout"
+          >Save Dashboard</Button
+        >
+      </header>
       <!-- </portal> -->
       <grid-layout
         v-if="DashboardWidgets"
@@ -81,11 +83,11 @@ import { Select, Button } from '@/components/atoms'
 import WidgetSettings from '@/components/widgets/settings.vue'
 // import HueGroupSettings from '@/components/widgets/hue/group/settings.vue';
 import WeatherSettings from '@/components/widgets/weather/settings.vue'
+import { WidgetDefaultSettings, WidgetsAvailable } from '@/constants/widgets'
 import {
-  WidgetDefaultSettings,
-  WidgetsAvailable,
-} from '@/constants/widgets'
-import { dasboardsLocalStorageKey, defaultSettings } from '@/constants/dashboard'
+  dasboardsLocalStorageKey,
+  defaultSettings,
+} from '@/constants/dashboard'
 import WidgetWrapper from '@/components/widgets/widget.vue'
 import { Widget } from '~/types/widgets'
 import { Board } from '~/types/dashboards'
@@ -116,7 +118,7 @@ export default class EditableDashboard extends Vue {
   }))
 
   created() {
-    this.DashboardWidgets = this.getDashboardWidgets(this.currentBoard?.widgets);
+    this.DashboardWidgets = this.getDashboardWidgets(this.currentBoard?.widgets)
   }
 
   get boards() {
@@ -181,16 +183,18 @@ export default class EditableDashboard extends Vue {
 
   // eslint-disable-next-line class-methods-use-this
   saveWidgetLayout() {
-	if(!process.browser){ 
-		return;
-	}
-	const existingBoards = JSON.parse(localStorage.getItem(dasboardsLocalStorageKey) || JSON.stringify([]));
-	const newBoards = existingBoards;
-	newBoards[this.$route.query.id as string] = {
-		...this.currentBoard,
-		widgets: this.DashboardWidgets,
-	};
-	localStorage.setItem(dasboardsLocalStorageKey, JSON.stringify(newBoards));
+    if (!process.browser) {
+      return
+    }
+    const existingBoards = JSON.parse(
+      localStorage.getItem(dasboardsLocalStorageKey) || JSON.stringify([])
+    )
+    const newBoards = existingBoards
+    newBoards[this.$route.query.id as string] = {
+      ...this.currentBoard,
+      widgets: this.DashboardWidgets,
+    }
+    localStorage.setItem(dasboardsLocalStorageKey, JSON.stringify(newBoards))
   }
 
   removeWidget(widgetIndex: number) {
@@ -199,9 +203,9 @@ export default class EditableDashboard extends Vue {
 
   viewDashboard() {
     this.$router.push({
-      name: 'dashboard',
-      params: {
-        id: this.$route.params.id,
+      path: '/dashboards',
+      query: {
+        id: this.$route.query.id,
       },
     })
   }
@@ -230,4 +234,59 @@ export default class EditableDashboard extends Vue {
   color: var(--secondary);
   margin-right: var(--padding);
 }
+
+.vue-grid-item {
+		& > .vue-resizable-handle {
+			/* Styling from .bi-arrow-down-right */
+			&::before {
+				content: "\f123";
+				display: inline-block;
+				font-family: bootstrap-icons !important;
+				font-style: normal;
+				font-weight: normal !important;
+				font-variant: normal;
+				text-transform: none;
+				line-height: 1;
+				vertical-align: -.125em;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
+			position: absolute;
+			bottom: var(--padding);
+			right: var(--padding);
+			/** reset of the original styling from framework */
+			padding: 0;
+			background: none;
+		}
+
+		.vue-resizable-handle, .drag, .remove {
+			color: var(--text-color);
+			font-size: 20px;
+		}
+	}
+
+	.settings-header {
+		display: grid;
+		grid-template-columns: auto 1fr auto;
+		grid-template-rows: 1fr;
+		justify-content: center;
+		align-items: center;
+		> * {
+			font-size: 1rem;
+			font-weight: var(--weight-normal);
+		}
+		text-transform: uppercase;
+	}
+	form {
+		display: flex;
+		justify-content: flex-start;
+		flex-direction: column;
+		label {
+			display: flex;
+			align-items: center;
+		}
+		.form-field {
+			margin-left: var(--padding);
+		}
+	}
 </style>

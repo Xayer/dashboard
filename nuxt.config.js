@@ -13,19 +13,19 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Poppins'},
-      { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css'}
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Poppins' },
+      { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css' }
     ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    
+
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    {src: '~/plugins/vue-grid-layout', ssr: false},
+    { src: '~/plugins/vue-grid-layout', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -59,20 +59,6 @@ export default {
   build: {
   },
   generate: {
-    routes() {
-      const routes = [];
 
-      routes.push({
-        component: `~/pages/dashboards/_id`,
-        route: `/dashboards`,
-      });
-
-      routes.push({
-        component: `~/pages/dashboards/_id/edit`,
-        route: `/dashboards/edit`,
-      });
-      
-      return routes;
-    },
   },
 }
