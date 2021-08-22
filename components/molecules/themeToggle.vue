@@ -1,6 +1,6 @@
 <template>
 	<div class="theme" @click="toggleTheme">
-		<i class="bi" :class="`bi-${themeIcon}`"></i>
+		<i class="bi" :class="themeIcon"></i>
 	</div>
 </template>
 <script lang="ts">
@@ -12,7 +12,6 @@ import { Theme } from '@/types/themes';
 	computed: {
 		...mapGetters({
 			theme: 'themes/theme',
-			themeIcon: 'themes/themeIcon',
 			availableThemes: 'themes/themes',
 		}),
 	},
@@ -22,7 +21,9 @@ export default class ThemesWidget extends Vue {
 
 	theme!: string;
 
-	themeIcon!: string;
+	get themeIcon() {
+		return this.$store.getters ? `bi-${this.$store.getters['themes/themeIcon']}` : null;
+	}
 
   	setTheme(theme: string) {
   		this.$store.dispatch('themes/setTheme', theme);
@@ -47,7 +48,6 @@ export default class ThemesWidget extends Vue {
 		  }
 		  // document.body.className = theme;
 		  const currentTheme = this.availableThemes.find((theme) => theme.name === themeName);
-		  if(currentTheme?.icon) { this.themeIcon = currentTheme?.icon; }
 
 		  const documentRoot = document.querySelector<HTMLElement>(':root');
 		  if(documentRoot) {
