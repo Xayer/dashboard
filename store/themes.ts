@@ -18,7 +18,7 @@ export default {
           variables: {
             '--accent-0': '#1D2733',
             '--text-color': 'var(--white)',
-            '--accent-50': '#222D3B',
+            '--accent-50': '#212d3b',
             '--accent-100': '#273243',
           },
         },
