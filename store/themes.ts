@@ -19,6 +19,7 @@ export default {
             '--accent-0': '#1D2733',
             '--text-color': 'var(--white)',
             '--accent-50': '#222D3B',
+            '--accent-100': '#273243',
           },
         },
         { name: 'light', icon: 'sun' },
