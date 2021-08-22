@@ -21,15 +21,16 @@ export default class Select extends Vue {
 </script>
 <style lang="scss" scoped>
 select {
-  border: 1px solid var(--secondary);
+  border: 1px solid var(--accent-100);
   border-radius: var(--radius);
-  padding: calc(var(--padding) * 0.75) calc(var(--padding) * 1.5);
+  box-sizing: border-box;
+  padding: calc(var(--padding) / 2) calc(var(--padding) / 2);
   transition: var(--transition-global);
   background-color: var(--input-bg);
   color: var(--input-text-color);
   &:focus {
     outline: none;
-    box-shadow: var(--primary) var(--input-box-shadow);
+    box-shadow: var(--accent-primary) var(--input-box-shadow);
   }
 }
 </style>
