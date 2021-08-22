@@ -84,7 +84,6 @@ import WeatherSettings from '@/components/widgets/weather/settings.vue'
 import {
   WidgetDefaultSettings,
   WidgetsAvailable,
-  widgetsLocalStorageKey,
 } from '@/constants/widgets'
 import { dasboardsLocalStorageKey, defaultSettings } from '@/constants/dashboard'
 import WidgetWrapper from '@/components/widgets/widget.vue'
