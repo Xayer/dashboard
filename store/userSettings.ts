@@ -10,7 +10,6 @@ import {
   userInfoStorageKey,
   jwtBaseEndpoint,
 } from '@/constants/login'
-import { widgetsLocalStorageKey } from '@/constants/widgets'
 import { SettingsResponse, UserSettings, UserInfo } from '@/types/settings'
 import { storageKey as spotifyStorageKey } from '@/modules/apis/spotify'
 import { todosStorageKey } from '@/constants/todo'

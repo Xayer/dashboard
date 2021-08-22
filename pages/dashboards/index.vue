@@ -119,7 +119,7 @@ export default class Dashboard extends Vue {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getDashboardWidgets(widgets: Board[] | undefined) {
+  getDashboardWidgets(widgets: Widget[] | undefined) {
     if (!process.browser || !widgets) {
       return undefined
     }
