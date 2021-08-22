@@ -1,38 +1,36 @@
 <template>
-	<select v-model="selectedValue">
-		<option
-			v-for="option in options"
-			:key="`${option.text}:${option.value}`"
-			:value="option.value"
-			:disabled="option.disabled || false"
-			v-text="option.text"
-		></option>
-	</select>
+  <select v-model="selectedValue">
+    <option
+      v-for="option in options"
+      :key="`${option.text}:${option.value}`"
+      :value="option.value"
+      :disabled="option.disabled || false"
+      v-text="option.text"
+    ></option>
+  </select>
 </template>
 <script lang="ts">
-import {
-	Vue, Component, Prop, VModel,
-} from 'vue-property-decorator';
+import { Vue, Component, Prop, VModel } from 'nuxt-property-decorator'
 
-@Component({
-})
+@Component({})
 export default class Select extends Vue {
-	@Prop() options!: { text: string; value: string}[];
+  @Prop() options!: { text: string; value: string }[]
 
-	@VModel() readonly selectedValue!: string;
+  @VModel() readonly selectedValue!: string
 }
 </script>
 <style lang="scss" scoped>
-	select {
-		border: 1px solid var(--secondary);
-		border-radius: var(--radius);
-		padding: calc(var(--padding) * 0.75) calc(var(--padding) * 1.5);
-		transition: var(--transition-global);
-		background-color: var(--input-bg);
-		color: var(--input-text-color);
-		&:focus {
-			outline: none;
-			box-shadow: var(--primary) var(--input-box-shadow);
-		}
-	}
+select {
+  border: 1px solid var(--accent-100);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+  padding: calc(var(--padding) / 2) calc(var(--padding) / 2);
+  transition: var(--transition-global);
+  background-color: var(--input-bg);
+  color: var(--input-text-color);
+  &:focus {
+    outline: none;
+    box-shadow: var(--accent-primary) var(--input-box-shadow);
+  }
+}
 </style>

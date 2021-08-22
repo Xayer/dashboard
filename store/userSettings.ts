@@ -10,11 +10,11 @@ import {
   userInfoStorageKey,
   jwtBaseEndpoint,
 } from '@/constants/login'
-import { widgetsLocalStorageKey } from '@/constants/widgets'
 import { SettingsResponse, UserSettings, UserInfo } from '@/types/settings'
 import { storageKey as spotifyStorageKey } from '@/modules/apis/spotify'
 import { todosStorageKey } from '@/constants/todo'
 import { themeStorageKey } from '~/constants/themes'
+import { dasboardsLocalStorageKey } from '~/constants/dashboard'
 
 type StateType = {
   isAuthenticated: boolean
@@ -37,12 +37,13 @@ const SettingsState: StateType = {
 const SettingsGetters = {
   isAuthenticated: (state: StateType) => state.isAuthenticated,
   user: (state: StateType) => state.userInfo,
+  boards: ({ userSettings: { boards } }: StateType) => boards,
   settings: () => ({
     boards: [
       {
         name: 'Dashboard',
         widgets: JSON.parse(
-          localStorage.getItem(widgetsLocalStorageKey) || JSON.stringify([])
+          localStorage.getItem(dasboardsLocalStorageKey) || JSON.stringify([])
         ),
       },
     ],
@@ -99,14 +100,9 @@ const actions = {
     }
 
     const settings = {
-      boards: [
-        {
-          name: 'Dashboard',
-          widgets: JSON.parse(
-            localStorage.getItem(widgetsLocalStorageKey) || '[]'
-          ),
-        },
-      ],
+      boards: JSON.parse(
+        localStorage.getItem(dasboardsLocalStorageKey) || JSON.stringify([])
+      ),
       settings: [
         {
           key: menuShownStorageKey,
@@ -131,7 +127,7 @@ const actions = {
       ],
     }
 
-    commit('SET_SETTINGS', settings)
+    commit('LOAD_SETTINGS', settings)
   },
   authenticate: async (
     { commit }: { commit: Commit },
@@ -173,16 +169,15 @@ const actions = {
     dispatch: Dispatch
   }) => {
     await dispatch('fetch').then(
-      ({
+      async ({
         data: {
           meta: { settings },
           id,
           name,
         },
       }: AxiosResponse<SettingsResponse>) => {
-        commit('SET_SETTINGS', settings)
-        commit('SET_USER_DATA', { id, name })
-        dispatch('loadExistingSettings')
+        await commit('SET_SETTINGS', settings)
+        await commit('SET_USER_DATA', { id, name })
       }
     )
   },
@@ -206,14 +201,15 @@ const actions = {
     })
 
     const localSettings = {
-      boards: [
-        {
-          name: 'Dashboard',
-          widgets: JSON.parse(
-            localStorage.getItem(widgetsLocalStorageKey) || JSON.stringify([])
-          ),
-        },
-      ],
+      boards: JSON.parse(
+        localStorage.getItem(dasboardsLocalStorageKey) ||
+          JSON.stringify([
+            {
+              name: 'Dasboard',
+              widgets: [],
+            },
+          ])
+      ),
       settings: [
         {
           key: menuShownStorageKey,
@@ -265,7 +261,6 @@ const actions = {
         }: AxiosResponse<SettingsResponse>) => {
           commit('SET_SETTINGS', settings)
           commit('SET_USER_DATA', { id, name })
-          dispatch('loadExistingSettings')
         }
       )
       .catch((response) => {
@@ -282,13 +277,17 @@ const mutations = {
     state.userInfo = userInfo
     localStorage.setItem(userInfoStorageKey, JSON.stringify(userInfo))
   },
+  LOAD_SETTINGS: (state: StateType, newSettings: UserSettings) => {
+    const { boards, settings } = newSettings
+    state.userSettings.boards = boards
+
+    state.userSettings.settings = settings
+  },
   SET_SETTINGS: (_state: StateType, newSettings: UserSettings) => {
     const { boards, settings } = newSettings
-    // TODO: change to have multiple boards, rather than just saving the widgets of the first board
-    localStorage.setItem(
-      widgetsLocalStorageKey,
-      JSON.stringify(boards[0].widgets)
-    )
+
+    localStorage.setItem(dasboardsLocalStorageKey, JSON.stringify(boards))
+
     settings.forEach(({ key, value }) => {
       localStorage.setItem(key, JSON.stringify(value))
     })
@@ -296,7 +295,7 @@ const mutations = {
 }
 
 export default {
-  state: SettingsState,
+  state: () => SettingsState,
   getters: SettingsGetters,
   actions,
   mutations,
