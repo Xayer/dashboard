@@ -1,9 +1,8 @@
 <template>
   <div>
     <client-only v-if="currentBoard">
-      <header>
-        <!-- <portal to="page-title">Edit Dashboard</portal> -->
-        <!-- <portal to="page-actions"> -->
+        <portal to="page-title">Edit Dashboard</portal>
+        <portal to="page-actions">
         <Button key="view-dashboard" class="m-r m-b" @click="viewDashboard"
           >View Dashboard</Button
         >
@@ -25,8 +24,7 @@
           @click="saveWidgetLayout"
           >Save Dashboard</Button
         >
-      </header>
-      <!-- </portal> -->
+      </portal>
       <grid-layout
         v-if="DashboardWidgets"
         :layout.sync="DashboardWidgets"

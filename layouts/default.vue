@@ -1,18 +1,20 @@
 <template>
   <main>
-    <nav>
-      <ThemeToggle />
-    </nav>
+    <Header />
+    <div class="sub-header m-b">
+        <portal-target name="page-title" />
+        <portal-target name="page-actions" />
+    </div>
     <Nuxt />
   </main>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { ThemeToggle } from '@/components/molecules'
+import { Header } from '@/components/organisms'
 @Component({
-  components: {
-    ThemeToggle,
-  },
+  components:{
+    Header,
+  }
 })
 export default class Layout extends Vue {
   created() {
@@ -44,6 +46,7 @@ export default class Layout extends Vue {
 
   --link-color: #646dec;
   --link-hover: #e46299;
+  --link-current: var(--accent-success);
   --text-color: #444;
   --white: #eee;
 
@@ -78,18 +81,6 @@ a {
   }
 }
 
-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  width: 100vw;
-  box-sizing: border-box;
-}
-
 h1,
 h2,
 h3,
@@ -106,4 +97,10 @@ h6 {
 .m-b { margin-bottom: calc(var(--padding) / 2); }
 .m-t { margin-top: calc(var(--padding) / 2); }
 .m-l { margin-left: calc(var(--padding) / 2); }
+
+.sub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 </style>

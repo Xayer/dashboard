@@ -2,11 +2,10 @@
   <div v-if="$route.query.id">
     <client-only>
       <template v-if="currentBoard">
-        <NuxtLink :to="{ path: '/dashboards' }">Back</NuxtLink>
-        <!-- <portal to="page-title">Dashboard</portal> -->
-        <!-- <portal to="page-actions"> -->
-        <Button class="primary m-b" @click="editDashboard">Edit</Button>
-        <!-- </portal> -->
+        <portal v-if="currentBoard.name" to="page-title">{{ currentBoard.name }}</portal>
+        <portal to="page-actions">
+          <Button class="primary m-b" @click="editDashboard">Edit</Button>
+        </portal>
         <grid-layout
           v-if="getDashboardWidgets"
           :layout.sync="DashboardWidgets"
