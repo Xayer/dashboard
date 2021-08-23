@@ -13,6 +13,12 @@ export type SettingKeyValue = {
 export type SettingsResponse = {
   id: number
   name: string
+  // eslint-disable-next-line camelcase
+  avatar_urls: {
+    24: string
+    48: string
+    96: string
+  }
   meta: {
     settings: {
       boards: BoardResponse[]
@@ -29,4 +35,5 @@ export type UserSettings = {
 export type UserInfo = {
   id?: number
   name?: string
+  avatar?: string
 }

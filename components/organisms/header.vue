@@ -6,17 +6,19 @@
     <Menu :items="menuItems" />
     <aside>
       <ThemeToggle />
-      <img src="//placehold.it/32x32" alt="" />
+      <Avatar :size="24" />
     </aside>
   </header>
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { Avatar } from '@/components/atoms'
 import { ThemeToggle, Menu } from '@/components/molecules'
 @Component({
   components: {
     ThemeToggle,
     Menu,
+    Avatar,
   },
 })
 export default class Header extends Vue {

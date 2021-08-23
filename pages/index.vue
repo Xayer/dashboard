@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="m-b">Welcome to the Dashboard!</h1>
+    <portal to="page-title">Welcome!</portal>
     <CardCollection>
       <Card>
         <template #title>Explore Dashboards</template>

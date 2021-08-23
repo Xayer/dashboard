@@ -27,6 +27,7 @@ const SettingsState: StateType = {
   userInfo: {
     id: undefined,
     name: undefined,
+    avatar: undefined,
   },
   userSettings: {
     boards: [],
@@ -37,6 +38,7 @@ const SettingsState: StateType = {
 const SettingsGetters = {
   isAuthenticated: (state: StateType) => state.isAuthenticated,
   user: (state: StateType) => state.userInfo,
+  avatar: ({ userInfo: { avatar } }: StateType) => avatar,
   boards: ({ userSettings: { boards } }: StateType) => boards,
   settings: () => ({
     boards: [
@@ -127,7 +129,12 @@ const actions = {
       ],
     }
 
-    commit('LOAD_SETTINGS', settings)
+    commit('LOAD_SETTINGS', {
+      settings,
+      user: JSON.parse(
+        localStorage.getItem(userInfoStorageKey) || JSON.stringify({})
+      ),
+    })
   },
   authenticate: async (
     { commit }: { commit: Commit },
@@ -174,10 +181,12 @@ const actions = {
           meta: { settings },
           id,
           name,
+          // eslint-disable-next-line camelcase
+          avatar_urls,
         },
       }: AxiosResponse<SettingsResponse>) => {
         await commit('SET_SETTINGS', settings)
-        await commit('SET_USER_DATA', { id, name })
+        await commit('SET_USER_DATA', { id, name, avatar: avatar_urls['48'] })
       }
     )
   },
@@ -257,10 +266,12 @@ const actions = {
             meta: { settings },
             id,
             name,
+            // eslint-disable-next-line camelcase
+            avatar_urls,
           },
         }: AxiosResponse<SettingsResponse>) => {
           commit('SET_SETTINGS', settings)
-          commit('SET_USER_DATA', { id, name })
+          commit('SET_USER_DATA', { id, name, avatar: avatar_urls['48'] })
         }
       )
       .catch((response) => {
@@ -274,10 +285,21 @@ const mutations = {
     state.isAuthenticated = isAuthenticated
   },
   SET_USER_DATA: (state: StateType, userInfo: UserInfo) => {
-    state.userInfo = userInfo
+    let avatar = ''
+    if (userInfo.avatar) {
+      const removeUrlParams = /\?.*/g
+      avatar = userInfo.avatar.replace(removeUrlParams, '')
+    }
+    state.userInfo = {
+      ...userInfo,
+      avatar,
+    }
     localStorage.setItem(userInfoStorageKey, JSON.stringify(userInfo))
   },
-  LOAD_SETTINGS: (state: StateType, newSettings: UserSettings) => {
+  LOAD_SETTINGS: (
+    state: StateType,
+    { settings: newSettings }: { settings: UserSettings }
+  ) => {
     const { boards, settings } = newSettings
     state.userSettings.boards = boards
 

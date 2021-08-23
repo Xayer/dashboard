@@ -2,7 +2,7 @@
   <main>
     <Header />
     <div class="sub-header m-b">
-        <portal-target name="page-title" />
+        <h2><portal-target name="page-title" /></h2>
         <portal-target name="page-actions" />
     </div>
     <Nuxt />
