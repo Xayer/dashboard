@@ -1,5 +1,7 @@
 <template>
-    <img v-if="avatar" :src="avatar" />
+    <div>
+        <img v-if="avatar" :src="avatar" />
+    </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator'
