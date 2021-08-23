@@ -22,6 +22,18 @@ type StateType = {
   userInfo: UserInfo
 }
 
+const updateUserInfo = (userInfo: UserInfo) => {
+  let avatar = ''
+  if (userInfo.avatar) {
+    const removeUrlParams = /\?.*/g
+    avatar = userInfo.avatar.replace(removeUrlParams, '')
+  }
+  return {
+    ...userInfo,
+    avatar,
+  }
+}
+
 const SettingsState: StateType = {
   isAuthenticated: false,
   userInfo: {
@@ -285,23 +297,19 @@ const mutations = {
     state.isAuthenticated = isAuthenticated
   },
   SET_USER_DATA: (state: StateType, userInfo: UserInfo) => {
-    let avatar = ''
-    if (userInfo.avatar) {
-      const removeUrlParams = /\?.*/g
-      avatar = userInfo.avatar.replace(removeUrlParams, '')
-    }
-    state.userInfo = {
-      ...userInfo,
-      avatar,
-    }
+    state.userInfo = updateUserInfo(userInfo)
     localStorage.setItem(userInfoStorageKey, JSON.stringify(userInfo))
   },
   LOAD_SETTINGS: (
     state: StateType,
-    { settings: newSettings }: { settings: UserSettings }
+    {
+      settings: newSettings,
+      user: userSettings,
+    }: { settings: UserSettings; user: UserInfo }
   ) => {
     const { boards, settings } = newSettings
     state.userSettings.boards = boards
+    state.userInfo = updateUserInfo(userSettings)
 
     state.userSettings.settings = settings
   },

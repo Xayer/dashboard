@@ -1,5 +1,5 @@
 <template>
-    <img :src="`${avatar}?s=${size}`" />
+    <img v-if="avatar" :src="avatar" />
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator'
@@ -13,6 +13,9 @@ import { mapGetters } from 'vuex'
 })
 export default class Avatar extends Vue {
     @Prop({ default: 48}) size!: number;
-    avatar!: string;
+    get avatar() {
+        const image = this.$store.getters['userSettings/avatar']; 
+        return image ? `${image}?s=${this.size}` : undefined
+    }
 }
 </script>
