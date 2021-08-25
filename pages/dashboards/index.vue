@@ -42,11 +42,11 @@
           </grid-item>
         </grid-layout>
       </template>
-      <template v-else> Board not found :( </template>
+      <portal v-else to="page-title">Board not found :(</portal>
     </client-only>
   </div>
   <div v-else>
-    Dashboard List
+    <portal to="page-title">Dashboards</portal>
     <client-only>
       <Card v-for="(board, index) in boards" :key="board.name">
         <template #title> {{ board.name }}</template>
