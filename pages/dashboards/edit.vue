@@ -125,18 +125,22 @@ export default class EditableDashboard extends Vue {
 
   get currentBoard(): Board | null {
     const currentBoard = this.$route.query.id as string
-    if (!currentBoard) {
+    if (!currentBoard && !this.boards[currentBoard]) {
       return null
     }
     return this.boards[currentBoard]
   }
 
   mounted() {
+    this.$store.dispatch('userSettings/loadExistingSettings');
     this.loadWidgetsBasedOnId(this.currentBoard)
   }
 
   @Watch('currentBoard')
   loadWidgetsBasedOnId(currentBoard: Board | null) {
+    if(!currentBoard) {
+      return [];
+    }
     this.DashboardWidgets = this.getDashboardWidgets(currentBoard?.widgets)
   }
 
@@ -187,7 +191,8 @@ export default class EditableDashboard extends Vue {
     const existingBoards = JSON.parse(
       localStorage.getItem(dasboardsLocalStorageKey) || JSON.stringify([])
     )
-    const newBoards = existingBoards
+    // make a copy of the existing boards
+    const newBoards = JSON.parse(JSON.stringify(existingBoards));
     newBoards[this.$route.query.id as string] = {
       ...this.currentBoard,
       widgets: this.DashboardWidgets,

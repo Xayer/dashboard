@@ -2,7 +2,9 @@
   <div v-if="$route.query.id">
     <client-only>
       <template v-if="currentBoard">
-        <portal v-if="currentBoard.name" to="page-title">{{ currentBoard.name }}</portal>
+        <portal v-if="currentBoard.name" to="page-title">{{
+          currentBoard.name
+        }}</portal>
         <portal to="page-actions">
           <Button class="primary m-b" @click="editDashboard">Edit</Button>
         </portal>
@@ -40,20 +42,18 @@
           </grid-item>
         </grid-layout>
       </template>
-      <template v-else>
-        Board not found :(
-      </template>
+      <template v-else> Board not found :( </template>
     </client-only>
   </div>
   <div v-else>
     Dashboard List
     <client-only>
-    <Card v-for="(board, index) in boards" :key="board.name">
-      <template #title> {{board.name }}</template>
-      <template #action>
-        <Button class="primary" @click="link(index)">view</Button>
-      </template>
-    </Card>
+      <Card v-for="(board, index) in boards" :key="board.name">
+        <template #title> {{ board.name }}</template>
+        <template #action>
+          <Button class="primary" @click="link(index)">view</Button>
+        </template>
+      </Card>
     </client-only>
   </div>
 </template>
@@ -97,24 +97,28 @@ export default class Dashboard extends Vue {
   DashboardWidgets: any = null
 
   get boards() {
-    return this.$store.getters['userSettings/boards'];
+    return this.$store.getters['userSettings/boards']
   }
 
   get currentBoard(): Board | null {
-    const currentBoard = this.$route.query.id as string;
-      if(!currentBoard) {
-        return null;
-      }
-      return this.boards[currentBoard];
+    const currentBoard = this.$route.query.id as string
+    if (!currentBoard && !this.boards[currentBoard]) {
+      return null
+    }
+    return this.boards[currentBoard]
   }
 
   mounted() {
-    this.loadWidgetsBasedOnId(this.currentBoard);
+    this.$store.dispatch('userSettings/loadExistingSettings')
+    this.loadWidgetsBasedOnId(this.currentBoard)
   }
 
   @Watch('currentBoard')
   loadWidgetsBasedOnId(currentBoard: Board | null) {
-    this.DashboardWidgets = this.getDashboardWidgets(currentBoard?.widgets);
+    if (!currentBoard) {
+      return []
+    }
+    this.DashboardWidgets = this.getDashboardWidgets(currentBoard?.widgets)
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -124,14 +128,14 @@ export default class Dashboard extends Vue {
     }
 
     // to make sure we dont override the store, we copy it.
-    const clonedWidgets = JSON.parse(JSON.stringify(widgets)) as Widget[];
+    const clonedWidgets = JSON.parse(JSON.stringify(widgets)) as Widget[]
     return clonedWidgets.map((widget) => {
       const widgetData = { ...widget }
       if (!widget.guid) {
         widgetData.guid = new Date().toUTCString()
       }
       return widgetData
-    });
+    })
   }
 
   editDashboard() {
