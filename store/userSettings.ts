@@ -28,6 +28,7 @@ const updateUserInfo = (userInfo: UserInfo) => {
     const removeUrlParams = /\?.*/g
     avatar = userInfo.avatar.replace(removeUrlParams, '')
   }
+
   return {
     ...userInfo,
     avatar,
@@ -108,7 +109,7 @@ const actions = {
       localStorage.removeItem(jwtTokenStorageKey)
     }
   },
-  loadExistingSettings: ({ commit }: { commit: Commit }) => {
+  loadExistingSettings: async ({ commit }: { commit: Commit }) => {
     if (!process.browser) {
       return
     }
@@ -121,12 +122,14 @@ const actions = {
         {
           key: menuShownStorageKey,
           value: JSON.parse(
-            localStorage.getItem(menuShownStorageKey) || '"true"'
+            localStorage.getItem(menuShownStorageKey) || JSON.stringify(true)
           ),
         },
         {
           key: themeStorageKey,
-          value: JSON.parse(localStorage.getItem(themeStorageKey) || '"true"'),
+          value: JSON.parse(
+            localStorage.getItem(themeStorageKey) || JSON.stringify('light')
+          ),
         },
         {
           key: spotifyStorageKey,
@@ -141,12 +144,16 @@ const actions = {
       ],
     }
 
-    commit('LOAD_SETTINGS', {
+    await commit('LOAD_SETTINGS', {
       settings,
-      user: JSON.parse(
-        localStorage.getItem(userInfoStorageKey) || JSON.stringify({})
-      ),
     })
+
+    const userData = JSON.parse(
+      localStorage.getItem(userInfoStorageKey) as string
+    )
+    if (userData) {
+      await commit('SET_USER_DATA', userData)
+    }
   },
   authenticate: async (
     { commit }: { commit: Commit },
@@ -273,7 +280,7 @@ const actions = {
         }
       )
       .then(
-        ({
+        async ({
           data: {
             meta: { settings },
             id,
@@ -282,8 +289,8 @@ const actions = {
             avatar_urls,
           },
         }: AxiosResponse<SettingsResponse>) => {
-          commit('SET_SETTINGS', settings)
-          commit('SET_USER_DATA', { id, name, avatar: avatar_urls['48'] })
+          await commit('SET_SETTINGS', settings)
+          await commit('SET_USER_DATA', { id, name, avatar: avatar_urls['48'] })
         }
       )
       .catch((response) => {
@@ -296,20 +303,20 @@ const mutations = {
   SET_IS_AUTHENTICATED: (state: StateType, isAuthenticated: boolean) => {
     state.isAuthenticated = isAuthenticated
   },
-  SET_USER_DATA: (state: StateType, userInfo: UserInfo) => {
-    state.userInfo = updateUserInfo(userInfo)
-    localStorage.setItem(userInfoStorageKey, JSON.stringify(userInfo))
+  SET_USER_DATA: (state: StateType, userInfo?: UserInfo) => {
+    if (!userInfo) {
+      return
+    }
+    const formattedUserInfo = updateUserInfo(userInfo)
+    state.userInfo = formattedUserInfo
+    localStorage.setItem(userInfoStorageKey, JSON.stringify(formattedUserInfo))
   },
   LOAD_SETTINGS: (
     state: StateType,
-    {
-      settings: newSettings,
-      user: userSettings,
-    }: { settings: UserSettings; user: UserInfo }
+    { settings: newSettings }: { settings: UserSettings }
   ) => {
     const { boards, settings } = newSettings
     state.userSettings.boards = boards
-    state.userInfo = updateUserInfo(userSettings)
 
     state.userSettings.settings = settings
   },
