@@ -9,19 +9,64 @@
   </main>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator'
+import { Component, Vue, Watch } from 'nuxt-property-decorator'
+import { mapGetters } from 'vuex'
 import { Header } from '@/components/organisms'
 @Component({
   components:{
     Header,
-  }
+  },
+  computed: {...mapGetters({
+    token: 'hue/token',
+    hueAvailable: 'hue/available',
+    hueAddress: 'hue/hueAddress',
+  })}
 })
 export default class Layout extends Vue {
+  token?: string;
+  bridgeAddressNotFound = true;
+  devicesTimeout!: ReturnType<typeof setTimeout>;
   created() {
     this.$store.dispatch('themes/loadTheme')
     this.$store.dispatch('userSettings/validate')
     this.$store.dispatch('userSettings/loadExistingSettings')
+    this.$store.dispatch('hue/loadSettings')
+    if(process.browser) {
+      window.addEventListener('offline', () => {
+        this.$store.commit('internet/SET_CONNECTION_STATUS', false);
+      });
+      window.addEventListener('online', () => {
+        this.$store.commit('internet/SET_CONNECTION_STATUS', true);
+      });
+    }
   }
+
+  detectDevices() {
+    if(this.token) {
+      return;
+    }
+		this.$store.dispatch('hue/getDevices').catch((error: any) => {
+			console.log(error.description);
+		});
+	}
+
+  @Watch('bridgeAddress')
+	commitBridgeAddress(address: string) {
+		this.$store.commit('hue/SET_BRIDGE_ADDRESS', address);
+		this.bridgeAddressNotFound = false;
+		this.detectDevices();
+	}
+
+	@Watch('bridgeAddressNotFound')
+	bridgeAddressChanged(found: boolean) {
+		if (found) {
+			this.devicesTimeout = setInterval(() => {
+				this.detectDevices();
+			}, 3000);
+		} else {
+			clearInterval(this.devicesTimeout);
+		}
+	}
 }
 </script>
 <style lang="scss">

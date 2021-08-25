@@ -6,7 +6,7 @@
     <Menu :items="menuItems" />
     <aside>
       <ThemeToggle />
-      <Avatar :size="24" />
+      <NuxtLink to="/settings/login"><Avatar :size="32" /></NuxtLink>
     </aside>
   </header>
 </template>

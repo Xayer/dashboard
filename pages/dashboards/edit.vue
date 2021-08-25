@@ -79,7 +79,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Watch } from 'nuxt-property-decorator'
 import { Select, Button } from '@/components/atoms'
 import WidgetSettings from '@/components/widgets/settings.vue'
-// import HueGroupSettings from '@/components/widgets/hue/group/settings.vue';
+import HueGroupSettings from '@/components/widgets/hue/group/settings.vue';
 import WeatherSettings from '@/components/widgets/weather/settings.vue'
 import { WidgetDefaultSettings, WidgetsAvailable } from '@/constants/widgets'
 import {
@@ -96,7 +96,7 @@ import { Board } from '~/types/dashboards'
     Select,
     Button,
     Weather: WeatherSettings,
-    // HueGroup: HueGroupSettings,
+    HueGroup: HueGroupSettings,
     WidgetWrapper,
     Forecast: WeatherSettings,
   },

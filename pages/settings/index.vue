@@ -28,7 +28,8 @@ import { Button } from '@/components/atoms';
 export default class Settings extends Vue {
     routes = [
         'login',
-        'spotify'
+        'spotify',
+        'hue'
     ];
 
     link(route: string){
