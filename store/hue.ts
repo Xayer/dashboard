@@ -1,7 +1,7 @@
 import { Commit, Dispatch } from 'vuex'
 import HueAPI from '@/modules/apis/hue'
 import { Devices } from '@/types/hue'
-import { hueBridgeAddressStorageKey, hueTokenStorageKey } from '~/constants/hue'
+import { hueBridgeAddressStorageKey } from '~/constants/hue'
 
 const state = {
   devices: {},
@@ -20,7 +20,13 @@ const getters = {
 }
 
 const actions = {
-  loadSettings: ({ commit }: { commit: Commit }) => {
+  loadSettings: ({
+    commit,
+    dispatch,
+  }: {
+    commit: Commit
+    dispatch: Dispatch
+  }) => {
     if (!process.browser) {
       return
     }
@@ -28,6 +34,7 @@ const actions = {
     if (address) {
       commit('SET_BRIDGE_ADDRESS', address)
       commit('REFRESH_TOKEN')
+      dispatch('getDevices')
     }
   },
   getDevices: ({
@@ -79,7 +86,6 @@ const actions = {
     }),
   registerToken: ({
     commit,
-    dispatch,
     rootGetters,
   }: {
     commit: any
@@ -90,11 +96,7 @@ const actions = {
       commit('REFRESH_TOKEN')
     }),
   toggleLight: (
-    {
-      commit,
-      dispatch,
-      rootGetters,
-    }: { commit: any; dispatch: any; rootGetters: any },
+    { dispatch, rootGetters }: { commit: any; dispatch: any; rootGetters: any },
     {
       uniqueId,
       on,
@@ -105,19 +107,11 @@ const actions = {
       dispatch('getDevices')
     }),
   turnLightOn: (
-    {
-      commit,
-      dispatch,
-      rootGetters,
-    }: { commit: any; dispatch: any; rootGetters: any },
+    { rootGetters }: { commit: any; dispatch: any; rootGetters: any },
     uniqueId: string
   ) => rootGetters['hue/instance'].lightOn(uniqueId),
   turnLightOff: (
-    {
-      commit,
-      dispatch,
-      rootGetters,
-    }: { commit: any; dispatch: any; rootGetters: any },
+    { rootGetters }: { commit: any; dispatch: any; rootGetters: any },
     uniqueId: string
   ) => rootGetters['hue/instance'].lightOff(uniqueId),
 }

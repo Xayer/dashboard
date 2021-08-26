@@ -92,6 +92,13 @@ export default class HueIntegration extends Vue {
 		});
 	}
 
+	@Watch('bridgeAddress')
+	commitBridgeAddress(address: string) {
+		this.$store.commit('hue/SET_BRIDGE_ADDRESS', address);
+		this.bridgeAddressNotFound = false;
+		this.detectDevices();
+	}
+
 	registerToken() {
 		if (this.bridgeAddressNotFound) {
 			this.$store.commit('hue/SET_BRIDGE_ADDRESS', this.bridgeAddress);
