@@ -1,1 +1,1 @@
-export const todosStorageKey = 'todos';
+export const todosStorageKey = 'todos'

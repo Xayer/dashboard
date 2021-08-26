@@ -1,8 +1,8 @@
 <template>
   <div>
     <client-only v-if="currentBoard">
-        <portal to="page-title">Edit Dashboard</portal>
-        <portal to="page-actions">
+      <portal to="page-title">Edit Dashboard</portal>
+      <portal to="page-actions">
         <Button key="view-dashboard" class="m-r m-b" @click="viewDashboard"
           >View Dashboard</Button
         >
@@ -89,6 +89,7 @@ import {
 import WidgetWrapper from '@/components/widgets/widget.vue'
 import { Widget } from '~/types/widgets'
 import { Board } from '~/types/dashboards'
+import HueGroupSettings from '~/components/widgets/hue/group/settings.vue'
 
 @Component({
   components: {
@@ -96,7 +97,7 @@ import { Board } from '~/types/dashboards'
     Select,
     Button,
     Weather: WeatherSettings,
-    // HueGroup: HueGroupSettings,
+    HueGroup: HueGroupSettings,
     WidgetWrapper,
     Forecast: WeatherSettings,
   },
@@ -132,14 +133,14 @@ export default class EditableDashboard extends Vue {
   }
 
   mounted() {
-    this.$store.dispatch('userSettings/loadExistingSettings');
+    this.$store.dispatch('userSettings/loadExistingSettings')
     this.loadWidgetsBasedOnId(this.currentBoard)
   }
 
   @Watch('currentBoard')
   loadWidgetsBasedOnId(currentBoard: Board | null) {
-    if(!currentBoard) {
-      return [];
+    if (!currentBoard) {
+      return []
     }
     this.DashboardWidgets = this.getDashboardWidgets(currentBoard?.widgets)
   }
@@ -192,7 +193,7 @@ export default class EditableDashboard extends Vue {
       localStorage.getItem(dasboardsLocalStorageKey) || JSON.stringify([])
     )
     // make a copy of the existing boards
-    const newBoards = JSON.parse(JSON.stringify(existingBoards));
+    const newBoards = JSON.parse(JSON.stringify(existingBoards))
     newBoards[this.$route.query.id as string] = {
       ...this.currentBoard,
       widgets: this.DashboardWidgets,
@@ -239,57 +240,59 @@ export default class EditableDashboard extends Vue {
 }
 
 .vue-grid-item {
-		& > .vue-resizable-handle {
-			/* Styling from .bi-arrow-down-right */
-			&::before {
-				content: "\f123";
-				display: inline-block;
-				font-family: bootstrap-icons !important;
-				font-style: normal;
-				font-weight: normal !important;
-				font-variant: normal;
-				text-transform: none;
-				line-height: 1;
-				vertical-align: -.125em;
-				-webkit-font-smoothing: antialiased;
-				-moz-osx-font-smoothing: grayscale;
-			}
-			position: absolute;
-			bottom: var(--padding);
-			right: var(--padding);
-			/** reset of the original styling from framework */
-			padding: 0;
-			background: none;
-		}
+  & > .vue-resizable-handle {
+    /* Styling from .bi-arrow-down-right */
+    &::before {
+      content: '\f123';
+      display: inline-block;
+      font-family: bootstrap-icons !important;
+      font-style: normal;
+      font-weight: normal !important;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      vertical-align: -0.125em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    position: absolute;
+    bottom: var(--padding);
+    right: var(--padding);
+    /** reset of the original styling from framework */
+    padding: 0;
+    background: none;
+  }
 
-		.vue-resizable-handle, .drag, .remove {
-			color: var(--text-color);
-			font-size: 20px;
-		}
-	}
+  .vue-resizable-handle,
+  .drag,
+  .remove {
+    color: var(--text-color);
+    font-size: 20px;
+  }
+}
 
-	.settings-header {
-		display: grid;
-		grid-template-columns: auto 1fr auto;
-		grid-template-rows: 1fr;
-		justify-content: center;
-		align-items: center;
-		> * {
-			font-size: 1rem;
-			font-weight: var(--weight-normal);
-		}
-		text-transform: uppercase;
-	}
-	form {
-		display: flex;
-		justify-content: flex-start;
-		flex-direction: column;
-		label {
-			display: flex;
-			align-items: center;
-		}
-		.form-field {
-			margin-left: var(--padding);
-		}
-	}
+.settings-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: 1fr;
+  justify-content: center;
+  align-items: center;
+  > * {
+    font-size: 1rem;
+    font-weight: var(--weight-normal);
+  }
+  text-transform: uppercase;
+}
+form {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  label {
+    display: flex;
+    align-items: center;
+  }
+  .form-field {
+    margin-left: var(--padding);
+  }
+}
 </style>

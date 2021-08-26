@@ -11,7 +11,9 @@
       <Card>
         <template #title>Setup Account </template>
         <template #action>
-          <Button class="primary" @click="link('/settings/login')">Setup</Button>
+          <Button class="primary" @click="link('/settings/login')"
+            >Setup</Button
+          >
         </template>
       </Card>
     </CardCollection>

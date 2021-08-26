@@ -1,9 +1,9 @@
 <template>
-    <div class="theme" @click="toggleTheme">
-      <client-only>
-        <i v-if="icon" class="bi" :class="icon"></i>
-      </client-only>
-    </div>
+  <div class="theme" @click="toggleTheme">
+    <client-only>
+      <i v-if="icon" class="bi" :class="icon"></i>
+    </client-only>
+  </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from 'nuxt-property-decorator'
@@ -11,16 +11,16 @@ import { mapGetters } from 'vuex'
 import { Theme } from '@/types/themes'
 
 @Component({
-    computed: {
-        ...mapGetters({
-            theme: 'themes/theme',
-            availableThemes: 'themes/themes',
-        }),
-    },
+  computed: {
+    ...mapGetters({
+      theme: 'themes/theme',
+      availableThemes: 'themes/themes',
+    }),
+  },
 })
 export default class ThemesWidget extends Vue {
   availableThemes!: Theme[]
-  icon = '';
+  icon = ''
 
   theme!: string
 
@@ -54,8 +54,8 @@ export default class ThemesWidget extends Vue {
       (theme) => theme.name === themeName
     )
 
-    if(currentTheme?.icon) {
-      this.$set(this, 'icon', `bi-${currentTheme?.icon}`);
+    if (currentTheme?.icon) {
+      this.$set(this, 'icon', `bi-${currentTheme?.icon}`)
     }
 
     const documentRoot = document.querySelector<HTMLElement>(':root')
