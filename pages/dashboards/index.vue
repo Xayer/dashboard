@@ -72,9 +72,9 @@ import {
   RejseplanenDeparture,
 } from '@/components/widgets'
 import { Board } from '~/types/dashboards'
-import HueBridges from '@/components/widgets/hue/bridges.vue';
-import HueLight from '@/components/widgets/hue/light.vue';
-import HueGroup from '@/components/widgets/hue/group/group.vue';
+import HueBridges from '@/components/widgets/hue/bridges.vue'
+import HueLight from '@/components/widgets/hue/light.vue'
+import HueGroup from '@/components/widgets/hue/group/group.vue'
 
 @Component({
   components: {

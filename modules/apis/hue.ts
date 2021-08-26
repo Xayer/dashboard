@@ -73,7 +73,6 @@ export default class HueAPI extends API {
 
   getDevices() {
     return new Promise((resolve, reject) => {
-      console.log('test')
       if (!this.findExistingToken()) {
         reject(Error('token missing'))
       }

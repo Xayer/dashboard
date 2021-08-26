@@ -1,1 +1,1 @@
-export const themeStorageKey = "theme";
+export const themeStorageKey = 'theme'
