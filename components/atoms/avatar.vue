@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <nuxt-link to="/settings/login">
     <img v-if="avatar" :src="avatar" />
-  </div>
+  </nuxt-link>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator'
