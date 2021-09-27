@@ -1,7 +1,9 @@
 <template>
-    <div class="theme" @click="toggleTheme">
-        <i class="bi" :class="themeIcon"></i>
-    </div>
+  <div class="theme" @click="toggleTheme">
+    <client-only>
+      <i v-if="icon" class="bi" :class="icon"></i>
+    </client-only>
+  </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from 'nuxt-property-decorator'
@@ -9,21 +11,18 @@ import { mapGetters } from 'vuex'
 import { Theme } from '@/types/themes'
 
 @Component({
-    computed: {
-        ...mapGetters({
-            theme: 'themes/theme',
-            availableThemes: 'themes/themes',
-        }),
-    },
+  computed: {
+    ...mapGetters({
+      theme: 'themes/theme',
+      availableThemes: 'themes/themes',
+    }),
+  },
 })
 export default class ThemesWidget extends Vue {
   availableThemes!: Theme[]
+  icon = ''
 
   theme!: string
-
-  get themeIcon() {
-    return this.$store.getters ? `bi-${this.$store.getters['themes/themeIcon']}` : null;
-  }
 
   setTheme(theme: string) {
     this.$store.dispatch('themes/setTheme', theme)
@@ -40,7 +39,7 @@ export default class ThemesWidget extends Vue {
     this.setTheme(this.availableThemes[nextThemeIndex].name)
   }
 
-  mounted() {
+  created() {
     this.updateTheme(this.theme)
   }
 
@@ -55,6 +54,10 @@ export default class ThemesWidget extends Vue {
       (theme) => theme.name === themeName
     )
 
+    if (currentTheme?.icon) {
+      this.$set(this, 'icon', `bi-${currentTheme?.icon}`)
+    }
+
     const documentRoot = document.querySelector<HTMLElement>(':root')
     if (documentRoot) {
       // clean up existing variables
@@ -67,22 +70,9 @@ export default class ThemesWidget extends Vue {
 }
 </script>
 <style lang="scss">
-span {
-  text-transform: capitalize;
-  display: inline-block;
-  margin: {
-    block-start: 0;
-    block-end: 0;
-  }
-}
 i {
-  display: inline-block;
-  margin-inline-end: 0.5rem;
-}
-.on {
-  color: var(--success);
-}
-.off {
-  color: var(--danger);
+  &:hover {
+    cursor: pointer;
+  }
 }
 </style>

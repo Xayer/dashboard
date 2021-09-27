@@ -6,6 +6,7 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
+    "prettier": "prettier",
     "generate": "nuxt generate",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "yarn lint:js",
@@ -35,10 +36,15 @@
     "eslint-plugin-vue": "^7.12.1",
     "fibers": "^5.0.0",
     "jest": "^27.0.5",
+    "portal-vue": "^2.1.7",
     "prettier": "^2.3.2",
     "sass": "^1.37.5",
     "sass-loader": "10",
     "ts-jest": "^27.0.3",
     "vue-jest": "^3.0.4"
+  },
+  "resolutions": {
+    "@babel/core": "7.13.15",
+    "@babel/preset-env": "7.13.15"
   }
 }

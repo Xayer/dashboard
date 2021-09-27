@@ -1,24 +1,71 @@
 <template>
   <main>
-    <nav>
-      <ThemeToggle />
-    </nav>
+    <Header />
+    <div class="sub-header m-b">
+      <h2><portal-target name="page-title" /></h2>
+      <portal-target name="page-actions" />
+    </div>
     <Nuxt />
   </main>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator'
-import { ThemeToggle } from '@/components/molecules'
+import { Component, Vue, Watch } from 'nuxt-property-decorator'
+import { mapGetters } from 'vuex'
+import { Header } from '@/components/organisms'
 @Component({
   components: {
-    ThemeToggle,
+    Header,
+  },
+  computed: {
+    ...mapGetters({
+      token: 'hue/token',
+      hueAvailable: 'hue/available',
+      hueAddress: 'hue/hueAddress',
+    }),
   },
 })
 export default class Layout extends Vue {
+  token?: string
+  bridgeAddressNotFound = true
+  devicesTimeout!: ReturnType<typeof setTimeout>
   created() {
     this.$store.dispatch('themes/loadTheme')
     this.$store.dispatch('userSettings/validate')
     this.$store.dispatch('userSettings/loadExistingSettings')
+    this.$store.dispatch('hue/loadSettings')
+    if (process.browser) {
+      window.addEventListener('offline', () => {
+        this.$store.commit('internet/SET_CONNECTION_STATUS', false)
+      })
+      window.addEventListener('online', () => {
+        this.$store.commit('internet/SET_CONNECTION_STATUS', true)
+      })
+    }
+  }
+
+  detectDevices() {
+    if (this.token) {
+      return
+    }
+    this.$store.dispatch('hue/getDevices').catch((error: any) => {})
+  }
+
+  @Watch('bridgeAddress')
+  commitBridgeAddress(address: string) {
+    this.$store.commit('hue/SET_BRIDGE_ADDRESS', address)
+    this.bridgeAddressNotFound = false
+    this.detectDevices()
+  }
+
+  @Watch('bridgeAddressNotFound')
+  bridgeAddressChanged(found: boolean) {
+    if (found) {
+      this.devicesTimeout = setInterval(() => {
+        this.detectDevices()
+      }, 3000)
+    } else {
+      clearInterval(this.devicesTimeout)
+    }
   }
 }
 </script>
@@ -44,6 +91,7 @@ export default class Layout extends Vue {
 
   --link-color: #646dec;
   --link-hover: #e46299;
+  --link-current: var(--accent-success);
   --text-color: #444;
   --white: #eee;
 
@@ -62,7 +110,9 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-input { font-family: var(--font-display); }
+input {
+  font-family: var(--font-display);
+}
 
 main {
   padding: var(--padding);
@@ -78,18 +128,6 @@ a {
   }
 }
 
-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  width: 100vw;
-  box-sizing: border-box;
-}
-
 h1,
 h2,
 h3,
@@ -102,8 +140,22 @@ h6 {
   padding: 0;
 }
 
-.m-r { margin-right: calc(var(--padding) / 2); }
-.m-b { margin-bottom: calc(var(--padding) / 2); }
-.m-t { margin-top: calc(var(--padding) / 2); }
-.m-l { margin-left: calc(var(--padding) / 2); }
+.m-r {
+  margin-right: calc(var(--padding) / 2);
+}
+.m-b {
+  margin-bottom: calc(var(--padding) / 2);
+}
+.m-t {
+  margin-top: calc(var(--padding) / 2);
+}
+.m-l {
+  margin-left: calc(var(--padding) / 2);
+}
+
+.sub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 </style>

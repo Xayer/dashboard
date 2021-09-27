@@ -113,8 +113,7 @@ export default class ForecastWidget extends Vue {
 
   // eslint-disable-next-line class-methods-use-this
   async mounted() {
-    const response = await forecast(this.settings.city, this.settings.units)
-    this.weatherData = response
+    this.weatherData = await forecast(this.settings.city, this.settings.units)
   }
 
   get temperatureUnit() {
