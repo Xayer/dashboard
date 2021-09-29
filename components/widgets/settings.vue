@@ -1,19 +1,17 @@
 <template>
   <form @submit.stop.prevent="">
-    <div
+    <label
       v-for="(settingValue, settingName) in settings"
       :key="`${settingName}:${settingValue}`"
-    >
-      <label :for="settingName"
-        >{{ settingName }}:
-        <FormInput
-          class="form-field"
-          :value="settings[settingName]"
-          :name="settingName"
-          @input="updateValue(settingName, $event)"
-        />
-      </label>
-    </div>
+      :for="settingName"
+      >{{ settingName }}:
+      <FormInput
+        class="form-field"
+        :value="settings[settingName]"
+        :name="settingName"
+        @input="updateValue(settingName, $event)"
+      />
+    </label>
   </form>
 </template>
 <script lang="ts">
@@ -38,4 +36,28 @@ export default class WidgetSettingEditor extends Vue {
   }
 }
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+form {
+  label {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    gap: var(--padding);
+    & + label {
+      margin-top: var(--padding);
+    }
+
+    .form-field {
+      margin-left: 0;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+      input {
+        width: 100%;
+      }
+    }
+  }
+}
+</style>

@@ -47,7 +47,7 @@ export default class Layout extends Vue {
     if (this.token) {
       return
     }
-    this.$store.dispatch('hue/getDevices').catch((error: any) => {})
+    this.$store.dispatch('hue/getDevices')
   }
 
   @Watch('bridgeAddress')
@@ -157,5 +157,39 @@ h6 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+  transition: var(-transition);
+}
+.slide-fade-leave-active {
+  transition: var(--transition);
+}
+.slide-fade-enter, .slide-fade-leave-to
+	/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(-var(--padding));
+  opacity: 0;
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.fade-enter-active {
+  transition: var(--transition);
+  opacity: 1;
+}
+.fade-leave-active {
+  transition: var(--transition);
+  opacity: 0 !important;
+}
+.fade-leave-to {
+  transition: var(--transition);
+  opacity: 0 !important;
+}
+.fade-enter,
+.fade-leave-to {
+  transition: var(--transition);
+  opacity: 0 !important;
 }
 </style>
