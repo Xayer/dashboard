@@ -47,11 +47,15 @@
   </div>
   <div v-else>
     <portal to="page-title">Dashboards</portal>
+    <portal to="page-actions">
+      <Button class="primary" @click="createNewDashboard">Create</Button>
+    </portal>
     <client-only>
-      <Card v-for="(board, index) in boards" :key="board.name">
+      <Card v-for="(board, index) in boards" :key="`${index}-${board.name}`">
         <template #title> {{ board.name }}</template>
         <template #action>
           <Button class="primary" @click="link(index)">view</Button>
+          <Button class="danger" @click="deleteDashboard(index)">X</Button>
         </template>
       </Card>
     </client-only>
@@ -149,6 +153,16 @@ export default class Dashboard extends Vue {
 
   link(id: number) {
     this.$router.push({ path: '/dashboards', query: { id: id.toString() } })
+  }
+
+  createNewDashboard() {
+    this.$store.commit('userSettings/CREATE_NEW_DASHBOARD')
+    this.$store.dispatch('userSettings/loadExistingSettings')
+  }
+
+  deleteDashboard(dashboardIndex: number) {
+    this.$store.commit('userSettings/REMOVE_DASHBOARD', dashboardIndex)
+    this.$store.dispatch('userSettings/loadExistingSettings')
   }
 }
 </script>
