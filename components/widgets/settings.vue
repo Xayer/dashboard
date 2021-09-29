@@ -51,6 +51,12 @@ form {
 
     .form-field {
       margin-left: 0;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+      input {
+        width: 100%;
+      }
     }
   }
 }
