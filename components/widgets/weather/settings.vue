@@ -2,12 +2,11 @@
   <form @submit.stop.prevent="">
     <label for="City"
       >City
-      <Input class="m-t" :value="city" @input="updateValue('city', $event)" />
+      <Input :value="city" @input="updateValue('city', $event)" />
     </label>
     <label for="Unit"
       >Unit
       <Select
-        class="m-t"
         :value="unit"
         :options="options"
         name="Unit"
@@ -55,11 +54,22 @@ export default class WeatherSettings extends Vue {
   }
 }
 </script>
-<style scoped>
-form,
-label {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+<style lang="scss">
+form {
+  label {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    gap: var(--padding);
+    & + label {
+      margin-top: var(--padding);
+    }
+
+    .form-field {
+      margin-left: 0;
+    }
+  }
 }
 </style>

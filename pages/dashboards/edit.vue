@@ -57,14 +57,26 @@
               <span class="remove m-l" @click="removeWidget(itemIndex)">
                 <i class="bi bi-x-circle"></i>
               </span>
+              <Button @click="openSettingsPanel(item.guid)">Settings</Button>
             </div>
-            <Sidebar>
-				<component
-					:is="widgetSettingsComponent(item.type)"
-					v-model="DashboardWidgets[itemIndex].settings"
-				/>
-			</Sidebar>
           </WidgetWrapper>
+          <portal
+            v-if="item.guid === currentSettings"
+            :key="currentSettings"
+            to="widget-settings"
+          >
+            <component
+              :is="widgetSettingsComponent(item.type)"
+              v-model="DashboardWidgets[itemIndex].settings"
+            />
+          </portal>
+          <portal
+            v-if="item.guid === currentSettings"
+            :key="`${currentSettings}-name`"
+            to="widget-settings-title"
+          >
+            {{ item.type }}
+          </portal>
         </grid-item>
       </grid-layout>
       <p v-else>
@@ -73,6 +85,14 @@
       </p>
     </client-only>
     <template v-else> Board not found :( </template>
+    <Sidebar v-model="settingsOpen">
+      <template #title>
+        <portal-target name="widget-settings-title" />
+      </template>
+      <template #default>
+        <portal-target name="widget-settings" />
+      </template>
+    </Sidebar>
   </div>
 </template>
 
@@ -82,7 +102,6 @@ import { Watch } from 'nuxt-property-decorator'
 import { Select, Button } from '@/components/atoms'
 import { Sidebar } from '@/components/molecules'
 import WidgetSettings from '@/components/widgets/settings.vue'
-// import HueGroupSettings from '@/components/widgets/hue/group/settings.vue';
 import WeatherSettings from '@/components/widgets/weather/settings.vue'
 import { WidgetDefaultSettings, WidgetsAvailable } from '@/constants/widgets'
 import {
@@ -99,7 +118,7 @@ import HueGroupSettings from '~/components/widgets/hue/group/settings.vue'
     WidgetSettings,
     Select,
     Button,
-	Sidebar,
+    Sidebar,
     Weather: WeatherSettings,
     HueGroup: HueGroupSettings,
     WidgetWrapper,
@@ -113,7 +132,11 @@ export default class EditableDashboard extends Vue {
 
   selectedWidget: string = WidgetsAvailable.TextWidget.toString()
 
-  DashboardWidgets: any = null
+  DashboardWidgets?: any = null
+
+  currentSettings = ''
+
+  settingsOpen = false
 
   widgetOptions = Object.values(WidgetsAvailable).map((widget) => ({
     text: widget,
@@ -206,6 +229,11 @@ export default class EditableDashboard extends Vue {
   }
 
   removeWidget(widgetIndex: number) {
+    const { guid } = this.DashboardWidgets[widgetIndex]
+    if (this.currentSettings === guid) {
+      this.currentSettings = ''
+    }
+
     this.DashboardWidgets.splice(widgetIndex, 1)
   }
 
@@ -226,6 +254,24 @@ export default class EditableDashboard extends Vue {
       return widget
     }
     return 'WidgetSettings'
+  }
+
+  openSettingsPanel(widgetGuid: string) {
+    if (this.currentSettings === widgetGuid) {
+      this.currentSettings = ''
+      this.settingsOpen = false
+      return
+    }
+    this.currentSettings = widgetGuid
+    this.settingsOpen = true
+  }
+
+  // since we can close the sidebar with the close button, we need to clear the settings too.
+  @Watch('settingsOpen')
+  watchSettingsSidebar(visible: boolean) {
+    if (!visible) {
+      this.currentSettings = ''
+    }
   }
 }
 </script>
@@ -286,17 +332,5 @@ export default class EditableDashboard extends Vue {
     font-weight: var(--weight-normal);
   }
   text-transform: uppercase;
-}
-form {
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  label {
-    display: flex;
-    align-items: center;
-  }
-  .form-field {
-    margin-left: var(--padding);
-  }
 }
 </style>
