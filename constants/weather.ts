@@ -1,4 +1,7 @@
-export const getWeatherIcon = (weatherDescription: string) => {
+export const getWeatherIcon = (weatherDescription?: string) => {
+  if (!weatherDescription) {
+    return ''
+  }
   switch (weatherDescription) {
     case 'Thunderstorm':
       return 'cloud-lightning-rain'
@@ -11,7 +14,8 @@ export const getWeatherIcon = (weatherDescription: string) => {
     case 'Clouds':
       return 'cloudy'
     case 'Cear':
-    default:
       return 'sun'
+    default:
+      return ''
   }
 }

@@ -1,58 +1,75 @@
 <template>
   <div class="wrapper">
-    <div v-if="weatherData" class="weather">
-      <div v-if="weatherData.main">
-        <h1 v-if="weatherData.main" class="temp">
+    <div class="weather">
+      <template v-if="data">
+        <h1 class="temp">
           <i
-            :class="`weather-icon bi bi-${weatherIcon(weatherData.weather)}`"
+            v-if="weatherIcon"
+            class="weather-icon bi"
+            :class="{ weatherIcon: ` bi-${weatherIcon}` || undefined }"
           ></i>
-          {{ Math.round(weatherData.main.temp) }} {{ temperatureUnit }}
+          <span v-if="temperature"
+            >{{ temperature }} {{ temperatureUnit }}</span
+          >
         </h1>
-        <h3>{{ weatherData.name }}</h3>
-      </div>
+        <h3 v-if="label">{{ label }}</h3>
+      </template>
+      <Button
+        class="refresh-button"
+        :class="{ primary: isFetching }"
+        @click="refetch"
+        ><i class="bi bi-arrow-repeat" :class="{ spin: isFetching }"></i
+      ></Button>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from 'nuxt-property-decorator'
-import { currentWeather } from '@/modules/apis/weather'
+import { defineComponent, computed } from '@vue/composition-api'
 import { getWeatherIcon } from '@/constants/weather'
+import { useCurrentWeatherQuery } from '~/queries/weather'
+import { Button } from '~/components/atoms'
 
-@Component
-export default class WeatherWidget extends Vue {
-  @Prop() private settings!: { city: string; units: string }
-
-  weatherData: {
-    main?: {
-      temp: number
-      // eslint-disable-next-line camelcase
-      temp_min: number
-      // eslint-disable-next-line camelcase
-      temp_max: number
-    }
-    weather?: {
-      main: string
-      description: string
-    }[]
-  } = {}
-
-  // eslint-disable-next-line class-methods-use-this
-  async mounted() {
-    this.weatherData = await currentWeather(
-      this.settings.city,
-      this.settings.units
+export default defineComponent({
+  name: 'Weather',
+  components: {
+    Button,
+  },
+  props: {
+    settings: {
+      type: Object,
+      default: () => ({
+        city: '',
+        units: 'metric',
+      }),
+    },
+  },
+  setup(props) {
+    const { data, isFetching, refetch } = useCurrentWeatherQuery(
+      props.settings.city,
+      props.settings.units
     )
-  }
 
-  get temperatureUnit() {
-    return this.settings.units === 'metric' ? '°C' : '°F'
-  }
+    const temperatureUnit = props.settings.units === 'metric' ? '°C' : '°F'
 
-  // eslint-disable-next-line class-methods-use-this
-  weatherIcon(weather: { main: string }[]) {
-    return weather ? getWeatherIcon(weather[0].main) : ''
-  }
-}
+    const label = data.value?.name ?? props.settings.city
+    const temperature = computed(() =>
+      data.value?.main?.temp ? Math.round(data.value.main.temp) : ''
+    )
+    const weatherIcon = data.value?.weather
+      ? getWeatherIcon(data.value?.weather[0].main)
+      : ''
+
+    return {
+      data,
+      temperatureUnit,
+      temperature,
+      label,
+      weatherIcon,
+      isFetching,
+      refetch,
+    }
+  },
+})
 </script>
 <style lang="scss" scoped>
 .wrapper {
@@ -67,13 +84,12 @@ export default class WeatherWidget extends Vue {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 15px;
   .temps {
     height: auto;
     display: flex;
     justify-items: center;
     align-items: center;
-    gap: 15px;
+    gap: var(--padding);
     .min-max {
       height: inherit;
       display: flex;

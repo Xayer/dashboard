@@ -10,13 +10,13 @@ const version: string = '2.5'
 // const baseUrl: string = `${corsBypass}/${host}/data/${version}`;
 const baseUrl: string = `${host}/data/${version}`
 const token: string = 'f7307576b27dd288a84c60daa3a4dcec'
-const CURRENT_WEATHER_ENDPOINT = `${baseUrl}/weather`
-const FORECAST_ENDPOINT = `${baseUrl}/forecast`
 
 export const currentWeather = async (
   city: string,
   units: string = 'metric'
 ) => {
+  const CURRENT_WEATHER_ENDPOINT = `${baseUrl}/weather`
+
   const response = await fetch(
     `${CURRENT_WEATHER_ENDPOINT}/?${querystring.stringify({
       q: city,
@@ -31,6 +31,8 @@ export const forecast = async (
   city: string,
   units: string = 'metric'
 ): Promise<mappedForecasts> => {
+  const FORECAST_ENDPOINT = `${baseUrl}/forecast`
+
   const response = await fetch(
     `${FORECAST_ENDPOINT}/?${querystring.stringify({
       q: city,

@@ -1,5 +1,13 @@
 /* eslint-disable camelcase */
 
+export interface Units {
+  units: 'metric' | 'imperial'
+}
+
+export interface WeatherWidgetSettings extends Units {
+  city: string
+}
+
 export interface Main {
   temp: number
   feels_like: number
@@ -34,7 +42,7 @@ export interface Sys {
 }
 
 export interface Rain {
-  '3h': number
+  [key: string]: number
 }
 
 export interface Coord {
@@ -54,6 +62,23 @@ export interface Forecast {
   dt_txt: string
   rain?: Rain | null
   date?: Date
+}
+
+export interface CurrentWeatherResponse {
+  coord: Coord
+  weather?: WeatherEntity[] | null
+  base: string
+  main: Main
+  visibility: number
+  wind: Wind
+  rain: Rain
+  clouds: Clouds
+  dt: number
+  sys: Sys
+  timezone: number
+  id: number
+  name: string
+  cod: number
 }
 
 export interface City {
