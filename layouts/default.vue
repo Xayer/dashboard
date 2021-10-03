@@ -27,35 +27,35 @@ export default defineComponent({
     Header,
     VueQueryDevTools,
   },
-  setup() {
+  setup(_props, { root }) {
     Vue.use(VueCompositionApi)
 
     useQueryProvider()
 
-    // this.$store.dispatch('themes/loadTheme')
-    // this.$store.dispatch('userSettings/validate')
-    // this.$store.dispatch('userSettings/loadExistingSettings')
-    // this.$store.dispatch('hue/loadSettings')
-    // if (process.browser) {
-    //   window.addEventListener('offline', () => {
-    //     this.$store.commit('internet/SET_CONNECTION_STATUS', false)
-    //   })
-    //   window.addEventListener('online', () => {
-    //     this.$store.commit('internet/SET_CONNECTION_STATUS', true)
-    //   })
-    // }
+    root.$store.dispatch('themes/loadTheme')
+    root.$store.dispatch('userSettings/validate')
+    root.$store.dispatch('userSettings/loadExistingSettings')
+    root.$store.dispatch('hue/loadSettings')
+    if (process.browser) {
+      window.addEventListener('offline', () => {
+        root.$store.commit('internet/SET_CONNECTION_STATUS', false)
+      })
+      window.addEventListener('online', () => {
+        root.$store.commit('internet/SET_CONNECTION_STATUS', true)
+      })
+    }
   },
 
   // detectDevices() {
   //   if (this.token) {
   //     return
   //   }
-  //   this.$store.dispatch('hue/getDevices')
+  //   root.$store.dispatch('hue/getDevices')
   // }
 
   // @Watch('bridgeAddress')
   // commitBridgeAddress(address: string) {
-  //   this.$store.commit('hue/SET_BRIDGE_ADDRESS', address)
+  //   root.$store.commit('hue/SET_BRIDGE_ADDRESS', address)
   //   this.bridgeAddressNotFound = false
   //   this.detectDevices()
   // }

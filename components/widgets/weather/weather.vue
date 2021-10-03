@@ -6,11 +6,10 @@
           <i
             v-if="weatherIcon"
             class="weather-icon bi"
-            :class="{ weatherIcon: ` bi-${weatherIcon}` || undefined }"
+            :class="`bi-${weatherIcon}`"
           ></i>
-          <span v-if="temperature"
-            >{{ temperature }} {{ temperatureUnit }}</span
-          >
+          <span v-if="temperature">{{ temperature }}</span>
+          <span>{{ temperatureUnit }}</span>
         </h1>
         <h3 v-if="label">{{ label }}</h3>
       </template>
@@ -55,9 +54,9 @@ export default defineComponent({
     const temperature = computed(() =>
       data.value?.main?.temp ? Math.round(data.value.main.temp) : ''
     )
-    const weatherIcon = data.value?.weather
-      ? getWeatherIcon(data.value?.weather[0].main)
-      : ''
+    const weatherIcon = computed(() =>
+      data.value?.weather ? getWeatherIcon(data.value?.weather[0].main) : ''
+    )
 
     return {
       data,
@@ -107,6 +106,7 @@ export default defineComponent({
     .weather-icon {
       display: flex;
       align-items: flex-start;
+      gap: calc(var(--padding) / 4);
     }
   }
 }
