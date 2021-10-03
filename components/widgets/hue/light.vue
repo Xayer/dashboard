@@ -129,7 +129,7 @@ export default class HueBridges extends Vue {
   cursor: pointer;
   &,
   .bulb {
-    transition: var(--transition-global);
+    transition: var(--transition);
   }
 }
 h3 {

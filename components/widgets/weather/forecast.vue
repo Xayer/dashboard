@@ -172,7 +172,7 @@ export default class ForecastWidget extends Vue {
   left: 0;
   bottom: 0;
   right: 0;
-  transition: var(--transition-global);
+  transition: var(--transition);
   backdrop-filter: blur(var(--app-blur));
   background-color: var(--widget-bg);
   opacity: 0.85;
@@ -184,7 +184,7 @@ export default class ForecastWidget extends Vue {
     right: 0;
 
     content: '';
-    transition: var(--transition-global);
+    transition: var(--transition);
   }
   z-index: 2 !important;
 }
