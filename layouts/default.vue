@@ -87,6 +87,8 @@ export default defineComponent({
   --weight-normal: 600;
   --weight-bold: 700;
 
+  --blur: 10px;
+
   /** General Global styling options */
   --padding: 25px;
   --radius: 5px;
