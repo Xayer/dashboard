@@ -18,6 +18,9 @@ export default class Button extends Vue {
   border: 0;
   border-radius: var(--radius);
   padding: calc(var(--padding) / 2) calc(var(--padding) / 2);
+  &.sm {
+    padding: calc(var(--padding) / 4) calc(var(--padding) / 4);
+  }
   font-size: 0.65rem;
   text-transform: uppercase;
   // MUTED
