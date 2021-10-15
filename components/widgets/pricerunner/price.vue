@@ -26,6 +26,7 @@ export default defineComponent({
       default: () => ({
         productId: '',
         country: 'dk',
+        name: '',
       }),
     },
   },
@@ -41,7 +42,7 @@ export default defineComponent({
         active: false,
     };
 
-    return { productInfo: { value, label, active }, isFetching, refetch };
+    return { productInfo: { value, label: props.settings.name ? props.settings.name : label, active }, isFetching, refetch };
   },
 })
 </script>

@@ -135,6 +135,7 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     settings: {
       country: 'dk',
       productId: '5182343',
+      name: 'Canon EOS R',
     },
     w: 2,
     h: 1,
