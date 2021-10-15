@@ -70,6 +70,7 @@ import {
   Forecast,
   TodoList,
   RejseplanenDeparture,
+  Value,
 } from '@/components/widgets'
 import { Board } from '~/types/dashboards'
 import HueBridges from '@/components/widgets/hue/bridges.vue'
@@ -89,6 +90,7 @@ import HueGroup from '@/components/widgets/hue/group/group.vue'
     TodoList,
     Weather,
     Forecast,
+    Value,
   },
 })
 export default class Dashboard extends Vue {

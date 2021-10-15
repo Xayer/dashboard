@@ -11,6 +11,8 @@ export const WidgetsAvailable = {
   TodoList: 'TodoList',
   Weather: 'Weather',
   Forecast: 'Forecast',
+  Value: 'Value',
+  StockPrice: 'StockPrice',
 }
 
 export const WidgetTitles: { [key: string]: string } = {
@@ -22,6 +24,8 @@ export const WidgetTitles: { [key: string]: string } = {
   [WidgetsAvailable.TodoList]: 'Todo List',
   [WidgetsAvailable.Weather]: 'Weather',
   [WidgetsAvailable.Forecast]: 'Forecast',
+  [WidgetsAvailable.Value]: 'Value',
+  [WidgetsAvailable.StockPrice]: 'Stock Price',
 }
 
 export const WidgetDefaultSettings: { [key: string]: Widget } = {
@@ -126,5 +130,33 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     y: 2,
     x: 6,
     i: 2,
+  },
+  [WidgetsAvailable.Value]: {
+    type: WidgetsAvailable.Value,
+    title: WidgetTitles[WidgetsAvailable.Value],
+    settings: {
+      value: '$75,000',
+      title: 'Value',
+      label: '0.00',
+    },
+    w: 2,
+    h: 1,
+    y: 0,
+    x: 0,
+    i: 1,
+    minW: 2,
+  },
+  [WidgetsAvailable.StockPrice]: {
+    type: WidgetsAvailable.StockPrice,
+    title: WidgetTitles[WidgetsAvailable.StockPrice],
+    settings: {
+      stockName: 'IBM',
+    },
+    w: 2,
+    h: 1,
+    y: 0,
+    x: 0,
+    i: 1,
+    minW: 2,
   },
 }
