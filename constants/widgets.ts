@@ -11,6 +11,7 @@ export const WidgetsAvailable = {
   TodoList: 'TodoList',
   Weather: 'Weather',
   Forecast: 'Forecast',
+  PriceRunnerProductInfo: 'PriceRunnerProductInfo',
 }
 
 export const WidgetTitles: { [key: string]: string } = {
@@ -22,6 +23,7 @@ export const WidgetTitles: { [key: string]: string } = {
   [WidgetsAvailable.TodoList]: 'Todo List',
   [WidgetsAvailable.Weather]: 'Weather',
   [WidgetsAvailable.Forecast]: 'Forecast',
+  [WidgetsAvailable.PriceRunnerProductInfo]: 'PriceRunner Price',
 }
 
 export const WidgetDefaultSettings: { [key: string]: Widget } = {
@@ -126,5 +128,19 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     y: 2,
     x: 6,
     i: 2,
+  },
+  [WidgetsAvailable.PriceRunnerProductInfo]: {
+    type: WidgetsAvailable.PriceRunnerProductInfo,
+    title: WidgetTitles[WidgetsAvailable.PriceRunnerProductInfo],
+    settings: {
+      country: 'dk',
+      productId: '5182343',
+    },
+    w: 2,
+    h: 1,
+    maxH: 1,
+    y: 0,
+    x: 0,
+    i: 0,
   },
 }
