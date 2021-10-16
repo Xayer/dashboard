@@ -67,7 +67,7 @@ export default class API {
     })
   }
 
-  delete(
+  delete<T>(
     endpoint: string,
     identifier: string,
     _params?: object,
@@ -76,14 +76,14 @@ export default class API {
     return this.instance.delete(`${endpoint}/${identifier}`)
   }
 
-  put(
+  put<T>(
     endpoint: string,
     identifier: string,
     data: object,
     params?: object,
     headers?: object
   ) {
-    return this.request({
+    return this.request<T>({
       endpoint: `${endpoint}/${identifier}`,
       method: 'PUT',
       params,
@@ -91,4 +91,38 @@ export default class API {
       data,
     })
   }
+}
+
+// new client
+function request<T>({
+  endpoint,
+  data,
+  method,
+  params,
+  headers = {},
+}: RequestParams) {
+  const queryParams = new URLSearchParams({
+    ...params,
+  })
+  return fetch(`${endpoint}${queryParams ? `?${queryParams}` : ''}`, {
+    method,
+    ...(data && { body: JSON.stringify(data) }),
+    headers: new Headers({
+      ...headers,
+    }),
+  })
+}
+
+export async function get<T>(
+  endpoint: string,
+  params?: object,
+  headers?: object
+) {
+  const response = await request<T>({
+    endpoint,
+    params,
+    headers,
+    method: 'GET',
+  })
+  return response.json()
 }

@@ -1,11 +1,10 @@
 import { AxiosResponse } from 'axios'
+import API, { get } from './client'
 import { Devices } from '@/types/hue'
-import API from './client'
-import { hueTokenStorageKey } from '~/constants/hue'
+import { hueTokenStorageKey, hueBridgeAddressStorageKey } from '~/constants/hue'
 
 const protocol: string = 'http://'
 const baseUrl: string = '/api'
-const version: string = ''
 const appName = 'iot-dashboard'
 const device = 'dashboard'
 
@@ -17,7 +16,7 @@ export default class HueAPI extends API {
       protocol,
       host: bridgeAddress,
       baseURL: baseUrl,
-      version,
+      version: '',
     })
   }
 
@@ -121,4 +120,31 @@ export default class HueAPI extends API {
   lightOff(uniqueid: string) {
     this.toggleLight(uniqueid, false)
   }
+}
+
+function getHueEndpoint() {
+  const host = localStorage.getItem(hueBridgeAddressStorageKey)
+  if (!host) {
+    throw new Error('unable to find hue host')
+  }
+  return `${protocol}${host}${baseUrl}`
+}
+
+function getToken() {
+  const token = localStorage.getItem(hueTokenStorageKey)
+  if (!token) {
+    throw new Error('unable to find hue token')
+  }
+  return token
+}
+
+export function validate() {
+  const host = getHueEndpoint()
+  return get<Devices>(host)
+}
+
+export function getDevices() {
+  const host = getHueEndpoint()
+  const token = getToken()
+  return get<Devices>(`${host}/${token}`)
 }

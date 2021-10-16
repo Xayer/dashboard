@@ -14,48 +14,44 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { computed, defineComponent } from '@vue/composition-api'
 import { mapGetters } from 'vuex'
 import HueLight from '@/components/widgets/hue/light.vue'
 import { Devices } from '@/types/hue'
 import { WidgetSetting } from '~/types/widgets'
+import { useFetchDevices } from '~/queries/hue/groups'
 
-@Component({
-  components: { HueLight },
-  computed: {
-    ...mapGetters({
-      devices: 'hue/devices',
-      token: 'hue/token',
-      hueAvailable: 'hue/available',
-    }),
-  },
+export default defineComponent({
+  props: {
+      settings: {
+        type: Object,
+        default: () => ({
+          testGroup: {} as WidgetSetting,
+        }),
+      },
+    },
+  setup(props) {
+    let groupName = ''
+    if (props.settings.group) {
+      groupName = props.settings.group as unknown as string
+    }
+
+    // TODO: fix enabled state to be based on if hue is available
+    const { data: groups } = useFetchDevices(true);
+
+
+    const group = computed(() => {
+      if (!groupName || !groups.value) {
+        return null
+      }
+      return [...Object.values(groups.value)].find(
+        (groupNameToSearchIn) => groupNameToSearchIn.name === groupName
+      )
+    })
+
+    return { groupName, group };
+  }
 })
-export default class HuegroupNameWidget extends Vue {
-  token!: string
-
-  groupName = ''
-
-  devices!: Devices
-
-  hueAvailable!: boolean
-
-  @Prop() private settings!: { [key: string]: WidgetSetting }
-
-  created() {
-    if (this.settings.group) {
-      this.groupName = this.settings.group as unknown as string
-    }
-  }
-
-  get group() {
-    if (!this.groupName || !this.devices.groups) {
-      return null
-    }
-    return [...Object.values(this.devices.groups)].find(
-      (groupNameToSearchIn) => groupNameToSearchIn.name === this.groupName
-    )
-  }
-}
 </script>
 
 <style lang="scss" scoped>

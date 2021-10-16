@@ -20,6 +20,8 @@ import { mapGetters } from 'vuex'
 import { Select } from '@/components/atoms'
 import { Devices as HueDevices } from '@/types/hue'
 import { WidgetSetting } from '~/types/widgets'
+import { useFetchDevices } from '~/queries/hue/groups'
+import { computed, defineComponent } from '@vue/composition-api'
 
 @Component({
   components: {
@@ -33,7 +35,7 @@ import { WidgetSetting } from '~/types/widgets'
     }),
   },
 })
-export default class HueGroupSettings extends Vue {
+/* export default class HueGroupSettings extends Vue {
   devices!: HueDevices
 
   group = ''
@@ -82,7 +84,61 @@ export default class HueGroupSettings extends Vue {
   updateValue(key: string, value: any) {
     this.$emit('input', { ...this.settings, [key]: value })
   }
-}
+
+  
+} */
+
+export default defineComponent({
+  props: {
+      settings: {
+        type: Object,
+        default: () => ({
+          group: '',
+        }),
+      },
+    },
+  setup(props) {
+    let groupFromSettings = ''
+    if (props.settings.group) {
+      groupFromSettings = props.settings.group as unknown as string
+    }
+
+    // TODO: fix enabled state to be based on if hue is available
+    const { data } = useFetchDevices(true);
+
+    console.log(data.value);
+
+    const group = computed(() => {
+      if (!groupFromSettings || !groups.value) {
+        return null
+      }
+      return [...Object.values(groups.value)].find(
+        (groupsToSearchIn) => groupsToSearchIn.name === groupFromSettings
+      )
+    })
+
+    const options = computed(() => {
+      if(!groups.value) {
+        return [];
+      }
+      return [
+        {
+          text: 'Select Group',
+          value: '',
+          disabled: true,
+        },
+        ...Object.values(groups.value).map((lightGroup) => {
+          return {
+            text: lightGroup.name,
+            value: lightGroup.name,
+          }
+        })
+      ]
+    })
+
+    return { groupFromSettings, group, options };
+  }
+})
 </script>
 <style scoped>
 form,
