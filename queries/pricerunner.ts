@@ -9,12 +9,13 @@ export function parseProductInfo({
   currencyCode,
   history,
 }: ProductPriceHistoryResponse) {
-  const formattedPrice = Number.isNaN(lowestPrice)
-    ? ''
-    : new Intl.NumberFormat('da-DK', {
-        style: 'currency',
-        currency: currencyCode,
-      }).format(lowestPrice)
+  const formattedPrice =
+    Number.isNaN(lowestPrice) || !currencyCode
+      ? ''
+      : new Intl.NumberFormat('da-DK', {
+          style: 'currency',
+          currency: currencyCode,
+        }).format(lowestPrice)
   return {
     value: formattedPrice,
     label: history ? history[0].merchantProductSku : productId,

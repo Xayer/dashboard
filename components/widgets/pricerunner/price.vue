@@ -10,7 +10,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 import { useFetchProductInfo, parseProductInfo } from '~/queries/pricerunner'
 import { Value, Button } from '~/components/atoms'
 import { ValueProps } from '~/types/widgets/value'
@@ -36,13 +36,17 @@ export default defineComponent({
       props.settings.country
     )
 
-    const { value, label, active }: ValueProps = data.value ? parseProductInfo(data.value) : {
-        value: '',
-        label: '',
-        active: false,
-    };
+    const productInfo = computed(() => {
+      const { value, label, active }: ValueProps = data.value ? parseProductInfo(data.value) : {
+          value: '',
+          label: '',
+          active: false,
+      };
 
-    return { productInfo: { value, label: props.settings.name ? props.settings.name : label, active }, isFetching, refetch };
+      return { value, label: props.settings.name ? props.settings.name : label, active }
+    });
+
+    return { productInfo, isFetching, refetch };
   },
 })
 </script>
