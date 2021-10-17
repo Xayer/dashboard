@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Value v-if="productInfo" :value="productInfo.value" :label="productInfo.label" :state="productInfo.state" />
+    <Value v-if="addressBalance" :value="addressBalance.value" :label="addressBalance.label" :state="addressBalance.state" />
     <Button
       class="refresh-button"
       :class="{ primary: isFetching }"
@@ -11,11 +11,11 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent } from '@vue/composition-api'
-import { useFetchProductInfo, parseProductInfo } from '~/queries/pricerunner'
+import { useFetchAddressBalance, parseAccountBalance, useFetchEtherPrice } from '~/queries/etherscan'
 import { Value, Button } from '~/components/atoms'
 import { ValueProps } from '~/types/widgets/value'
 export default defineComponent({
-  name: 'Price',
+  name: 'AddressBalance',
   components: {
     Value,
     Button,
@@ -24,29 +24,29 @@ export default defineComponent({
     settings: {
       type: Object,
       default: () => ({
-        productId: '',
-        country: 'dk',
-        name: '',
+        address: ''
       }),
     },
   },
   setup(props) {
-    const { data, isFetching, refetch } = useFetchProductInfo(
-      props.settings.productId,
-      props.settings.country
+    const { data, isFetching, refetch } = useFetchAddressBalance(
+      props.settings.address
     )
 
-    const productInfo = computed(() => {
-      const { value, label, state }: ValueProps = data.value ? parseProductInfo(data.value) : {
+    const { data: usdEtherPrice } = useFetchEtherPrice(
+    )
+
+    const addressBalance = computed(() => {
+      const { value, label, state }: ValueProps = data.value && usdEtherPrice.value ? parseAccountBalance(data.value, usdEtherPrice.value) : {
           value: '',
-          label: '',
+          label: 'not available',
           state: 'danger',
       };
 
       return { value, label: props.settings.name ? props.settings.name : label, state }
     });
 
-    return { productInfo, isFetching, refetch };
+    return { addressBalance, isFetching, refetch };
   },
 })
 </script>

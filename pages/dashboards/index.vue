@@ -74,7 +74,7 @@ import {
   Forecast,
   TodoList,
   RejseplanenDeparture,
- PriceRunnerProductInfo, HueGroup, HueLight, HueBridges } from '@/components/widgets'
+ PriceRunnerProductInfo, HueGroup, HueLight, HueBridges, EtherScanAddressBalance } from '@/components/widgets'
 import { Board } from '~/types/dashboards'
 
 @Component({
@@ -91,6 +91,7 @@ import { Board } from '~/types/dashboards'
     Weather,
     Forecast,
     PriceRunnerProductInfo,
+    EtherScanAddressBalance,
   },
 })
 export default class Dashboard extends Vue {

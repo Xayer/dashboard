@@ -2,13 +2,13 @@
   <div>
     <div class="top">
       <span class="title" v-text="title"></span>
-      <span class="label" :class="active ? 'positive' : 'negative' " v-text="label"></span>
+      <span class="label" :class="labelClass" v-text="label"></span>
     </div>
     <h1 class="value" v-text="value"></h1>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 export default defineComponent({
     name: 'Value',
   props: {
@@ -24,10 +24,20 @@ export default defineComponent({
       type: String,
       default: () => '',
     },
-    active: {
-        type: Boolean,
-        default: () => false,
+    state: {
+        type: String,
+        default: () => '',
     }
+  },
+  setup(props) {
+    const labelClass = computed(() => {
+      console.log(props.state)
+      if(props.state === 'success') { return 'positive'}
+      if(props.state === 'danger') { return 'negative'}
+      if(props.state === 'default') { return ''}
+      return ''
+    })
+    return { labelClass }
   }
 })
 </script>

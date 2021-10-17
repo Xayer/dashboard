@@ -2,6 +2,7 @@ import { useQuery } from 'vue-query'
 import { minutes } from '~/constants/time'
 import { priceHistory } from '~/modules/apis/pricerunner'
 import { ProductPriceHistoryResponse } from '~/types/pricerunner/history'
+import { ValueProps } from '~/types/widgets/value'
 
 export function parseProductInfo({
   lowest: lowestPrice,
@@ -19,8 +20,8 @@ export function parseProductInfo({
   return {
     value: formattedPrice,
     label: history ? history[0].merchantProductSku : productId,
-    active: true,
-  }
+    state: 'success',
+  } as ValueProps
 }
 
 export function useFetchProductInfo(productId: string, country = 'dk') {

@@ -12,3 +12,5 @@ export { default as HueLight } from '@/components/widgets/hue/light.vue'
 export { default as HueGroup } from '@/components/widgets/hue/group/group.vue'
 
 export { default as PriceRunnerProductInfo } from '@/components/widgets/pricerunner/price.vue'
+
+export { default as EtherScanAddressBalance } from '@/components/widgets/etherscan/addressBalance.vue'

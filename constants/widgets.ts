@@ -12,6 +12,7 @@ export const WidgetsAvailable = {
   Weather: 'Weather',
   Forecast: 'Forecast',
   PriceRunnerProductInfo: 'PriceRunnerProductInfo',
+  EtherScanAddressBalance: 'EtherScanAddressBalance',
 }
 
 export const WidgetTitles: { [key: string]: string } = {
@@ -24,6 +25,7 @@ export const WidgetTitles: { [key: string]: string } = {
   [WidgetsAvailable.Weather]: 'Weather',
   [WidgetsAvailable.Forecast]: 'Forecast',
   [WidgetsAvailable.PriceRunnerProductInfo]: 'PriceRunner Price',
+  [WidgetsAvailable.EtherScanAddressBalance]: 'Ether Address Balance',
 }
 
 export const WidgetDefaultSettings: { [key: string]: Widget } = {
@@ -136,6 +138,19 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
       country: 'dk',
       productId: '5182343',
       name: 'Canon EOS R',
+    },
+    w: 2,
+    h: 1,
+    maxH: 1,
+    y: 0,
+    x: 0,
+    i: 0,
+  },
+  [WidgetsAvailable.EtherScanAddressBalance]: {
+    type: WidgetsAvailable.EtherScanAddressBalance,
+    title: WidgetTitles[WidgetsAvailable.EtherScanAddressBalance],
+    settings: {
+      address: '',
     },
     w: 2,
     h: 1,
