@@ -99,6 +99,10 @@ export default class Layout extends Vue {
 
   --button-text-color: var(--white);
   --button-box-shadow: var(--box-shadow-general);
+
+  --input-bg: var(--accent-0);
+  
+  --widget-padding: 15px;
 }
 
 body,
