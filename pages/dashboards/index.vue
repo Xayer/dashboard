@@ -34,7 +34,8 @@
           >
             <widget-wrapper>
               <component
-                :is="item.type"
+                :is="getWidget(item.type)"
+                :type="item.type"
                 :settings="item.settings"
                 :dimensions="{ w: item.w, h: item.h }"
               ></component>
@@ -74,6 +75,7 @@ import {
   Forecast,
   TodoList,
   RejseplanenDeparture,
+  Placeholder,
 } from '@/components/widgets'
 import { Board } from '~/types/dashboards'
 import HueBridges from '@/components/widgets/hue/bridges.vue'
@@ -93,6 +95,7 @@ import HueGroup from '@/components/widgets/hue/group/group.vue'
     TodoList,
     Weather,
     Forecast,
+    Placeholder,
   },
 })
 export default class Dashboard extends Vue {
@@ -153,6 +156,16 @@ export default class Dashboard extends Vue {
 
   link(id: number) {
     this.$router.push({ path: '/dashboards', query: { id: id.toString() } })
+  }
+
+  getWidget(widget: string) {
+    if (
+      this.$options.components &&
+      Object.keys(this!.$options!.components).includes(widget)
+    ) {
+      return widget
+    }
+    return 'Placeholder'
   }
 
   createNewDashboard() {
