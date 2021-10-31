@@ -30,6 +30,13 @@ export const getAccessToken = async () => {
   if (!process.browser) {
     return
   }
+  const refreshToken = JSON.parse(localStorage.getItem(storageKey) as string)
+
+  if (refreshToken === '') {
+    localStorage.removeItem(storageKey)
+    return
+  }
+
   const response = await fetch(TOKEN_ENDPOINT, {
     method: 'POST',
     headers: {
@@ -38,7 +45,7 @@ export const getAccessToken = async () => {
     },
     body: querystring.stringify({
       grant_type: 'refresh_token',
-      refresh_token: JSON.parse(localStorage.getItem(storageKey) as string),
+      refresh_token: refreshToken,
     }),
   })
 

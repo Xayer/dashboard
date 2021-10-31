@@ -5,7 +5,8 @@
       >Authenticate with Spotify</a
     >
     <section v-if="topTracks">
-      <article v-for="topTrack in topTracks" :key="topTrack.id">
+      <article v-for="(topTrack, index) in topTracks" :key="topTrack.id">
+        {{ index + 1 }}
         <img
           v-if="topTrack.album.images"
           :src="topTrack.album.images[2].url"
@@ -63,21 +64,27 @@ user-top-read`
       return
     }
 
-    const existingToken = localStorage.getItem(storageKey)
+    const existingToken = localStorage.getItem(storageKey);
     if (!this.integrationActive) {
       if (this.$route.query.code) {
         if (!existingToken || existingToken === 'undefined') {
-          const response = await authenticateToken(
-            this.$route.query.code as string
-          )
-          localStorage.setItem(
-            storageKey,
-            JSON.stringify(response.refresh_token)
-          )
-          localStorage.setItem(
-            integrationActiveStorageKey,
-            JSON.stringify(true)
-          )
+            const response = await authenticateToken(
+              this.$route.query.code as string
+            )
+
+            if (response.error) {
+              localStorage.removeItem(storageKey)
+              this.$router.push(this.$route.path)
+            }
+
+            localStorage.setItem(
+              storageKey,
+              JSON.stringify(response.refresh_token)
+            )
+            localStorage.setItem(
+              integrationActiveStorageKey,
+              JSON.stringify(true)
+            )
         }
       } else {
         return
