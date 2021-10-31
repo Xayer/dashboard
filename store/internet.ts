@@ -1,7 +1,9 @@
+const state = {
+  online: true,
+}
+
 export default {
-  state: {
-    online: true,
-  },
+  state: () => state,
 
   getters: {
     online: (state: any) => state.online,
