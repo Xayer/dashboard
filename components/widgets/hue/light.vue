@@ -1,26 +1,31 @@
 <template>
-  <div class="hue-light" @click="toggle(!light.state.on)">
-    <i
-      class="bulb bi"
-      :class="light.state.on ? 'bi-lightbulb-fill' : 'bi-lightbulb-off-fill'"
-      :style="{ color: light.state.on && light.state.hue ? hexColor : '' }"
-    />
-    <h3 class="name">{{ light.name }}</h3>
-    <span v-if="!isNaN(light.state.bri)">
-      {{ Math.round((light.state.bri / 255) * 100) }} % <br />
-    </span>
-    <!-- <input
-			ref="color"
-			type="color"
-			@change="colour(!light.state.on)"
-			v-if="light.state.hue"
-			:value="hexColor"
-		> -->
+  <div class="hue-light">
+    <template v-if="light">
+      <i class="bulb bi"
+        :class="light.state.on ? 'bi-lightbulb-fill' : 'bi-lightbulb-off-fill'"
+        :style="{ color: light.state.on && light.state.hue ? hexColor : '' }"
+        @click="light ? toggle(!light.state.on) : undefined"
+      />
+      <h3 class="name">{{ light.name }}</h3>
+
+      <div v-if="!isNaN(light.state.bri)" class="settings">
+        <input
+          v-if="light.state.hue"
+          ref="color"
+          type="color"
+          :value="hexColor"
+          @change.stop="colour()"
+        />
+        <span>{{ Math.round((light.state.bri / 255) * 100) }} %</span>
+      </div>
+    </template>
+    <template v-else>No light found.</template>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import { hexToRgb, rgbToHsl, rgbToXy } from "@/constants/color"
 
 @Component({})
 export default class HueBridges extends Vue {
@@ -40,37 +45,20 @@ export default class HueBridges extends Vue {
     this.$store.dispatch('hue/toggleLight', { uniqueId: this.hueId, on })
   }
 
-  colour(on: boolean) {
-    const result: Array<string> | null =
-      /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(
-        (this.$refs.color as HTMLInputElement).value
-      )
+  colour() {
+    const hex = (this.$refs.color as HTMLInputElement).value;
+    const { r, g,b } = hexToRgb(hex);
+    const { l } = rgbToHsl({ r, g,b });
+    const [x,y] = rgbToXy(r,g,b);
 
-    if (!result) return
-
-    const red = parseInt(result[1], 16) / 255
-    const green = parseInt(result[2], 16) / 255
-    const blue = parseInt(result[3], 16) / 255
-
-    const red2 =
-      red > 0.04045 ? ((red + 0.055) / (1.0 + 0.055)) ** 2.4 : red / 12.92
-    const green2 =
-      green > 0.04045 ? ((green + 0.055) / (1.0 + 0.055)) ** 2.4 : green / 12.92
-    const blue2 =
-      blue > 0.04045 ? ((blue + 0.055) / (1.0 + 0.055)) ** 2.4 : blue / 12.92
-
-    const X = red2 * 0.664511 + green2 * 0.154324 + blue2 * 0.162028
-    const Y = red2 * 0.283881 + green2 * 0.668433 + blue2 * 0.047685
-    const Z = red2 * 0.000088 + green2 * 0.07231 + blue2 * 0.986039
-
-    const x = X / (X + Y + Z)
-    const y = Y / (X + Y + Z)
-
-    const colour = [x, y]
     this.$store.dispatch('hue/toggleLight', {
       uniqueId: this.hueId,
-      on,
-      colour,
+      on: true,
+      xy: {
+        x,
+        y,
+      },
+      bri: l,
     })
   }
 
@@ -135,6 +123,17 @@ export default class HueBridges extends Vue {
 h3 {
   padding: 0;
   margin: 0;
+}
+
+input[type='color'] {
+  width: var(--padding);
+  height: var(--padding);
+  padding: calc(var(--padding) / 8);
+}
+
+.settings {
+  display: flex;
+  align-items: center;
 }
 
 .hue-light:hover {
