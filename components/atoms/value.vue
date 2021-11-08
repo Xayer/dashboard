@@ -31,7 +31,6 @@ export default defineComponent({
   },
   setup(props) {
     const labelClass = computed(() => {
-      console.log(props.state)
       if(props.state === 'success') { return 'positive'}
       if(props.state === 'danger') { return 'negative'}
       if(props.state === 'default') { return ''}
