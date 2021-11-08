@@ -13,7 +13,7 @@ export function parseAccountBalance(
 
   const calculatedEtherValue = Number.isNaN(parsedPrice)
     ? 0
-    : parsedPrice / 1000000000000000000
+    : 1000000000000000000 / parsedPrice
   const usd = etherPriceResult
     ? Number.parseFloat(etherPriceResult?.ethusd)
     : NaN
