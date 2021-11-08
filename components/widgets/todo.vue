@@ -56,7 +56,6 @@ export default {
   },
   methods: {
     addTodo() {
-      console.log(this.newTodo);
       this.todos.push({
         id: Date.now(),
         title: this.newTodo,

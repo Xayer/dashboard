@@ -6,7 +6,9 @@
       <portal-target name="page-actions" />
     </div>
     <Nuxt />
-    <VueQueryDevTools :initial-is-open="true" />
+    <client-only>
+      <VueQueryDevTools :initial-is-open="true" />
+    </client-only>
   </main>
 </template>
 <script lang="ts">
@@ -31,6 +33,10 @@ export default defineComponent({
     Vue.use(VueCompositionApi)
 
     useQueryProvider()
+
+    if (!process.browser) {
+      return undefined
+    }
 
     root.$store.dispatch('themes/loadTheme')
     root.$store.dispatch('userSettings/validate')
