@@ -6,7 +6,7 @@ export const addressBalance = async (address: string) => {
       module: 'account',
       action: 'balance',
       address,
-      apikey: 'DKDHB344FMFXF3IG19EE26MVXBEMKEQZ4B',
+      apikey: process.env.NUXT_ENV_ETHERSCAN_API as string,
     })}`
   )
   return response.json()
@@ -17,7 +17,7 @@ export const etherPrice = async () => {
     `${baseUrl}?${new URLSearchParams({
       module: 'stats',
       action: 'ethprice',
-      apikey: 'DKDHB344FMFXF3IG19EE26MVXBEMKEQZ4B',
+      apikey: process.env.NUXT_ENV_ETHERSCAN_API as string,
     })}`
   )
   return response.json()
