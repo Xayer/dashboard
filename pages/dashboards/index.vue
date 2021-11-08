@@ -34,7 +34,8 @@
           >
             <widget-wrapper>
               <component
-                :is="item.type"
+                :is="getWidget(item.type)"
+                :type="item.type"
                 :settings="item.settings"
                 :dimensions="{ w: item.w, h: item.h }"
               ></component>
@@ -74,7 +75,7 @@ import {
   Forecast,
   TodoList,
   RejseplanenDeparture,
- PriceRunnerProductInfo, HueGroup, HueLight, HueBridges, EtherScanAddressBalance } from '@/components/widgets'
+ PriceRunnerProductInfo, HueGroup, HueLight, HueBridges, EtherScanAddressBalance, Placeholder } from '@/components/widgets'
 import { Board } from '~/types/dashboards'
 
 @Component({
@@ -92,6 +93,7 @@ import { Board } from '~/types/dashboards'
     Forecast,
     PriceRunnerProductInfo,
     EtherScanAddressBalance,
+    Placeholder,
   },
 })
 export default class Dashboard extends Vue {
@@ -152,6 +154,16 @@ export default class Dashboard extends Vue {
 
   link(id: number) {
     this.$router.push({ path: '/dashboards', query: { id: id.toString() } })
+  }
+
+  getWidget(widget: string) {
+    if (
+      this.$options.components &&
+      Object.keys(this!.$options!.components).includes(widget)
+    ) {
+      return widget
+    }
+    return 'Placeholder'
   }
 
   createNewDashboard() {

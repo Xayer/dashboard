@@ -101,7 +101,13 @@ export default defineComponent({
   --white: #eee;
 
   --box-shadow-general: 0px 0px 15px -5px;
+
+  --button-text-color: var(--white);
   --button-box-shadow: var(--box-shadow-general);
+
+  --input-bg: var(--accent-0);
+  
+  --widget-padding: 15px;
 }
 
 body,
