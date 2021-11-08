@@ -6,68 +6,71 @@
       <portal-target name="page-actions" />
     </div>
     <Nuxt />
+    <VueQueryDevTools :initial-is-open="true" />
   </main>
 </template>
 <script lang="ts">
-import { Component, Vue, Watch } from 'nuxt-property-decorator'
-import { mapGetters } from 'vuex'
+// import { Component, Vue, Watch } from 'nuxt-property-decorator'
+// import { mapGetters } from 'vuex'
+import { useQueryProvider } from 'vue-query'
+import VueCompositionApi, { defineComponent } from '@vue/composition-api'
+import Vue from 'vue'
+import { VueQueryDevTools } from 'vue-query/devtools'
 import { Header } from '@/components/organisms'
-@Component({
+
+export default defineComponent({
+  // token?: string
+  // bridgeAddressNotFound = true
+  // devicesTimeout!: ReturnType<typeof setTimeout>
+  name: 'Default',
   components: {
     Header,
+    VueQueryDevTools,
   },
-  computed: {
-    ...mapGetters({
-      token: 'hue/token',
-      hueAvailable: 'hue/available',
-      hueAddress: 'hue/hueAddress',
-    }),
-  },
-})
-export default class Layout extends Vue {
-  token?: string
-  bridgeAddressNotFound = true
-  devicesTimeout!: ReturnType<typeof setTimeout>
-  created() {
-    this.$store.dispatch('themes/loadTheme')
-    this.$store.dispatch('userSettings/validate')
-    this.$store.dispatch('userSettings/loadExistingSettings')
-    this.$store.dispatch('hue/loadSettings')
+  setup(_props, { root }) {
+    Vue.use(VueCompositionApi)
+
+    useQueryProvider()
+
+    root.$store.dispatch('themes/loadTheme')
+    root.$store.dispatch('userSettings/validate')
+    root.$store.dispatch('userSettings/loadExistingSettings')
+    root.$store.dispatch('hue/loadSettings')
     if (process.browser) {
       window.addEventListener('offline', () => {
-        this.$store.commit('internet/SET_CONNECTION_STATUS', false)
+        root.$store.commit('internet/SET_CONNECTION_STATUS', false)
       })
       window.addEventListener('online', () => {
-        this.$store.commit('internet/SET_CONNECTION_STATUS', true)
+        root.$store.commit('internet/SET_CONNECTION_STATUS', true)
       })
     }
-  }
+  },
 
-  detectDevices() {
-    if (this.token) {
-      return
-    }
-    this.$store.dispatch('hue/getDevices')
-  }
+  // detectDevices() {
+  //   if (this.token) {
+  //     return
+  //   }
+  //   root.$store.dispatch('hue/getDevices')
+  // }
 
-  @Watch('bridgeAddress')
-  commitBridgeAddress(address: string) {
-    this.$store.commit('hue/SET_BRIDGE_ADDRESS', address)
-    this.bridgeAddressNotFound = false
-    this.detectDevices()
-  }
+  // @Watch('bridgeAddress')
+  // commitBridgeAddress(address: string) {
+  //   root.$store.commit('hue/SET_BRIDGE_ADDRESS', address)
+  //   this.bridgeAddressNotFound = false
+  //   this.detectDevices()
+  // }
 
-  @Watch('bridgeAddressNotFound')
-  bridgeAddressChanged(found: boolean) {
-    if (found) {
-      this.devicesTimeout = setInterval(() => {
-        this.detectDevices()
-      }, 3000)
-    } else {
-      clearInterval(this.devicesTimeout)
-    }
-  }
-}
+  // @Watch('bridgeAddressNotFound')
+  // bridgeAddressChanged(found: boolean) {
+  //   if (found) {
+  //     this.devicesTimeout = setInterval(() => {
+  //       this.detectDevices()
+  //     }, 3000)
+  //   } else {
+  //     clearInterval(this.devicesTimeout)
+  //   }
+  // }
+})
 </script>
 <style lang="scss">
 :root {
@@ -83,6 +86,8 @@ export default class Layout extends Vue {
   --font-display: 'Poppins', sans-serif;
   --weight-normal: 600;
   --weight-bold: 700;
+
+  --blur: 10px;
 
   /** General Global styling options */
   --padding: 25px;

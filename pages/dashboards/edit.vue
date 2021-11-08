@@ -53,7 +53,7 @@
           <WidgetWrapper>
             <div class="settings-header m-b">
               <span class="drag m-r"><i class="bi bi-arrows-move"></i></span>
-              <h2>{{ item.type }}</h2>
+              <h2>{{ WidgetTitles && WidgetTitles[item.type] ? WidgetTitles[item.type] : item.type }}</h2>
               <span class="remove m-l" @click="removeWidget(itemIndex)">
                 <i class="bi bi-x-circle"></i>
               </span>
@@ -103,7 +103,7 @@ import { Select, Button } from '@/components/atoms'
 import { Sidebar } from '@/components/molecules'
 import WidgetSettings from '@/components/widgets/settings.vue'
 import WeatherSettings from '@/components/widgets/weather/settings.vue'
-import { WidgetDefaultSettings, WidgetsAvailable } from '@/constants/widgets'
+import { WidgetDefaultSettings, WidgetsAvailable , WidgetTitles } from '@/constants/widgets'
 import {
   dasboardsLocalStorageKey,
   defaultSettings,
@@ -133,6 +133,8 @@ export default class EditableDashboard extends Vue {
   selectedWidget: string = WidgetsAvailable.TextWidget.toString()
 
   DashboardWidgets?: any = null
+
+  WidgetTitles = WidgetTitles
 
   currentSettings = ''
 
