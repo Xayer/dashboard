@@ -6,68 +6,77 @@
       <portal-target name="page-actions" />
     </div>
     <Nuxt />
+    <client-only>
+      <VueQueryDevTools :initial-is-open="true" />
+    </client-only>
   </main>
 </template>
 <script lang="ts">
-import { Component, Vue, Watch } from 'nuxt-property-decorator'
-import { mapGetters } from 'vuex'
+// import { Component, Vue, Watch } from 'nuxt-property-decorator'
+// import { mapGetters } from 'vuex'
+import { useQueryProvider } from 'vue-query'
+import VueCompositionApi, { defineComponent } from '@vue/composition-api'
+import Vue from 'vue'
+import { VueQueryDevTools } from 'vue-query/devtools'
 import { Header } from '@/components/organisms'
-@Component({
+
+export default defineComponent({
+  // token?: string
+  // bridgeAddressNotFound = true
+  // devicesTimeout!: ReturnType<typeof setTimeout>
+  name: 'Default',
   components: {
     Header,
+    VueQueryDevTools,
   },
-  computed: {
-    ...mapGetters({
-      token: 'hue/token',
-      hueAvailable: 'hue/available',
-      hueAddress: 'hue/hueAddress',
-    }),
-  },
-})
-export default class Layout extends Vue {
-  token?: string
-  bridgeAddressNotFound = true
-  devicesTimeout!: ReturnType<typeof setTimeout>
-  created() {
-    this.$store.dispatch('themes/loadTheme')
-    this.$store.dispatch('userSettings/validate')
-    this.$store.dispatch('userSettings/loadExistingSettings')
-    this.$store.dispatch('hue/loadSettings')
+  setup(_props, { root }) {
+    Vue.use(VueCompositionApi)
+
+    useQueryProvider()
+
+    if (!process.browser) {
+      return undefined
+    }
+
+    root.$store.dispatch('themes/loadTheme')
+    root.$store.dispatch('userSettings/validate')
+    root.$store.dispatch('userSettings/loadExistingSettings')
+    root.$store.dispatch('hue/loadSettings')
     if (process.browser) {
       window.addEventListener('offline', () => {
-        this.$store.commit('internet/SET_CONNECTION_STATUS', false)
+        root.$store.commit('internet/SET_CONNECTION_STATUS', false)
       })
       window.addEventListener('online', () => {
-        this.$store.commit('internet/SET_CONNECTION_STATUS', true)
+        root.$store.commit('internet/SET_CONNECTION_STATUS', true)
       })
     }
-  }
+  },
 
-  detectDevices() {
-    if (this.token) {
-      return
-    }
-    this.$store.dispatch('hue/getDevices').catch((error: any) => {})
-  }
+  // detectDevices() {
+  //   if (this.token) {
+  //     return
+  //   }
+  //   root.$store.dispatch('hue/getDevices')
+  // }
 
-  @Watch('bridgeAddress')
-  commitBridgeAddress(address: string) {
-    this.$store.commit('hue/SET_BRIDGE_ADDRESS', address)
-    this.bridgeAddressNotFound = false
-    this.detectDevices()
-  }
+  // @Watch('bridgeAddress')
+  // commitBridgeAddress(address: string) {
+  //   root.$store.commit('hue/SET_BRIDGE_ADDRESS', address)
+  //   this.bridgeAddressNotFound = false
+  //   this.detectDevices()
+  // }
 
-  @Watch('bridgeAddressNotFound')
-  bridgeAddressChanged(found: boolean) {
-    if (found) {
-      this.devicesTimeout = setInterval(() => {
-        this.detectDevices()
-      }, 3000)
-    } else {
-      clearInterval(this.devicesTimeout)
-    }
-  }
-}
+  // @Watch('bridgeAddressNotFound')
+  // bridgeAddressChanged(found: boolean) {
+  //   if (found) {
+  //     this.devicesTimeout = setInterval(() => {
+  //       this.detectDevices()
+  //     }, 3000)
+  //   } else {
+  //     clearInterval(this.devicesTimeout)
+  //   }
+  // }
+})
 </script>
 <style lang="scss">
 :root {
@@ -85,6 +94,8 @@ export default class Layout extends Vue {
   --weight-bold: 700;
   --weight-thin: 300;
 
+  --blur: 10px;
+
   /** General Global styling options */
   --padding: 25px;
   --radius: 5px;
@@ -97,7 +108,13 @@ export default class Layout extends Vue {
   --white: #eee;
 
   --box-shadow-general: 0px 0px 15px -5px;
+
+  --button-text-color: var(--white);
   --button-box-shadow: var(--box-shadow-general);
+
+  --input-bg: var(--accent-0);
+  
+  --widget-padding: 15px;
 }
 
 body,
@@ -158,5 +175,39 @@ h6 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+  transition: var(-transition);
+}
+.slide-fade-leave-active {
+  transition: var(--transition);
+}
+.slide-fade-enter, .slide-fade-leave-to
+	/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(-var(--padding));
+  opacity: 0;
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.fade-enter-active {
+  transition: var(--transition);
+  opacity: 1;
+}
+.fade-leave-active {
+  transition: var(--transition);
+  opacity: 0 !important;
+}
+.fade-leave-to {
+  transition: var(--transition);
+  opacity: 0 !important;
+}
+.fade-enter,
+.fade-leave-to {
+  transition: var(--transition);
+  opacity: 0 !important;
 }
 </style>

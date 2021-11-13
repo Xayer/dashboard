@@ -3,12 +3,8 @@ import { HueGroup } from '@/types/hue/group'
 
 export interface Devices {
   config: Object
-  groups: {
-    [key: string]: HueGroup
-  }
-  lights: {
-    [key: string]: HueLight
-  }
+  groups: Record<string, HueGroup>
+  lights: Record<string, HueLight>
   resourcelinks: Object
   rules: Object
   scenes: Object

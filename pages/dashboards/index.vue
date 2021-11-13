@@ -34,7 +34,8 @@
           >
             <widget-wrapper>
               <component
-                :is="item.type"
+                :is="getWidget(item.type)"
+                :type="item.type"
                 :settings="item.settings"
                 :dimensions="{ w: item.w, h: item.h }"
               ></component>
@@ -47,11 +48,15 @@
   </div>
   <div v-else>
     <portal to="page-title">Dashboards</portal>
+    <portal to="page-actions">
+      <Button class="primary" @click="createNewDashboard">Create</Button>
+    </portal>
     <client-only>
-      <Card v-for="(board, index) in boards" :key="board.name">
+      <Card v-for="(board, index) in boards" :key="`${index}-${board.name}`">
         <template #title> {{ board.name }}</template>
         <template #action>
           <Button class="primary" @click="link(index)">view</Button>
+          <Button class="danger" @click="deleteDashboard(index)">X</Button>
         </template>
       </Card>
     </client-only>
@@ -70,12 +75,15 @@ import {
   Forecast,
   TodoList,
   RejseplanenDeparture,
-  Value,
+  PriceRunnerProductInfo,
+  HueGroup,
+  HueLight,
+  HueBridges,
+  EtherScanAddressBalance,
+  Placeholder,
+  StockPrice,
 } from '@/components/widgets'
 import { Board } from '~/types/dashboards'
-import HueBridges from '@/components/widgets/hue/bridges.vue'
-import HueLight from '@/components/widgets/hue/light.vue'
-import HueGroup from '@/components/widgets/hue/group/group.vue'
 
 @Component({
   components: {
@@ -90,7 +98,10 @@ import HueGroup from '@/components/widgets/hue/group/group.vue'
     TodoList,
     Weather,
     Forecast,
-    Value,
+    PriceRunnerProductInfo,
+    EtherScanAddressBalance,
+    Placeholder,
+    StockPrice,
   },
 })
 export default class Dashboard extends Vue {
@@ -151,6 +162,26 @@ export default class Dashboard extends Vue {
 
   link(id: number) {
     this.$router.push({ path: '/dashboards', query: { id: id.toString() } })
+  }
+
+  getWidget(widget: string) {
+    if (
+      this.$options.components &&
+      Object.keys(this!.$options!.components).includes(widget)
+    ) {
+      return widget
+    }
+    return 'Placeholder'
+  }
+
+  createNewDashboard() {
+    this.$store.commit('userSettings/CREATE_NEW_DASHBOARD')
+    this.$store.dispatch('userSettings/loadExistingSettings')
+  }
+
+  deleteDashboard(dashboardIndex: number) {
+    this.$store.commit('userSettings/REMOVE_DASHBOARD', dashboardIndex)
+    this.$store.dispatch('userSettings/loadExistingSettings')
   }
 }
 </script>

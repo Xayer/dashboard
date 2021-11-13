@@ -15,6 +15,7 @@ import { storageKey as spotifyStorageKey } from '@/modules/apis/spotify'
 import { todosStorageKey } from '@/constants/todo'
 import { themeStorageKey } from '~/constants/themes'
 import { dasboardsLocalStorageKey } from '~/constants/dashboard'
+import { Board } from '~/types/dashboards'
 
 type StateType = {
   isAuthenticated: boolean
@@ -328,6 +329,41 @@ const mutations = {
     settings.forEach(({ key, value }) => {
       localStorage.setItem(key, JSON.stringify(value))
     })
+  },
+  CREATE_NEW_DASHBOARD: (_state: StateType) => {
+    const existingBoards: Board[] = [
+      ...JSON.parse(
+        localStorage.getItem(dasboardsLocalStorageKey) || JSON.stringify([])
+      ),
+    ]
+
+    existingBoards.push({
+      name: `Dashboard #${existingBoards.length}`,
+      widgets: [],
+    })
+
+    localStorage.setItem(
+      dasboardsLocalStorageKey,
+      JSON.stringify(existingBoards)
+    )
+  },
+  REMOVE_DASHBOARD: (_state: StateType, dashboardIndex: number) => {
+    const existingBoards: Board[] = [
+      ...JSON.parse(
+        localStorage.getItem(dasboardsLocalStorageKey) || JSON.stringify([])
+      ),
+    ]
+
+    if (!existingBoards[dashboardIndex]) {
+      return
+    }
+
+    existingBoards.splice(dashboardIndex, 1)
+
+    localStorage.setItem(
+      dasboardsLocalStorageKey,
+      JSON.stringify(existingBoards)
+    )
   },
 }
 

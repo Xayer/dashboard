@@ -14,9 +14,15 @@ export default class Widget extends Vue {}
 .vue-grid-item {
   --widget-bg: var(--accent-50);
   background-color: var(--widget-bg);
-  padding: 15px;
+  padding: var(--widget-padding);
   box-sizing: border-box;
   overflow: hidden;
   border-radius: var(--radius);
+  .refresh-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transition: var(--transition);
+  }
 }
 </style>

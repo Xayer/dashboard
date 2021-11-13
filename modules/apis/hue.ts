@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
-import { Devices } from '@/types/hue'
 import API from './client'
+import { Devices } from '@/types/hue'
 import { hueTokenStorageKey } from '~/constants/hue'
 
 const protocol: string = 'http://'
@@ -90,21 +90,19 @@ export default class HueAPI extends API {
     })
   }
 
-  toggleLight(uniqueid: string, on: boolean, colour?: Array<number>) {
-    return new Promise(async (resolve, reject) => {
+  toggleLight(uniqueid: string, on: boolean, xy?: { x: number, y: number}, bri = 100) {
+    return new Promise((resolve, reject) => {
       if (!this.findExistingToken()) {
         reject(Error('token missing'))
       }
 
-      const toggleData: { on: boolean; colour?: Array<number> } = {
+      const toggleData = {
         on,
+        ...(xy && { xy: [xy.x, xy.y]}),
+        bri: Math.round(bri),
       }
 
-      if (colour) {
-        toggleData.colour = colour
-      }
-
-      await this.put(`${this.token}/lights/${uniqueid}`, 'state', toggleData)
+      return this.put(`${this.token}/lights/${uniqueid}`, 'state', toggleData)
         .then((response: AxiosResponse<Devices>) => {
           resolve(response.data)
         })

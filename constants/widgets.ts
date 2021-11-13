@@ -11,8 +11,9 @@ export const WidgetsAvailable = {
   TodoList: 'TodoList',
   Weather: 'Weather',
   Forecast: 'Forecast',
-  Value: 'Value',
   StockPrice: 'StockPrice',
+  PriceRunnerProductInfo: 'PriceRunnerProductInfo',
+  EtherScanAddressBalance: 'EtherScanAddressBalance',
 }
 
 export const WidgetTitles: { [key: string]: string } = {
@@ -24,8 +25,9 @@ export const WidgetTitles: { [key: string]: string } = {
   [WidgetsAvailable.TodoList]: 'Todo List',
   [WidgetsAvailable.Weather]: 'Weather',
   [WidgetsAvailable.Forecast]: 'Forecast',
-  [WidgetsAvailable.Value]: 'Value',
   [WidgetsAvailable.StockPrice]: 'Stock Price',
+  [WidgetsAvailable.PriceRunnerProductInfo]: 'PriceRunner Price',
+  [WidgetsAvailable.EtherScanAddressBalance]: 'Ether Address Balance',
 }
 
 export const WidgetDefaultSettings: { [key: string]: Widget } = {
@@ -131,21 +133,6 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     x: 6,
     i: 2,
   },
-  [WidgetsAvailable.Value]: {
-    type: WidgetsAvailable.Value,
-    title: WidgetTitles[WidgetsAvailable.Value],
-    settings: {
-      value: '$75,000',
-      title: 'Value',
-      label: '0.00',
-    },
-    w: 2,
-    h: 1,
-    y: 0,
-    x: 0,
-    i: 1,
-    minW: 2,
-  },
   [WidgetsAvailable.StockPrice]: {
     type: WidgetsAvailable.StockPrice,
     title: WidgetTitles[WidgetsAvailable.StockPrice],
@@ -158,5 +145,33 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     x: 0,
     i: 1,
     minW: 2,
+  },
+  [WidgetsAvailable.EtherScanAddressBalance]: {
+    type: WidgetsAvailable.EtherScanAddressBalance,
+    title: WidgetTitles[WidgetsAvailable.EtherScanAddressBalance],
+    settings: {
+      address: '',
+    },
+    w: 2,
+    h: 1,
+    y: 0,
+    x: 0,
+    i: 1,
+    minW: 2,
+  },
+  [WidgetsAvailable.PriceRunnerProductInfo]: {
+    type: WidgetsAvailable.PriceRunnerProductInfo,
+    title: WidgetTitles[WidgetsAvailable.PriceRunnerProductInfo],
+    settings: {
+      country: 'dk',
+      productId: '5182343',
+      name: 'Canon EOS R',
+    },
+    w: 2,
+    h: 1,
+    maxH: 1,
+    y: 0,
+    x: 0,
+    i: 0,
   },
 }

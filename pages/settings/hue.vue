@@ -12,13 +12,13 @@
       class="m-t primary"
       >{{ lightLabel }} Lights</Button
     >
-    <span v-if="bridgeAddressNotFound" class="m-r">
-      <input v-model="bridgeAddress" type="text" placeholder="Hue Bridge IP" />
+    <span class="m-r">
+      <input v-model="bridgeAddressFromInput" type="text" placeholder="Hue Bridge IP" />
     </span>
     <Button
       v-if="!hueAvailable || !token"
       class="danger"
-      @click="registerToken()"
+      @click="submitBridgeAddress()"
       >!</Button
     >
     <span v-if="loading" class="loading">Loading</span>
@@ -49,9 +49,11 @@ export default class HueIntegration extends Vue {
 
   hueAvailable!: boolean
 
-  loading: boolean = false
+  loading = false
 
-  bridgeAddress: string = ''
+  bridgeAddress = ''
+
+  bridgeAddressFromInput = ''
 
   bridgeAddressNotFound = false
 
@@ -69,13 +71,23 @@ export default class HueIntegration extends Vue {
       return
     }
     if (localStorage.getItem(hueBridgeAddressStorageKey)) {
-      this.bridgeAddress = localStorage.getItem(
+      this.bridgeAddressFromInput = localStorage.getItem(
         hueBridgeAddressStorageKey
       ) as string
       this.bridgeAddressNotFound = false
     } else {
       this.bridgeAddressNotFound = true
     }
+  }
+
+  submitBridgeAddress() {
+    this.errorMessage = ''
+    if(!this.bridgeAddressFromInput) {
+      this.errorMessage = 'no bridge address specified.'
+      return;
+    }
+    this.bridgeAddress = this.bridgeAddressFromInput;
+    this.registerToken(this.bridgeAddress);
   }
 
   @Watch('bridgeAddressNotFound')
@@ -102,9 +114,9 @@ export default class HueIntegration extends Vue {
     this.detectDevices()
   }
 
-  registerToken() {
-    if (this.bridgeAddressNotFound) {
-      this.$store.commit('hue/SET_BRIDGE_ADDRESS', this.bridgeAddress)
+  registerToken(bridgeAddress: string) {
+    if (bridgeAddress) {
+      this.$store.commit('hue/SET_BRIDGE_ADDRESS', bridgeAddress)
       this.bridgeAddressNotFound = false
     }
     if (this.token) {
