@@ -1,11 +1,11 @@
 import { useQuery } from 'vue-query'
 import { minutes } from '~/constants/time'
 import { getRecentStocks } from '~/modules/apis/alpha'
-import { ValueProps } from '~/types/widgets/value'
+import { StockPriceDaily } from '~/types/alpha-vantage/stock'
 
 export function useFetchStockPrice(stock: string, interval = '5min') {
   const { isLoading, isError, isFetching, isSuccess, data, error, refetch } =
-    useQuery<ValueProps>(
+    useQuery<StockPriceDaily>(
       [stock, `stockPrice-interval-${interval}`],
       () => getRecentStocks(stock, interval),
       {

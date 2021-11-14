@@ -3,6 +3,7 @@
     <Value
       v-if="isSuccess"
       :value="stockData.value"
+      :title="stockData.title"
       :label="stockData.label"
       :state="stockData.state"
     />
@@ -19,6 +20,7 @@ import { computed, defineComponent } from '@vue/composition-api'
 import { Value, Button } from '~/components/atoms'
 import { useFetchStockPrice } from '@/queries/stock'
 import { ValueProps } from '~/types/widgets/value'
+import { parseStockPrice } from '~/modules/apis/alpha'
 
 export default defineComponent({
   name: 'StockPrice',
@@ -41,19 +43,24 @@ export default defineComponent({
       interval
     )
 
-    const stockData = computed(() =>
-      data?.value
-        ? ({
-            value: data?.value?.value,
-            label: data?.value?.label,
-            state: data?.value?.state,
-          } as ValueProps)
-        : {
-            value: 'N/A',
-            label: 'sad',
-            state: 'danger',
-          }
-    )
+    const stockData = computed(() => {
+      if (data?.value) {
+        const formattedData = parseStockPrice(data?.value)
+        return {
+          value: formattedData.value,
+          label: formattedData.label,
+          state: formattedData.state,
+          title: formattedData.title,
+        } as ValueProps
+      } else {
+        return {
+          value: 'N/A',
+          label: 'N/A',
+          title: props.settings.stockName,
+          state: 'danger',
+        }
+      }
+    })
 
     return {
       stockData,
