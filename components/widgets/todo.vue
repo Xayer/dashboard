@@ -8,11 +8,13 @@
     />
     <ol>
       <li v-for="todo in todos" :key="todo.id">
-        <label :class="{ done: todo.done }"><input
-          v-model="todo.done"
-          type="checkbox"
-          @click="toggleDoneState(todo)"
-        />{{ todo.title }}</label>
+        <label :class="{ done: todo.done }"
+          ><input
+            v-model="todo.done"
+            type="checkbox"
+            @click="toggleDoneState(todo)"
+          />{{ todo.title }}</label
+        >
         <Button class="sm" @click="removeTodo(todo)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -29,9 +31,10 @@
         </Button>
       </li>
     </ol>
-    <span class="stats">
-      <strong>{{ doneItems.length }} of {{ todos.length }}</strong> todos completed.
-    </span>
+    <div class="stats" :style="donePercentage">
+      <strong>{{ doneItems.length }} of {{ todos.length }}</strong> todos
+      completed.
+    </div>
   </section>
 </template>
 <script>
@@ -48,8 +51,15 @@ export default {
   },
   computed: {
     doneItems() {
-      return this.todos.filter((todo) => todo.done);
-    }
+      return this.todos.filter((todo) => todo.done)
+    },
+    donePercentage() {
+      const doneItems = this.todos.filter((todo) => todo.done)
+
+      const percentage =
+        100 - ((this.todos.length - doneItems.length) * 100) / this.todos.length
+      return `--percentage: ${percentage}%`
+    },
   },
   created() {
     this.loadTodosFromStorage()
@@ -81,7 +91,7 @@ export default {
     loadTodosFromStorage() {
       this.todos = JSON.parse(localStorage.getItem(todosStorageKey) || '[]')
     },
-  }
+  },
 }
 </script>
 <style lang="scss" scoped>
@@ -108,7 +118,22 @@ input {
 }
 
 .stats {
+  --percentage: 0%;
   font-size: 0.65rem;
+  padding: calc(var(--widget-padding) * 0.5);
+  margin-left: calc(var(--widget-padding) * -0.5);
+  margin-right: calc(var(--widget-padding) * -0.5);
+  position: relative;
+  display: block;
+  &::before {
+    content: '';
+    width: var(--percentage);
+    height: calc(0.65rem / 4);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent-success);
+  }
 }
 
 ol {
@@ -148,7 +173,9 @@ ol {
       justify-content: center;
       align-items: center;
       background: transparent !important;
-      svg { fill: var(--text-color); }
+      svg {
+        fill: var(--text-color);
+      }
       i {
         width: 14px;
         height: 14px;
