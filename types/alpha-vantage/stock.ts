@@ -23,3 +23,8 @@ export interface StockPriceIntraDay {
   'Meta Data': MetaData
   'Time Series (60min)': TimeSeries
 }
+
+export interface StockPriceDaily {
+  'Meta Data': MetaData
+  'Time Series (Daily)': TimeSeries
+}
