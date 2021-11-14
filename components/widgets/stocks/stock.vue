@@ -41,10 +41,6 @@ export default defineComponent({
       interval
     )
 
-    console.dir({
-      test: data.value,
-    })
-
     const stockData = computed(() =>
       data?.value
         ? ({
