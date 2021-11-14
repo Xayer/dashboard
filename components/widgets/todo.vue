@@ -1,19 +1,32 @@
 <template>
   <section>
     <Input
+      key="add-item"
       v-model="newTodo"
       placeholder="What needs to be done?"
-      autofocus
       @keyup.enter.native="addTodo"
     />
     <ol>
-      <li v-for="todo in todos" :key="todo.id">
-        <label :class="{ done: todo.done }"
-          ><input
-            v-model="todo.done"
-            type="checkbox"
-            @click="toggleDoneState(todo)"
-          />{{ todo.title }}</label
+      <li v-for="(todo, todoIndex) in todos" :key="todo.id">
+        <input
+          v-model="todo.done"
+          type="checkbox"
+          @click="toggleDoneState(todo)"
+        />
+
+        <input
+          v-if="editIndex === todoIndex"
+          v-model="existingTodo"
+          class="edit-form"
+          autofocus
+          type="text"
+          @blur="saveModifiedTodoItem"
+        />
+        <span
+          v-show="editIndex !== todoIndex"
+          :class="{ done: todo.done }"
+          @click="editTodo(todoIndex, $event)"
+          >{{ todo.title }}</span
         >
         <Button class="sm" @click="removeTodo(todo)">
           <svg
@@ -47,6 +60,8 @@ export default {
     return {
       newTodo: '',
       todos: [],
+      editIndex: null,
+      existingTodo: '',
     }
   },
   computed: {
@@ -74,6 +89,22 @@ export default {
       this.newTodo = ''
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
+    },
+    editTodo(index) {
+      this.editIndex = index
+      this.existingTodo = this.todos[index].title
+    },
+    saveModifiedTodoItem() {
+      const existingTodoItem = this.todos[this.editIndex]
+      this.todos.splice(this.editIndex, 1, {
+        ...existingTodoItem,
+        title: this.existingTodo,
+      })
+      localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
+      this.loadTodosFromStorage()
+
+      this.editIndex = -1
+      this.existingTodo = ''
     },
     toggleDoneState(todo) {
       this.todos.splice(this.todos.indexOf(todo), 1, {
@@ -126,6 +157,7 @@ input {
   position: relative;
   display: block;
   &::before {
+    transition: width 0.25s ease;
     content: '';
     width: var(--percentage);
     height: calc(0.65rem / 4);
@@ -154,12 +186,23 @@ ol {
       background-color: var(--accent-100);
     }
     padding-left: calc(var(--padding) / 4);
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 2rem auto 2rem;
+    justify-content: stretch;
     align-items: center;
     gap: calc(var(--padding) / 4);
     input {
-      width: auto;
+      &[type='checkbox'] {
+        justify-self: stretch;
+        text-align: left;
+        flex-grow: 1;
+      }
+
+      &.edit-form {
+        display: block;
+        padding: 0;
+        margin: 0;
+      }
     }
     label {
       justify-self: flex-start;
@@ -169,7 +212,7 @@ ol {
     button.btn {
       justify-self: stretch;
       align-self: flex-start;
-      display: flex;
+      display: inline-block;
       justify-content: center;
       align-items: center;
       background: transparent !important;
