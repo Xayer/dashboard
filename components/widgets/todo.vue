@@ -90,9 +90,13 @@ export default {
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
     },
-    editTodo(index) {
+    editTodo(index, event) {
       this.editIndex = index
       this.existingTodo = this.todos[index].title
+      const parent = event.target.parentElement
+      setTimeout(() => {
+        parent.querySelector('.edit-form').focus()
+      }, 50)
     },
     saveModifiedTodoItem() {
       const existingTodoItem = this.todos[this.editIndex]
