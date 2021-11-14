@@ -2,6 +2,7 @@
   <div>
     <Value
       v-if="addressBalance"
+      title="Balance"
       :value="addressBalance.value"
       :label="addressBalance.label"
       :state="addressBalance.state"

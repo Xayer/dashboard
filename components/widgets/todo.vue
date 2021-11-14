@@ -1,18 +1,33 @@
 <template>
   <section>
     <Input
+      key="add-item"
       v-model="newTodo"
       placeholder="What needs to be done?"
-      autofocus
       @keyup.enter.native="addTodo"
     />
     <ol>
-      <li v-for="todo in todos" :key="todo.id">
-        <label :class="{ done: todo.done }"><input
+      <li v-for="(todo, todoIndex) in todos" :key="todo.id">
+        <input
           v-model="todo.done"
           type="checkbox"
           @click="toggleDoneState(todo)"
-        />{{ todo.title }}</label>
+        />
+
+        <input
+          v-if="editIndex === todoIndex"
+          v-model="existingTodo"
+          class="edit-form"
+          autofocus
+          type="text"
+          @blur="saveModifiedTodoItem"
+        />
+        <span
+          v-show="editIndex !== todoIndex"
+          :class="{ done: todo.done }"
+          @click="editTodo(todoIndex, $event)"
+          >{{ todo.title }}</span
+        >
         <Button class="sm" @click="removeTodo(todo)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -29,9 +44,10 @@
         </Button>
       </li>
     </ol>
-    <span class="stats">
-      <strong>{{ doneItems.length }} of {{ todos.length }}</strong> todos completed.
-    </span>
+    <div class="stats" :style="donePercentage">
+      <strong>{{ doneItems.length }} of {{ todos.length }}</strong> todos
+      completed.
+    </div>
   </section>
 </template>
 <script>
@@ -44,12 +60,21 @@ export default {
     return {
       newTodo: '',
       todos: [],
+      editIndex: null,
+      existingTodo: '',
     }
   },
   computed: {
     doneItems() {
-      return this.todos.filter((todo) => todo.done);
-    }
+      return this.todos.filter((todo) => todo.done)
+    },
+    donePercentage() {
+      const doneItems = this.todos.filter((todo) => todo.done)
+
+      const percentage =
+        100 - ((this.todos.length - doneItems.length) * 100) / this.todos.length
+      return `--percentage: ${percentage}%`
+    },
   },
   created() {
     this.loadTodosFromStorage()
@@ -64,6 +89,26 @@ export default {
       this.newTodo = ''
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
+    },
+    editTodo(index, event) {
+      this.editIndex = index
+      this.existingTodo = this.todos[index].title
+      const parent = event.target.parentElement
+      setTimeout(() => {
+        parent.querySelector('.edit-form').focus()
+      }, 50)
+    },
+    saveModifiedTodoItem() {
+      const existingTodoItem = this.todos[this.editIndex]
+      this.todos.splice(this.editIndex, 1, {
+        ...existingTodoItem,
+        title: this.existingTodo,
+      })
+      localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
+      this.loadTodosFromStorage()
+
+      this.editIndex = -1
+      this.existingTodo = ''
     },
     toggleDoneState(todo) {
       this.todos.splice(this.todos.indexOf(todo), 1, {
@@ -81,7 +126,7 @@ export default {
     loadTodosFromStorage() {
       this.todos = JSON.parse(localStorage.getItem(todosStorageKey) || '[]')
     },
-  }
+  },
 }
 </script>
 <style lang="scss" scoped>
@@ -108,7 +153,23 @@ input {
 }
 
 .stats {
+  --percentage: 0%;
   font-size: 0.65rem;
+  padding: calc(var(--widget-padding) * 0.5);
+  margin-left: calc(var(--widget-padding) * -0.5);
+  margin-right: calc(var(--widget-padding) * -0.5);
+  position: relative;
+  display: block;
+  &::before {
+    transition: width 0.25s ease;
+    content: '';
+    width: var(--percentage);
+    height: calc(0.65rem / 4);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent-success);
+  }
 }
 
 ol {
@@ -129,12 +190,23 @@ ol {
       background-color: var(--accent-100);
     }
     padding-left: calc(var(--padding) / 4);
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 2rem auto 2rem;
+    justify-content: stretch;
     align-items: center;
     gap: calc(var(--padding) / 4);
     input {
-      width: auto;
+      &[type='checkbox'] {
+        justify-self: stretch;
+        text-align: left;
+        flex-grow: 1;
+      }
+
+      &.edit-form {
+        display: block;
+        padding: 0;
+        margin: 0;
+      }
     }
     label {
       justify-self: flex-start;
@@ -144,11 +216,13 @@ ol {
     button.btn {
       justify-self: stretch;
       align-self: flex-start;
-      display: flex;
+      display: inline-block;
       justify-content: center;
       align-items: center;
       background: transparent !important;
-      svg { fill: var(--text-color); }
+      svg {
+        fill: var(--text-color);
+      }
       i {
         width: 14px;
         height: 14px;
