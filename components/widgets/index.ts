@@ -6,6 +6,7 @@ export { default as Weather } from '@/components/widgets/weather/weather.vue'
 export { default as WeatherSettings } from '@/components/widgets/weather/settings.vue'
 
 export { default as RejseplanenDeparture } from '@/components/widgets/rejseplanen/departure.vue'
+export { default as StockPrice } from '@/components/widgets/stocks/stock.vue'
 
 export { default as HueBridges } from '@/components/widgets/hue/bridges.vue'
 export { default as HueLight } from '@/components/widgets/hue/light.vue'

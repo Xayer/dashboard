@@ -11,6 +11,7 @@ export const WidgetsAvailable = {
   TodoList: 'TodoList',
   Weather: 'Weather',
   Forecast: 'Forecast',
+  StockPrice: 'StockPrice',
   PriceRunnerProductInfo: 'PriceRunnerProductInfo',
   EtherScanAddressBalance: 'EtherScanAddressBalance',
 }
@@ -24,6 +25,7 @@ export const WidgetTitles: { [key: string]: string } = {
   [WidgetsAvailable.TodoList]: 'Todo List',
   [WidgetsAvailable.Weather]: 'Weather',
   [WidgetsAvailable.Forecast]: 'Forecast',
+  [WidgetsAvailable.StockPrice]: 'Stock Price',
   [WidgetsAvailable.PriceRunnerProductInfo]: 'PriceRunner Price',
   [WidgetsAvailable.EtherScanAddressBalance]: 'Ether Address Balance',
 }
@@ -131,6 +133,32 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     x: 6,
     i: 2,
   },
+  [WidgetsAvailable.StockPrice]: {
+    type: WidgetsAvailable.StockPrice,
+    title: WidgetTitles[WidgetsAvailable.StockPrice],
+    settings: {
+      stockName: 'IBM',
+    },
+    w: 2,
+    h: 1,
+    y: 0,
+    x: 0,
+    i: 1,
+    minW: 2,
+  },
+  [WidgetsAvailable.EtherScanAddressBalance]: {
+    type: WidgetsAvailable.EtherScanAddressBalance,
+    title: WidgetTitles[WidgetsAvailable.EtherScanAddressBalance],
+    settings: {
+      address: '',
+    },
+    w: 2,
+    h: 1,
+    y: 0,
+    x: 0,
+    i: 1,
+    minW: 2,
+  },
   [WidgetsAvailable.PriceRunnerProductInfo]: {
     type: WidgetsAvailable.PriceRunnerProductInfo,
     title: WidgetTitles[WidgetsAvailable.PriceRunnerProductInfo],
@@ -138,19 +166,6 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
       country: 'dk',
       productId: '5182343',
       name: 'Canon EOS R',
-    },
-    w: 2,
-    h: 1,
-    maxH: 1,
-    y: 0,
-    x: 0,
-    i: 0,
-  },
-  [WidgetsAvailable.EtherScanAddressBalance]: {
-    type: WidgetsAvailable.EtherScanAddressBalance,
-    title: WidgetTitles[WidgetsAvailable.EtherScanAddressBalance],
-    settings: {
-      address: '',
     },
     w: 2,
     h: 1,

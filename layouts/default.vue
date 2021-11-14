@@ -92,6 +92,7 @@ export default defineComponent({
   --font-display: 'Poppins', sans-serif;
   --weight-normal: 600;
   --weight-bold: 700;
+  --weight-thin: 300;
 
   --blur: 10px;
 
@@ -152,7 +153,7 @@ h4,
 h5,
 h6 {
   font-family: var(--font-display);
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-normal);
   margin: 0;
   padding: 0;
 }

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <Value v-if="addressBalance" :value="addressBalance.value" :label="addressBalance.label" :state="addressBalance.state" />
+    <Value
+      v-if="addressBalance"
+      :value="addressBalance.value"
+      :label="addressBalance.label"
+      :state="addressBalance.state"
+    />
     <Button
       class="refresh-button"
       :class="{ primary: isFetching }"
@@ -11,7 +16,11 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent } from '@vue/composition-api'
-import { useFetchAddressBalance, parseAccountBalance, useFetchEtherPrice } from '~/queries/etherscan'
+import {
+  useFetchAddressBalance,
+  parseAccountBalance,
+  useFetchEtherPrice,
+} from '~/queries/etherscan'
 import { Value, Button } from '~/components/atoms'
 import { ValueProps } from '~/types/widgets/value'
 export default defineComponent({
@@ -24,7 +33,7 @@ export default defineComponent({
     settings: {
       type: Object,
       default: () => ({
-        address: ''
+        address: '',
       }),
     },
   },
@@ -33,20 +42,26 @@ export default defineComponent({
       props.settings.address
     )
 
-    const { data: usdEtherPrice } = useFetchEtherPrice(
-    )
+    const { data: usdEtherPrice } = useFetchEtherPrice()
 
     const addressBalance = computed(() => {
-      const { value, label, state }: ValueProps = data.value && usdEtherPrice.value ? parseAccountBalance(data.value, usdEtherPrice.value) : {
-          value: '',
-          label: 'not available',
-          state: 'danger',
-      };
+      const { value, label, state }: ValueProps =
+        data.value && usdEtherPrice.value
+          ? parseAccountBalance(data.value, usdEtherPrice.value)
+          : {
+              value: '',
+              label: 'not available',
+              state: 'danger',
+            }
 
-      return { value, label: props.settings.name ? props.settings.name : label, state }
-    });
+      return {
+        value,
+        label: props.settings.name ? props.settings.name : label,
+        state,
+      }
+    })
 
-    return { addressBalance, isFetching, refetch };
+    return { addressBalance, isFetching, refetch }
   },
 })
 </script>
