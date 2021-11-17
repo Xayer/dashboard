@@ -193,10 +193,11 @@ export default defineComponent({
   justify-content: center;
   flex-direction: column;
   position: absolute;
-  top: calc(var(--padding) * -1);
-  left: calc(var(--padding) * -1);
-  bottom: calc(var(--padding) * -1);
-  right: calc(var(--padding) * -1);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
   transition: var(--transition);
   backdrop-filter: blur(var(--blur));
   background-color: var(--widget-bg);
@@ -222,7 +223,7 @@ export default defineComponent({
   display: flex;
   width: 100%;
   height: 100%;
-  margin: calc(var(--padding) * -1);
+  // margin: calc(var(--padding) * -1);
   justify-content: space-between;
   align-items: center;
   .day-name {
