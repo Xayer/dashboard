@@ -49,7 +49,11 @@
               </div>
             </div>
           </div>
-          <div key="forecasts" class="wrapper">
+          <div
+            key="forecasts"
+            class="wrapper"
+            :class="!!selectedDay ? 'blur' : undefined"
+          >
             <h2 v-if="weatherData.city && showTitle">
               {{ weatherData.city.name }}
             </h2>
@@ -185,6 +189,7 @@ export default defineComponent({
   flex-direction: column;
   position: relative;
   z-index: 1;
+  transition: 250ms ease-out;
 }
 
 .overlay {
@@ -199,8 +204,6 @@ export default defineComponent({
   right: 0;
   height: 100%;
   transition: var(--transition);
-  backdrop-filter: blur(var(--blur));
-  background-color: var(--widget-bg);
   opacity: 0.85;
   &:before {
     position: absolute;
@@ -219,6 +222,10 @@ export default defineComponent({
   cursor: pointer;
 }
 
+.blur {
+  filter: blur(var(--blur));
+  opacity: 0.25;
+}
 .forecasts {
   display: flex;
   width: 100%;
