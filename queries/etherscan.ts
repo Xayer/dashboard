@@ -14,18 +14,21 @@ export function parseAccountBalance(
   const calculatedEtherValue = Number.isNaN(parsedPrice)
     ? 0
     : 1000000000000000000 / parsedPrice
+
   const usd = etherPriceResult
     ? Number.parseFloat(etherPriceResult?.ethusd)
     : NaN
+
   const convertedPrice = Number.isNaN(usd)
     ? ''
     : new Intl.NumberFormat('da-DK', {
         style: 'currency',
         currency: 'USD',
       }).format(usd / calculatedEtherValue)
+
   return {
     value: convertedPrice,
-    label: `${calculatedEtherValue} ETH`,
+    label: `${parsedPrice * 0.000000000000000001} ETH`,
     state: 'default',
   } as ValueProps
 }
