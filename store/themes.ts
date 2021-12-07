@@ -27,9 +27,10 @@ export default {
           name: 'red',
           icon: 'star',
           variables: {
-            '--accent-0': '#475c7a',
+            '--accent-0': '#685d79',
             '--text-color': 'var(--white)',
-            '--accent-50': '#685d79',
+            '--accent-50': '#5d546c',
+            '--accent-100': '#5d546c',
           },
         },
         {
