@@ -32,9 +32,5 @@ export default class Card extends Vue {}
     font-size: var(--card-title-size);
     text-transform: uppercase;
   }
-
-  + .card {
-    margin-top: var(--padding);
-  }
 }
 </style>

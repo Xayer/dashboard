@@ -7,26 +7,33 @@
       >
       <Select v-else v-model="timeRange" :options="timeRanges"></Select>
     </div>
-    <section v-if="topTracks">
-      <article v-for="(topTrack, index) in topTracks" :key="topTrack.id">
-        {{ index + 1 }}
+    <CardCollection v-if="topTracks" class="tracks">
+      <Card v-for="(topTrack, index) in topTracks" :key="topTrack.id">
+        <template #title>
+          {{ index + 1 }}
+        </template>
         <img
           v-if="topTrack.album.images"
           :src="topTrack.album.images[2].url"
-          :alt="`${topTrack.name} - ${topTrack.artists.join(', ')}`"
+          :alt="`${topTrack.name} - ${topTrack.artists
+            .map((artist) => artist.name)
+            .join(', ')}`"
           :width="topTrack.album.images[2].width"
           :height="topTrack.album.images[2].height"
         />
         <div class="titles">
-          <h2>
-            <a :href="topTrack.href">{{ topTrack.name }}</a>
-          </h2>
-          <h3 v-for="artist in topTrack.artists" :key="artist.id">
-            <a :href="artist.href">{{ artist.name }}</a>
-          </h3>
+          <a class="title" :href="topTrack.href">{{ topTrack.name }}</a>
+          <div class="artists">
+            <a
+              v-for="artist in topTrack.artists"
+              :key="artist.id"
+              :href="artist.href"
+              >{{ artist.name }}</a
+            >
+          </div>
         </div>
-      </article>
-    </section>
+      </Card>
+    </CardCollection>
   </div>
 </template>
 <script lang="ts">
@@ -39,11 +46,15 @@ import {
   redirectUri,
   storageKey,
 } from '@/modules/apis/spotify'
-import { Select } from '@/components/atoms'
+import { Select, Button } from '@/components/atoms'
+import { Card, CardCollection } from '@/components/molecules'
 
 @Component({
   components: {
     Select,
+    Button,
+    Card,
+    CardCollection,
   },
 })
 export default class SpotifyIntegrationPage extends Vue {
@@ -122,18 +133,22 @@ user-top-read`
 }
 </script>
 <style lang="scss">
-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  article {
+section.tracks {
+  & > .card {
     display: flex;
     justify-content: start;
     align-items: center;
-    gap: 10px;
-    background-color: var(--dark-bg-alt);
-    .titles {
-      padding: 5px;
+    gap: var(--padding);
+    padding: calc(var(--padding) / 2);
+    a {
+      color: var(--text-color);
+    }
+    .title {
+      font-size: 1.25rem;
+    }
+    .artists {
+      display: flex;
+      gap: calc(var(--padding) / 4);
     }
   }
 }
@@ -141,5 +156,7 @@ section {
 .setting-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding-bottom: var(--padding);
 }
 </style>

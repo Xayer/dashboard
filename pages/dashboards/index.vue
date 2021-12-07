@@ -52,13 +52,15 @@
       <Button class="primary" @click="createNewDashboard">Create</Button>
     </portal>
     <client-only>
-      <Card v-for="(board, index) in boards" :key="`${index}-${board.name}`">
-        <template #title> {{ board.name }}</template>
-        <template #action>
-          <Button class="primary" @click="link(index)">view</Button>
-          <Button class="danger" @click="deleteDashboard(index)">X</Button>
-        </template>
-      </Card>
+      <CardCollection>
+        <Card v-for="(board, index) in boards" :key="`${index}-${board.name}`">
+          <template #title> {{ board.name }}</template>
+          <template #action>
+            <Button class="primary" @click="link(index)">view</Button>
+            <Button class="danger" @click="deleteDashboard(index)">X</Button>
+          </template>
+        </Card>
+      </CardCollection>
     </client-only>
   </div>
 </template>
@@ -66,7 +68,7 @@
 import { Component, Vue, Watch } from 'nuxt-property-decorator'
 import { defaultSettings } from '@/constants/dashboard'
 import { Button } from '@/components/atoms'
-import { Card } from '@/components/molecules'
+import { Card, CardCollection } from '@/components/molecules'
 import { Widget } from '~/types/widgets'
 import {
   Widget as WidgetWrapper,
@@ -89,6 +91,7 @@ import { Board } from '~/types/dashboards'
   components: {
     Button,
     Card,
+    CardCollection,
     TextWidget: Text,
     HueBridges,
     HueLight,
