@@ -1,9 +1,12 @@
 <template>
   <div>
-    <h3 class="m-b">Spotify</h3>
-    <a v-if="!integrationActive && !$route.query.code" :href="authUrl"
-      >Authenticate with Spotify</a
-    >
+    <div class="setting-header">
+      <h3 class="m-b">Spotify</h3>
+      <a v-if="!integrationActive && !$route.query.code" :href="authUrl"
+        >Authenticate with Spotify</a
+      >
+      <Select v-else v-model="timeRange" :options="timeRanges"></Select>
+    </div>
     <section v-if="topTracks">
       <article v-for="(topTrack, index) in topTracks" :key="topTrack.id">
         {{ index + 1 }}
@@ -36,10 +39,21 @@ import {
   redirectUri,
   storageKey,
 } from '@/modules/apis/spotify'
+import { Select } from '@/components/atoms'
 
-@Component({})
+@Component({
+  components: {
+    Select,
+  },
+})
 export default class SpotifyIntegrationPage extends Vue {
   topTracks = []
+  timeRange = 'medium_term'
+  timeRanges = [
+    { text: '4 weeks', value: 'short_term' },
+    { text: '6 months', value: 'medium_term' },
+    { text: 'several years', value: 'long_term' },
+  ]
 
   // eslint-disable-next-line class-methods-use-this
   get authUrl(): string {
@@ -59,39 +73,40 @@ user-top-read`
   }
 
   @Watch('integrationActive')
+  @Watch('timeRange')
   async fetchTopTracks() {
     if (!process.browser) {
       return
     }
 
-    const existingToken = localStorage.getItem(storageKey);
+    const existingToken = localStorage.getItem(storageKey)
     if (!this.integrationActive) {
       if (this.$route.query.code) {
         if (!existingToken || existingToken === 'undefined') {
-            const response = await authenticateToken(
-              this.$route.query.code as string
-            )
+          const response = await authenticateToken(
+            this.$route.query.code as string
+          )
 
-            if (response.error) {
-              localStorage.removeItem(storageKey)
-              this.$router.push(this.$route.path)
-            }
+          if (response.error) {
+            localStorage.removeItem(storageKey)
+            this.$router.push(this.$route.path)
+          }
 
-            localStorage.setItem(
-              storageKey,
-              JSON.stringify(response.refresh_token)
-            )
-            localStorage.setItem(
-              integrationActiveStorageKey,
-              JSON.stringify(true)
-            )
+          localStorage.setItem(
+            storageKey,
+            JSON.stringify(response.refresh_token)
+          )
+          localStorage.setItem(
+            integrationActiveStorageKey,
+            JSON.stringify(true)
+          )
         }
       } else {
         return
       }
     }
 
-    await getTopTracks()
+    await getTopTracks(this.timeRange as 'medium_term')
       .then((topTracks) => {
         this.topTracks = topTracks.items
         localStorage.setItem(integrationActiveStorageKey, JSON.stringify(true))
@@ -121,5 +136,10 @@ section {
       padding: 5px;
     }
   }
+}
+
+.setting-header {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

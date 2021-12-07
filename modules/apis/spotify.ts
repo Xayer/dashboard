@@ -52,14 +52,21 @@ export const getAccessToken = async () => {
   return response.json()
 }
 
-export const getTopTracks = async () => {
+export const getTopTracks = async (
+  timeRange: 'short_term' | 'medium_term' | 'long_term'
+) => {
   const { access_token: accessToken } = await getAccessToken()
 
-  const response = await fetch(TOP_TRACKS_ENDPOINT, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  })
+  const response = await fetch(
+    `${TOP_TRACKS_ENDPOINT}/?${new URLSearchParams({
+      time_range: timeRange,
+    }).toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  )
 
   return response.json()
 }
