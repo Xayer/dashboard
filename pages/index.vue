@@ -1,37 +1,41 @@
 <template>
   <div>
-    <portal to="page-title"
-      >Welcome back{{ accountName ? `, ${accountName}` : '' }}!</portal
-    >
-    <CardCollection class="m-b">
-      <div class="vue-grid-item">
-        <WidgetWrapper>
-          <Location />
-        </WidgetWrapper>
-      </div>
-      <div class="vue-grid-item">
-        <WidgetWrapper v-if="city">
-          <Weather :settings="{ units: 'metric', city }" />
-        </WidgetWrapper>
-      </div>
-    </CardCollection>
+    <client-only>
+      <portal to="page-title"
+        >Welcome back{{ accountName ? `, ${accountName}` : '' }}!</portal
+      >
+      <CardCollection class="m-b">
+        <div class="vue-grid-item">
+          <WidgetWrapper>
+            <Location />
+          </WidgetWrapper>
+        </div>
+        <div class="vue-grid-item">
+          <WidgetWrapper v-if="city">
+            <Weather :settings="{ units: 'metric', city }" />
+          </WidgetWrapper>
+        </div>
+      </CardCollection>
 
-    <CardCollection>
-      <Card>
-        <template #title>Explore Dashboards</template>
-        <template #action>
-          <Button class="primary" @click="link('/dashboards')">Explore</Button>
-        </template>
-      </Card>
-      <Card>
-        <template #title>Setup Account </template>
-        <template #action>
-          <Button class="primary" @click="link('/settings/account')"
-            >Setup</Button
-          >
-        </template>
-      </Card>
-    </CardCollection>
+      <CardCollection>
+        <Card>
+          <template #title>Explore Dashboards</template>
+          <template #action>
+            <Button class="primary" @click="link('/dashboards')"
+              >Explore</Button
+            >
+          </template>
+        </Card>
+        <Card>
+          <template #title>Setup Account </template>
+          <template #action>
+            <Button class="primary" @click="link('/settings/account')"
+              >Setup</Button
+            >
+          </template>
+        </Card>
+      </CardCollection>
+    </client-only>
   </div>
 </template>
 <script lang="ts">
