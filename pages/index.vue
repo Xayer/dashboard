@@ -1,7 +1,7 @@
 <template>
   <div>
     <client-only>
-      <portal to="page-title"
+      <portal v-if="accountName" to="page-title"
         >Welcome back{{ accountName ? `, ${accountName}` : '' }}!</portal
       >
       <CardCollection class="m-b">
