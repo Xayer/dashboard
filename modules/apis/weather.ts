@@ -7,9 +7,8 @@ import {
 
 const host = 'https://api.openweathermap.org'
 const version: string = '2.5'
-// const baseUrl: string = `${corsBypass}/${host}/data/${version}`;
 const baseUrl: string = `${host}/data/${version}`
-const token: string = 'f7307576b27dd288a84c60daa3a4dcec'
+const token: string = process.env.NUXT_ENV_WEATHER_API as string
 
 export const currentWeather = async (
   city: string,
