@@ -1,4 +1,4 @@
 export async function ipInformation() {
-  const response = await fetch('https://ip-api.com/json/')
+  const response = await fetch('https://ipwhois.app/json/')
   return await response.json()
 }

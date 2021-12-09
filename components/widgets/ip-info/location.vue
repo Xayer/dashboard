@@ -38,7 +38,7 @@ export default defineComponent({
 
     const city = computed(() => data.value?.city)
 
-    const regionName = computed(() => data.value?.regionName)
+    const regionName = computed(() => data.value?.region)
 
     const country = computed(() => data.value?.country)
 
