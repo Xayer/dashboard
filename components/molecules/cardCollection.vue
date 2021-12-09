@@ -6,10 +6,8 @@ section {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--padding);
-  @media only screen and (max-width: 1024px) {
-    body {
-      grid-template-columns: 1fr 1fr;
-    }
+  @media only screen and (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
   }
 }
 </style>
