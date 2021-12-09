@@ -52,15 +52,7 @@
       <Button class="primary" @click="createNewDashboard">Create</Button>
     </portal>
     <client-only>
-      <CardCollection>
-        <Card v-for="(board, index) in boards" :key="`${index}-${board.name}`">
-          <template #title> {{ board.name }}</template>
-          <template #action>
-            <Button class="primary" @click="link(index)">view</Button>
-            <Button class="danger" @click="deleteDashboard(index)">X</Button>
-          </template>
-        </Card>
-      </CardCollection>
+      <DashboardList :boards="boards" />
     </client-only>
   </div>
 </template>
@@ -86,10 +78,12 @@ import {
   StockPrice,
 } from '@/components/widgets'
 import { Board } from '~/types/dashboards'
+import { DashboardList } from '@/components/organisms'
 
 @Component({
   components: {
     Button,
+    DashboardList,
     Card,
     CardCollection,
     TextWidget: Text,
@@ -163,10 +157,6 @@ export default class Dashboard extends Vue {
     })
   }
 
-  link(id: number) {
-    this.$router.push({ path: '/dashboards', query: { id: id.toString() } })
-  }
-
   getWidget(widget: string) {
     if (
       this.$options.components &&
@@ -179,11 +169,6 @@ export default class Dashboard extends Vue {
 
   createNewDashboard() {
     this.$store.commit('userSettings/CREATE_NEW_DASHBOARD')
-    this.$store.dispatch('userSettings/loadExistingSettings')
-  }
-
-  deleteDashboard(dashboardIndex: number) {
-    this.$store.commit('userSettings/REMOVE_DASHBOARD', dashboardIndex)
     this.$store.dispatch('userSettings/loadExistingSettings')
   }
 }

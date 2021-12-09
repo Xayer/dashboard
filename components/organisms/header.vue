@@ -1,8 +1,5 @@
 <template>
   <header class="m-b">
-    <a href="/" class="logo">
-      <img src="//placehold.it/32x32" alt="" />
-    </a>
     <Menu :items="menuItems" />
     <aside>
       <ThemeToggle />
