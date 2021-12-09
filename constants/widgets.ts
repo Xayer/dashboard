@@ -14,6 +14,7 @@ export const WidgetsAvailable = {
   StockPrice: 'StockPrice',
   PriceRunnerProductInfo: 'PriceRunnerProductInfo',
   EtherScanAddressBalance: 'EtherScanAddressBalance',
+  Location: 'Location',
 }
 
 export const WidgetTitles: { [key: string]: string } = {
@@ -28,6 +29,7 @@ export const WidgetTitles: { [key: string]: string } = {
   [WidgetsAvailable.StockPrice]: 'Stock Price',
   [WidgetsAvailable.PriceRunnerProductInfo]: 'PriceRunner Price',
   [WidgetsAvailable.EtherScanAddressBalance]: 'Ether Address Balance',
+  [WidgetsAvailable.Location]: 'Location',
 }
 
 export const WidgetDefaultSettings: { [key: string]: Widget } = {
@@ -167,6 +169,17 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
       productId: '5182343',
       name: 'Canon EOS R',
     },
+    w: 2,
+    h: 1,
+    maxH: 1,
+    y: 0,
+    x: 0,
+    i: 0,
+  },
+  [WidgetsAvailable.Location]: {
+    type: WidgetsAvailable.Location,
+    title: WidgetTitles[WidgetsAvailable.Location],
+    settings: {},
     w: 2,
     h: 1,
     maxH: 1,

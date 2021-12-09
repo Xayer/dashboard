@@ -16,3 +16,5 @@ export { default as PriceRunnerProductInfo } from '@/components/widgets/pricerun
 
 export { default as EtherScanAddressBalance } from '@/components/widgets/etherscan/addressBalance.vue'
 export { default as Placeholder } from '@/components/widgets/placeholder.vue'
+
+export { default as Location } from '@/components/widgets/ip-info/location.vue'

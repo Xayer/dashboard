@@ -76,6 +76,7 @@ import {
   EtherScanAddressBalance,
   Placeholder,
   StockPrice,
+  Location,
 } from '@/components/widgets'
 import { Board } from '~/types/dashboards'
 import { DashboardList } from '@/components/organisms'
@@ -99,6 +100,7 @@ import { DashboardList } from '@/components/organisms'
     EtherScanAddressBalance,
     Placeholder,
     StockPrice,
+    Location,
   },
 })
 export default class Dashboard extends Vue {
