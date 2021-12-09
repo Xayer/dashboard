@@ -26,7 +26,7 @@ nav {
     box-shadow: var(--menu-shadow) var(--link-color);
     padding-bottom: calc(var(--padding) / 6);
     transition: var(--transition);
-    &.nuxt-link-active {
+    &.nuxt-link-exact-active {
       box-shadow: var(--menu-shadow) var(--link-current);
     }
     + a {

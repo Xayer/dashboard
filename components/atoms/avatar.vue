@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link to="/settings/login">
+  <nuxt-link v-if="avatar" to="/settings/account">
     <img v-if="avatar" :src="avatar" />
   </nuxt-link>
 </template>

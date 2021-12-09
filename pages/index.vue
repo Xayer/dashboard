@@ -1,6 +1,8 @@
 <template>
   <div>
-    <portal to="page-title">Welcome!</portal>
+    <portal to="page-title"
+      >Welcome back{{ accountName ? `, ${accountName}` : '' }}!</portal
+    >
     <CardCollection>
       <Card>
         <template #title>Explore Dashboards</template>
@@ -11,7 +13,7 @@
       <Card>
         <template #title>Setup Account </template>
         <template #action>
-          <Button class="primary" @click="link('/settings/login')"
+          <Button class="primary" @click="link('/settings/account')"
             >Setup</Button
           >
         </template>
@@ -23,6 +25,7 @@
 import { Component, Vue } from 'nuxt-property-decorator'
 import { Card, CardCollection } from '@/components/molecules'
 import { Button } from '@/components/atoms'
+import { userInfoStorageKey } from '~/constants/account'
 @Component({
   components: {
     Card,
@@ -33,6 +36,16 @@ import { Button } from '@/components/atoms'
 export default class Frontpage extends Vue {
   link(path: string) {
     this.$router.push({ path })
+  }
+
+  get accountName() {
+    if (!process.browser) {
+      return {}
+    }
+    const accountDetails = JSON.parse(
+      localStorage.getItem(userInfoStorageKey) as string
+    )
+    return accountDetails ? accountDetails.name : ''
   }
 }
 </script>

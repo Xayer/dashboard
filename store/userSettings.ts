@@ -9,7 +9,7 @@ import {
   menuShownStorageKey,
   userInfoStorageKey,
   jwtBaseEndpoint,
-} from '@/constants/login'
+} from '~/constants/account'
 import { SettingsResponse, UserSettings, UserInfo } from '@/types/settings'
 import { storageKey as spotifyStorageKey } from '@/modules/apis/spotify'
 import { todosStorageKey } from '@/constants/todo'

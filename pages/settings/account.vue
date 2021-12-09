@@ -1,26 +1,26 @@
 <template>
   <div>
     <template v-if="isAuthenticated">
+      <portal to="page-title">Welcome back, {{ accountDetails.name }}!</portal>
       <Button
-        class="m-l"
         :class="isAuthenticated ? 'primary' : 'danger'"
         :disabled="!isAuthenticated"
         @click="downloadSettings"
-        >Download Settings</Button
+        ><i class="bi bi-download"></i> Download Settings</Button
       >
       <Button
         class="m-l"
         :class="isAuthenticated ? 'primary' : 'danger'"
         :disabled="!isAuthenticated"
         @click="uploadSettings"
-        >Upload Settings</Button
+        ><i class="bi bi-upload"></i> Upload Settings</Button
       >
       <Button
         class="m-l"
         :class="isAuthenticated ? 'primary' : 'danger'"
         :disabled="!isAuthenticated"
         @click="signOut"
-        >sign out</Button
+        ><i class="bi bi-box-arrow-in-right"></i> Sign out</Button
       >
     </template>
     <form v-else ref="form" @submit.stop.prevent="submitForm">
@@ -53,6 +53,7 @@ import { mapGetters } from 'vuex'
 import { FormInput } from '@/components/molecules'
 import { Button } from '@/components/atoms'
 import { themeStorageKey } from '~/constants/themes'
+import { userInfoStorageKey } from '~/constants/account'
 
 @Component({
   components: {
@@ -74,6 +75,13 @@ export default class Login extends Vue {
 
   $ref!: {
     form: typeof HTMLFormElement
+  }
+
+  get accountDetails() {
+    if (!process.browser) {
+      return {}
+    }
+    return JSON.parse(localStorage.getItem(userInfoStorageKey) as string)
   }
 
   // eslint-disable-next-line class-methods-use-this

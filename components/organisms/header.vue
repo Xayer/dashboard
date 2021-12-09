@@ -3,7 +3,7 @@
     <Menu :items="menuItems" />
     <aside>
       <ThemeToggle />
-      <NuxtLink to="/settings/login"><Avatar :size="32" /></NuxtLink>
+      <Avatar :size="32" />
     </aside>
   </header>
 </template>
@@ -20,6 +20,7 @@ import { ThemeToggle, Menu } from '@/components/molecules'
 })
 export default class Header extends Vue {
   menuItems = [
+    { path: '/', label: 'Home' },
     { path: '/dashboards', label: 'Dashboards' },
     { path: '/settings', label: 'Settings' },
   ]
