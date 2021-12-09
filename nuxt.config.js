@@ -12,7 +12,9 @@ export default {
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      { rel: 'icon', type: 'image/png', href: '/favicon.png' },
       {
         rel: 'stylesheet',
         href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;700&display=swap',
@@ -56,6 +58,7 @@ export default {
   pwa: {
     manifest: {
       lang: 'en',
+      description: 'Your personalized dashboard',
     },
   },
 
