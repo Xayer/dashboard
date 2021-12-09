@@ -4,7 +4,7 @@
       <portal v-if="accountName" to="page-title"
         >Welcome back{{ accountName ? `, ${accountName}` : '' }}!</portal
       >
-      <CardCollection class="m-b">
+      <CardCollection>
         <div class="vue-grid-item">
           <WidgetWrapper>
             <Location />
@@ -15,9 +15,7 @@
             <Weather :settings="{ units: 'metric', city }" />
           </WidgetWrapper>
         </div>
-      </CardCollection>
 
-      <CardCollection>
         <Card>
           <template #title>Explore Dashboards</template>
           <template #action>
