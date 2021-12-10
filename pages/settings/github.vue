@@ -5,7 +5,7 @@
         <p v-if="authCode">Authenticating...</p>
         <a v-if="!isAuthorized" :href="authorizationUrl">Login with Github</a>
       </div>
-      <p v-if="isAuthorized && userInfo">
+      <p v-if="userInfo">
         <pre>{{ userInfo }}</pre>
       </p>
     </client-only>
@@ -19,14 +19,15 @@ import {
   ref,
   useRoute,
   useRouter,
+  watch,
 } from '@nuxtjs/composition-api'
 import {
   githubAuthorizationUrl,
   githubGetAccessToken,
   githubTokenStorageKey,
   githubStateStorageKey,
+  githubUserInfoStorageKey,
 } from '@/modules/apis/github'
-import { userInfoStorageKey } from '~/constants/account'
 import { useFetchGithubUserInfo } from '@/queries/github'
 export default defineComponent({
   name: 'GithubSettings',
@@ -38,22 +39,25 @@ export default defineComponent({
     const authorizationUrl = computed(() => githubAuthorizationUrl())
     const isAuthorized = ref(false)
     const authorizationSuccessful = ref(false)
-    const loginSuccessful = ref(false)
-    const userInfo = ref({})
+    const token = ref('')
+    const { data: userInfo } = useFetchGithubUserInfo()
+    watch(userInfo, () => {
+      if (token.value && userInfo.value?.id) {
+        localStorage.setItem(
+          githubUserInfoStorageKey,
+          JSON.stringify(userInfo.value)
+        )
+        isAuthorized.value = true
+      }
+    })
 
     onMounted(async () => {
       if (!process.browser) {
         return
       }
       // if user is already authenticated and has a token
-      const token = localStorage.getItem(githubTokenStorageKey)
-      if (token) {
-        const { data } = useFetchGithubUserInfo()
-        if (data.value?.id) {
-          localStorage.setItem(userInfoStorageKey, JSON.stringify(data.value))
-          userInfo.value = data.value
-          isAuthorized.value = true
-        }
+      token.value = localStorage.getItem(githubTokenStorageKey) as string
+      if (token.value !== null) {
         return
       }
 
@@ -71,7 +75,7 @@ export default defineComponent({
 
         if (response.access_token) {
           localStorage.setItem(githubTokenStorageKey, response.access_token)
-          loginSuccessful.value = true
+          isAuthorized.value = true
         }
         router.replace({ query: {} })
       }
@@ -81,7 +85,6 @@ export default defineComponent({
       authCode,
       authorizationUrl,
       authorizationSuccessful,
-      loginSuccessful,
       isAuthorized,
       userInfo,
     }

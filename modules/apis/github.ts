@@ -1,5 +1,4 @@
 import { AccessTokenResponse, RefreshTokenResponse } from '~/types/github/auth'
-import { UserInfo } from '~/types/settings'
 
 export const githubStateStorageKey = 'github-state'
 export const githubTokenStorageKey = 'github-token'
