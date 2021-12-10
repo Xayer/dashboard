@@ -2,13 +2,20 @@
   <div>
     <client-only>
       <div>
-        <Button @click="clearGithubData">Clear Data</Button>
         <p v-if="authCode">Authenticating...</p>
         <a v-if="!isAuthorized" :href="authorizationUrl">Login with Github</a>
       </div>
       <p v-if="isAuthorized && userInfo">
         <pre>{{ userInfo }}</pre>
       </p>
+      <pre v-if="debugEnabled">{{
+        {
+        userInfo,
+        token
+        }
+      }}
+      <Button @click="clearGithubData">Clear Data</Button>
+      </pre>
     </client-only>
   </div>
 </template>
@@ -46,6 +53,7 @@ export default defineComponent({
     const authorizationSuccessful = ref(false)
     const token = ref('')
     const { data: userInfo } = useFetchGithubUserInfo()
+    const debugEnabled = computed(() => !!route.value.query.debug)
     watch(userInfo, () => {
       if (token.value && userInfo.value?.id) {
         localStorage.setItem(
@@ -61,7 +69,12 @@ export default defineComponent({
         return
       }
       // if user is already authenticated and has a token
-      token.value = localStorage.getItem(githubTokenStorageKey) as string
+      const tokenFromLocalStorage = localStorage.getItem(
+        githubTokenStorageKey
+      ) as string
+      if (tokenFromLocalStorage) {
+        token.value = tokenFromLocalStorage
+      }
       if (token.value !== null) {
         return
       }
@@ -92,6 +105,8 @@ export default defineComponent({
       authorizationSuccessful,
       isAuthorized,
       userInfo,
+      debugEnabled,
+      token,
     }
   },
   methods: {
