@@ -26,7 +26,7 @@ import { Button } from '@/components/atoms'
   },
 })
 export default class Settings extends Vue {
-  routes = ['account', 'spotify', 'hue']
+  routes = ['account', 'github', 'spotify', 'hue']
 
   link(route: string) {
     this.$router.push({ path: `settings/${route}` })

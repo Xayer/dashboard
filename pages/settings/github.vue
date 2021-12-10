@@ -1,11 +1,13 @@
 <template>
   <div>
     <client-only>
-      <pre v-if="authCode">
-        {{ authCode }}
-    </pre
-      >
-      <a v-else :href="authorizationUrl">Login with Github</a>
+      <div>
+        <p v-if="authCode">Authenticating...</p>
+        <a v-if="!isAuthorized" :href="authorizationUrl">Login with Github</a>
+      </div>
+      <p v-if="isAuthorized && userInfo">
+        <pre>{{ userInfo }}</pre>
+      </p>
     </client-only>
   </div>
 </template>
@@ -14,45 +16,64 @@ import {
   computed,
   defineComponent,
   onMounted,
+  ref,
   useRoute,
+  useRouter,
 } from '@nuxtjs/composition-api'
 import {
   githubAuthorizationUrl,
   githubGetAccessToken,
-  localStorageStateKey,
+  githubTokenStorageKey,
+  githubStateStorageKey,
 } from '@/modules/apis/github'
+import { userInfoStorageKey } from '~/constants/account'
+import { useFetchGithubUserInfo } from '@/queries/github'
 export default defineComponent({
   name: 'GithubSettings',
   setup() {
     const route = useRoute()
+    const router = useRouter()
     const authCode = computed(() => route.value.query.code)
     const state = computed(() => route.value.query.state)
     const authorizationUrl = computed(() => githubAuthorizationUrl())
-    let authorizationSuccessful = false
-    let loginSuccessful = false
+    const isAuthorized = ref(false)
+    const authorizationSuccessful = ref(false)
+    const loginSuccessful = ref(false)
+    const userInfo = ref({})
 
     onMounted(async () => {
-      if (authCode.value && state.value) {
-        if (!process.browser) {
-          return
+      if (!process.browser) {
+        return
+      }
+      // if user is already authenticated and has a token
+      const token = localStorage.getItem(githubTokenStorageKey)
+      if (token) {
+        const { data } = useFetchGithubUserInfo()
+        if (data.value?.id) {
+          localStorage.setItem(userInfoStorageKey, JSON.stringify(data.value))
+          userInfo.value = data.value
+          isAuthorized.value = true
         }
+        return
+      }
+
+      if (authCode.value && state.value) {
         // compare state with what was set in localStorage before authorizing
-        if (localStorage.getItem(localStorageStateKey) !== state.value) {
-          authorizationSuccessful = false
+        if (localStorage.getItem(githubStateStorageKey) !== state.value) {
+          authorizationSuccessful.value = false
+        } else {
+          authorizationSuccessful.value = true
         }
 
-        localStorage.removeItem(localStorageStateKey)
+        localStorage.removeItem(githubStateStorageKey)
 
         const response = await githubGetAccessToken(authCode.value as string)
-        console.log(response)
 
         if (response.access_token) {
-          console.log(response.access_token)
-          loginSuccessful = true
-        } else {
-          loginSuccessful = false
+          localStorage.setItem(githubTokenStorageKey, response.access_token)
+          loginSuccessful.value = true
         }
-        route.value.query.code = ''
+        router.replace({ query: {} })
       }
     })
 
@@ -61,6 +82,8 @@ export default defineComponent({
       authorizationUrl,
       authorizationSuccessful,
       loginSuccessful,
+      isAuthorized,
+      userInfo,
     }
   },
 })

@@ -136,7 +136,7 @@ user-top-read`
 section.tracks {
   & > .card {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     gap: var(--padding);
     padding: calc(var(--padding) / 2);

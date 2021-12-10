@@ -74,7 +74,7 @@ export default defineComponent({
       const accountDetails = JSON.parse(
         localStorage.getItem(userInfoStorageKey) as string
       )
-      return accountDetails ? accountDetails.name : ''
+      return accountDetails && accountDetails?.name ? accountDetails?.name : ''
     })
 
     const { data, isFetching, refetch } = useFetchIpInfo()
