@@ -2,10 +2,11 @@
   <div>
     <client-only>
       <div>
+        <Button @click="clearGithubData">Clear Data</Button>
         <p v-if="authCode">Authenticating...</p>
         <a v-if="!isAuthorized" :href="authorizationUrl">Login with Github</a>
       </div>
-      <p v-if="userInfo">
+      <p v-if="isAuthorized && userInfo">
         <pre>{{ userInfo }}</pre>
       </p>
     </client-only>
@@ -21,6 +22,7 @@ import {
   useRouter,
   watch,
 } from '@nuxtjs/composition-api'
+import { Button } from '@/components/atoms'
 import {
   githubAuthorizationUrl,
   githubGetAccessToken,
@@ -31,6 +33,9 @@ import {
 import { useFetchGithubUserInfo } from '@/queries/github'
 export default defineComponent({
   name: 'GithubSettings',
+  components: {
+    Button,
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -88,6 +93,16 @@ export default defineComponent({
       isAuthorized,
       userInfo,
     }
+  },
+  methods: {
+    clearGithubData() {
+      if (!process.browser) {
+        return
+      }
+      localStorage.removeItem(githubStateStorageKey)
+      localStorage.removeItem(githubTokenStorageKey)
+      localStorage.removeItem(githubUserInfoStorageKey)
+    },
   },
 })
 </script>
