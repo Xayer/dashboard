@@ -1,7 +1,13 @@
 <template>
   <div>
     <template v-if="isAuthenticated">
-      <portal to="page-title">Welcome back, {{ accountDetails.name }}!</portal>
+      <portal v-if="accountDetails" to="page-title"
+        >Welcome back{{
+          accountDetails && accountDetails.name
+            ? `, ${accountDetails.name}`
+            : ''
+        }}!</portal
+      >
       <Button
         :class="isAuthenticated ? 'primary' : 'danger'"
         :disabled="!isAuthenticated"
