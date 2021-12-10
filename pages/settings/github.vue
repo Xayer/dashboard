@@ -15,6 +15,7 @@
         }
       }}
       <Button @click="clearGithubData">Clear Data</Button>
+      <Button @click="refetch">refetch</Button>
       </pre>
     </client-only>
   </div>
@@ -29,6 +30,7 @@ import {
   useRouter,
   watch,
 } from '@nuxtjs/composition-api'
+import { useQuery } from 'vue-query'
 import { Button } from '@/components/atoms'
 import {
   githubAuthorizationUrl,
@@ -52,8 +54,10 @@ export default defineComponent({
     const isAuthorized = ref(false)
     const authorizationSuccessful = ref(false)
     const token = ref('')
-    const { data: userInfo } = useFetchGithubUserInfo()
+    const { data: userInfo, refetch } = useFetchGithubUserInfo()
+
     const debugEnabled = computed(() => !!route.value.query.debug)
+
     watch(userInfo, () => {
       if (token.value && userInfo.value?.id) {
         localStorage.setItem(
@@ -75,9 +79,6 @@ export default defineComponent({
       if (tokenFromLocalStorage) {
         token.value = tokenFromLocalStorage
       }
-      if (token.value !== null) {
-        return
-      }
 
       if (authCode.value && state.value) {
         // compare state with what was set in localStorage before authorizing
@@ -94,6 +95,7 @@ export default defineComponent({
         if (response.access_token) {
           localStorage.setItem(githubTokenStorageKey, response.access_token)
           isAuthorized.value = true
+          refetch.value()
         }
         router.replace({ query: {} })
       }
@@ -107,6 +109,7 @@ export default defineComponent({
       userInfo,
       debugEnabled,
       token,
+      refetch,
     }
   },
   methods: {
