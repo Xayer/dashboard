@@ -30,7 +30,6 @@ import {
   useRouter,
   watch,
 } from '@nuxtjs/composition-api'
-import { useQuery } from 'vue-query'
 import { Button } from '@/components/atoms'
 import {
   githubAuthorizationUrl,
