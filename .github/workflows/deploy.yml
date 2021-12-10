@@ -20,6 +20,10 @@ jobs:
       NUXT_ENV_SPOTIFY_REDIRECT_URI: ${{ secrets.SPOTIFY_REDIRECT_URI }}
       NUXT_ENV_SETTINGS_ENDPOINT: ${{ secrets.SETTINGS_ENDPOINT }}
       NUXT_ENV_PROXY_URL: ${{ secrets.NUXT_ENV_PROXY_URL }}
+      NUXT_ENV_GITHUB_REDIRECT_URI: ${{ secrets.GITHUB_REDIRECT_URI }}
+      NUXT_ENV_GITHUB_CLIENT_ID: ${{ secrets.NUXT_ENV_GITHUB_CLIENT_ID }}
+      NUXT_ENV_GITHUB_CLIENT_SECRET: ${{ secrets.NUXT_ENV_GITHUB_CLIENT_SECRET }}
+      NUXT_ENV_GITHUB_PROXY_URL: ${{ secrets.NUXT_ENV_GITHUB_PROXY_URL }}
     strategy:
       matrix:
         node-version: [12.x]
