@@ -1,16 +1,16 @@
 <template>
-  <div>
+  <component :is="hasUrl" :href="link" target="_blank">
     <div class="top">
       <span class="title" v-text="title"></span>
       <span class="label" :class="labelClass" v-text="label"></span>
     </div>
     <h1 class="value" v-text="value"></h1>
-  </div>
+  </component>
 </template>
 <script lang="ts">
 import { computed, defineComponent } from '@vue/composition-api'
 export default defineComponent({
-    name: 'Value',
+  name: 'Value',
   props: {
     title: {
       type: String,
@@ -25,23 +25,38 @@ export default defineComponent({
       default: () => '',
     },
     state: {
-        type: String,
-        default: () => '',
-    }
+      type: String,
+      default: () => '',
+    },
+    url: {
+      type: String,
+      default: () => '',
+    },
   },
   setup(props) {
+    const hasUrl = computed(() => (props.url ? 'a' : 'div'))
+    const link = computed(() => props.url)
     const labelClass = computed(() => {
-      if(props.state === 'success') { return 'positive'}
-      if(props.state === 'danger') { return 'negative'}
-      if(props.state === 'default') { return ''}
+      if (props.state === 'success') {
+        return 'positive'
+      }
+      if (props.state === 'danger') {
+        return 'negative'
+      }
+      if (props.state === 'default') {
+        return ''
+      }
       return ''
     })
-    return { labelClass }
-  }
+
+    return { labelClass, hasUrl, link }
+  },
 })
 </script>
 <style lang="scss" scoped>
-div {
+div,
+a {
+  color: var(--text-color);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

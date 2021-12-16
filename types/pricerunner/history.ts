@@ -17,6 +17,6 @@ export interface ProductPriceHistoryResponse {
   lowest: number
   highest: number
   currencyCode: string
-  history?: HistoryEntity[] | null
-  merchants?: MerchantsEntity[] | null
+  history: HistoryEntity[]
+  merchants: MerchantsEntity[]
 }

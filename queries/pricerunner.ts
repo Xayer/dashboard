@@ -5,22 +5,30 @@ import { ProductPriceHistoryResponse } from '~/types/pricerunner/history'
 import { ValueProps } from '~/types/widgets/value'
 
 export function parseProductInfo({
-  lowest: lowestPrice,
   productId,
   currencyCode,
   history,
 }: ProductPriceHistoryResponse) {
+  const latestPriceInfo = history[history.length - 1]
+
   const formattedPrice =
-    Number.isNaN(lowestPrice) || !currencyCode
+    Number.isNaN(latestPriceInfo.price) || !currencyCode
       ? ''
       : new Intl.NumberFormat('da-DK', {
           style: 'currency',
           currency: currencyCode,
-        }).format(lowestPrice)
+        }).format(latestPriceInfo.price)
+
+  const timestamp = new Date(latestPriceInfo.timestamp)
   return {
-    value: formattedPrice,
-    label: history ? history[0].merchantProductSku : productId,
-    state: 'success',
+    value: latestPriceInfo ? formattedPrice : '',
+    label: latestPriceInfo.merchantProductSku ?? productId,
+    title:
+      timestamp && latestPriceInfo
+        ? `${latestPriceInfo.merchantName} (${timestamp.toLocaleDateString()})`
+        : '',
+    state: 'default',
+    url: `//pricerunner.dk/pl/00-${productId}`,
   } as ValueProps
 }
 

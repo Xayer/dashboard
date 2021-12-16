@@ -1,6 +1,13 @@
 <template>
   <div>
-    <Value v-if="productInfo" :value="productInfo.value" :label="productInfo.label" :state="productInfo.state" />
+    <Value
+      v-if="productInfo"
+      :value="productInfo.value"
+      :label="productInfo.label"
+      :state="productInfo.state"
+      :title="productInfo.title"
+      :url="productInfo.url"
+    />
     <Button
       class="refresh-button"
       :class="{ primary: isFetching }"
@@ -37,16 +44,25 @@ export default defineComponent({
     )
 
     const productInfo = computed(() => {
-      const { value, label, state }: ValueProps = data.value ? parseProductInfo(data.value) : {
-          value: '',
-          label: '',
-          state: 'danger',
-      };
+      const { value, label, state, title, url }: ValueProps = data.value
+        ? parseProductInfo(data.value)
+        : ({
+            value: '',
+            title: 'loading',
+            label: props.settings.name,
+            state: 'danger',
+          } as ValueProps)
 
-      return { value, label: props.settings.name ? props.settings.name : label, state }
-    });
+      return {
+        value,
+        label: props.settings.name ? props.settings.name : label,
+        state,
+        title,
+        url,
+      }
+    })
 
-    return { productInfo, isFetching, refetch };
+    return { productInfo, isFetching, refetch }
   },
 })
 </script>
