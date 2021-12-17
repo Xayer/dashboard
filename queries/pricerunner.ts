@@ -10,6 +10,10 @@ export function parseProductInfo({
   history,
 }: ProductPriceHistoryResponse) {
   const latestPriceInfo = history[history.length - 1]
+  const yesterdaysPriceInfo = history[history.length - 2]
+
+  const diff = latestPriceInfo.price - yesterdaysPriceInfo.price
+  const diffPercentage = (diff * 100) / latestPriceInfo.price
 
   const formattedPrice =
     Number.isNaN(latestPriceInfo.price) || !currencyCode
@@ -19,15 +23,26 @@ export function parseProductInfo({
           currency: currencyCode,
         }).format(latestPriceInfo.price)
 
-  const timestamp = new Date(latestPriceInfo.timestamp)
+  const formattedDiff = diff
+    ? new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: currencyCode,
+      }).format(Number(diff))
+    : 0
+
   return {
     value: latestPriceInfo ? formattedPrice : '',
-    label: latestPriceInfo.merchantProductSku ?? productId,
-    title:
-      timestamp && latestPriceInfo
-        ? `${latestPriceInfo.merchantName} (${timestamp.toLocaleDateString()})`
+    label:
+      diffPercentage !== 0
+        ? `${formattedDiff} (${diffPercentage.toFixed(2)}%)`
         : '',
-    state: 'default',
+    title: productId,
+    state:
+      diffPercentage === 0
+        ? 'default'
+        : diffPercentage >= 0
+        ? 'success'
+        : 'danger',
     url: `//pricerunner.dk/pl/00-${productId}`,
   } as ValueProps
 }

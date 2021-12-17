@@ -55,9 +55,9 @@ export default defineComponent({
 
       return {
         value,
-        label: props.settings.name ? props.settings.name : label,
+        label,
         state,
-        title,
+        title: props.settings.name ? props.settings.name : title,
         url,
       }
     })

@@ -28,9 +28,7 @@ export default defineComponent({
   props: {
     settings: {
       type: Object,
-      default: () => ({
-        address: '',
-      }),
+      default: () => ({}),
     },
   },
   setup(_props) {
