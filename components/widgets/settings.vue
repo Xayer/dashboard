@@ -2,7 +2,7 @@
   <form @submit.stop.prevent="">
     <label
       v-for="(settingValue, settingName) in settings"
-      :key="`${settingName}:${settingValue}`"
+      :key="settingName"
       :for="settingName"
       >{{ settingName }}:
       <FormInput
@@ -30,6 +30,10 @@ export default class WidgetSettingEditor extends Vue {
   @VModel() readonly settings!: WidgetSetting[]
 
   @Prop() title!: string
+
+  created() {
+    console.log('created')
+  }
 
   updateValue(key: string, value: any) {
     this.$emit('input', { ...this.settings, [key]: value })
