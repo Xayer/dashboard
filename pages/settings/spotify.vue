@@ -89,7 +89,7 @@ export default class SpotifyIntegrationPage extends Vue {
       return
     }
 
-    const existingToken = localStorage.getItem(storageKey)
+    let existingToken = localStorage.getItem(storageKey)
     if (!this.integrationActive) {
       if (this.$route.query.code) {
         if (!existingToken || existingToken === 'undefined') {
@@ -97,31 +97,41 @@ export default class SpotifyIntegrationPage extends Vue {
             this.$route.query.code as string
           )
 
-          if (response.error) {
+          if (!response.error) {
+            localStorage.setItem(
+              storageKey,
+              JSON.stringify(response.refresh_token)
+            )
+            localStorage.setItem(
+              integrationActiveStorageKey,
+              JSON.stringify(true)
+            )
+          } else {
             localStorage.removeItem(storageKey)
-            this.$router.push(this.$route.path)
+            localStorage.removeItem(integrationActiveStorageKey)
           }
 
-          localStorage.setItem(
-            storageKey,
-            JSON.stringify(response.refresh_token)
-          )
-          localStorage.setItem(
-            integrationActiveStorageKey,
-            JSON.stringify(true)
-          )
+          existingToken = localStorage.getItem(storageKey)
         }
       }
     }
 
-    await getTopTracks(this.timeRange as 'medium_term')
-      .then((topTracks) => {
-        this.topTracks = topTracks.items
-        localStorage.setItem(integrationActiveStorageKey, JSON.stringify(true))
-      })
-      .catch(() => {
-        localStorage.setItem(integrationActiveStorageKey, JSON.stringify(false))
-      })
+    if (existingToken) {
+      await getTopTracks(this.timeRange as 'medium_term')
+        .then((topTracks) => {
+          this.topTracks = topTracks.items
+          localStorage.setItem(
+            integrationActiveStorageKey,
+            JSON.stringify(true)
+          )
+        })
+        .catch(() => {
+          localStorage.setItem(
+            integrationActiveStorageKey,
+            JSON.stringify(false)
+          )
+        })
+    }
   }
 
   mounted() {
