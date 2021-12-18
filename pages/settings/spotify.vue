@@ -78,8 +78,9 @@ user-top-read`
       return
     }
     return (
-      JSON.stringify(localStorage.getItem(integrationActiveStorageKey)) ===
-      'true'
+      JSON.parse(
+        localStorage.getItem(integrationActiveStorageKey) as string
+      ) === true
     )
   }
 
@@ -112,8 +113,6 @@ user-top-read`
             JSON.stringify(true)
           )
         }
-      } else {
-        return
       }
     }
 
