@@ -15,6 +15,7 @@ export const WidgetsAvailable = {
   PriceRunnerProductInfo: 'PriceRunnerProductInfo',
   EtherScanAddressBalance: 'EtherScanAddressBalance',
   Location: 'Location',
+  SpotifyTopTracks: 'SpotifyTopTracks',
 }
 
 export const WidgetTitles: { [key: string]: string } = {
@@ -30,6 +31,7 @@ export const WidgetTitles: { [key: string]: string } = {
   [WidgetsAvailable.PriceRunnerProductInfo]: 'PriceRunner Price',
   [WidgetsAvailable.EtherScanAddressBalance]: 'Ether Address Balance',
   [WidgetsAvailable.Location]: 'Location',
+  [WidgetsAvailable.SpotifyTopTracks]: 'Top Tracks Spotify',
 }
 
 export const WidgetDefaultSettings: { [key: string]: Widget } = {
@@ -183,6 +185,18 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     w: 2,
     h: 1,
     maxH: 1,
+    y: 0,
+    x: 0,
+    i: 0,
+  },
+  [WidgetsAvailable.SpotifyTopTracks]: {
+    type: WidgetsAvailable.SpotifyTopTracks,
+    title: WidgetTitles[WidgetsAvailable.SpotifyTopTracks],
+    settings: {
+      range: 'medium_term',
+    },
+    w: 2,
+    h: 1,
     y: 0,
     x: 0,
     i: 0,

@@ -18,3 +18,6 @@ export { default as EtherScanAddressBalance } from '@/components/widgets/ethersc
 export { default as Placeholder } from '@/components/widgets/placeholder.vue'
 
 export { default as Location } from '@/components/widgets/ip-info/location.vue'
+
+export { default as SpotifyTopTracks } from '@/components/widgets/spotify/topTracks.vue'
+export { default as SpotifyTopTracksSettings } from '@/components/widgets/spotify/topTracksSettings.vue'

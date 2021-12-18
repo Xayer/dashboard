@@ -1,8 +1,12 @@
 import querystring from 'querystring'
+import { TopTimeRange } from '~/types/spotify/topTracks'
 
 export const clientId = process.env.NUXT_ENV_SPOTIFY_CLIENT_ID
 export const clientSecret = process.env.NUXT_ENV_SPOTIFY_CLIENT_SECRET
 export const redirectUri = process.env.NUXT_ENV_SPOTIFY_REDIRECT_URI
+export const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=user-read-currently-playing%20
+user-top-read`
+
 export const storageKey = 'spotify-refresh-token'
 export const integrationActiveStorageKey = 'integration-spotify-active'
 
@@ -52,9 +56,7 @@ export const getAccessToken = async () => {
   return response.json()
 }
 
-export const getTopTracks = async (
-  timeRange: 'short_term' | 'medium_term' | 'long_term'
-) => {
+export const getTopTracks = async (timeRange: TopTimeRange) => {
   const { access_token: accessToken } = await getAccessToken()
 
   const response = await fetch(

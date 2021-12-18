@@ -40,10 +40,9 @@
 import { Component, Vue, Watch } from 'nuxt-property-decorator'
 import {
   authenticateToken,
-  clientId,
+  authUrl,
   getTopTracks,
   integrationActiveStorageKey,
-  redirectUri,
   storageKey,
 } from '@/modules/apis/spotify'
 import { Select, Button } from '@/components/atoms'
@@ -68,8 +67,7 @@ export default class SpotifyIntegrationPage extends Vue {
 
   // eslint-disable-next-line class-methods-use-this
   get authUrl(): string {
-    return `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=user-read-currently-playing%20
-user-top-read`
+    return authUrl
   }
 
   // eslint-disable-next-line class-methods-use-this

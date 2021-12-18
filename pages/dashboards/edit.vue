@@ -53,7 +53,13 @@
           <WidgetWrapper>
             <div class="settings-header m-b">
               <span class="drag m-r"><i class="bi bi-arrows-move"></i></span>
-              <h2>{{ WidgetTitles && WidgetTitles[item.type] ? WidgetTitles[item.type] : item.type }}</h2>
+              <h2>
+                {{
+                  WidgetTitles && WidgetTitles[item.type]
+                    ? WidgetTitles[item.type]
+                    : item.type
+                }}
+              </h2>
               <span class="remove m-l" @click="removeWidget(itemIndex)">
                 <i class="bi bi-x-circle"></i>
               </span>
@@ -103,7 +109,11 @@ import { Select, Button } from '@/components/atoms'
 import { Sidebar } from '@/components/molecules'
 import WidgetSettings from '@/components/widgets/settings.vue'
 import WeatherSettings from '@/components/widgets/weather/settings.vue'
-import { WidgetDefaultSettings, WidgetsAvailable , WidgetTitles } from '@/constants/widgets'
+import {
+  WidgetDefaultSettings,
+  WidgetsAvailable,
+  WidgetTitles,
+} from '@/constants/widgets'
 import {
   dasboardsLocalStorageKey,
   defaultSettings,
@@ -112,6 +122,7 @@ import WidgetWrapper from '@/components/widgets/widget.vue'
 import { Widget } from '~/types/widgets'
 import { Board } from '~/types/dashboards'
 import HueGroupSettings from '~/components/widgets/hue/group/settings.vue'
+import { SpotifyTopTracksSettings } from '~/components/widgets'
 
 @Component({
   components: {
@@ -123,6 +134,7 @@ import HueGroupSettings from '~/components/widgets/hue/group/settings.vue'
     HueGroup: HueGroupSettings,
     WidgetWrapper,
     Forecast: WeatherSettings,
+    SpotifyTopTracks: SpotifyTopTracksSettings,
   },
 })
 export default class EditableDashboard extends Vue {
