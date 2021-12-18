@@ -17,6 +17,7 @@ export default class Widget extends Vue {}
   padding: var(--widget-padding);
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;
   border-radius: var(--radius);
   .refresh-button {
     position: absolute;
