@@ -52,13 +52,16 @@
       <Button class="primary" @click="createNewDashboard">Create</Button>
     </portal>
     <client-only>
-      <DashboardList :boards="boards" />
+      <DashboardList :boards="boards" @input="updateDashboardName" />
     </client-only>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from 'nuxt-property-decorator'
-import { defaultSettings } from '@/constants/dashboard'
+import {
+  dasboardsLocalStorageKey,
+  defaultSettings,
+} from '@/constants/dashboard'
 import { Button } from '@/components/atoms'
 import { Card, CardCollection } from '@/components/molecules'
 import { Widget } from '~/types/widgets'
@@ -173,6 +176,24 @@ export default class Dashboard extends Vue {
 
   createNewDashboard() {
     this.$store.commit('userSettings/CREATE_NEW_DASHBOARD')
+    this.$store.dispatch('userSettings/loadExistingSettings')
+  }
+
+  updateDashboardName({
+    name: dashboardName,
+    index: dashboardEditIndex,
+  }: {
+    name: string
+    index: number
+  }) {
+    const newDashboards = JSON.parse(JSON.stringify([...this.boards]))
+
+    newDashboards[dashboardEditIndex].name = dashboardName
+
+    localStorage.setItem(
+      dasboardsLocalStorageKey,
+      JSON.stringify(newDashboards)
+    )
     this.$store.dispatch('userSettings/loadExistingSettings')
   }
 }

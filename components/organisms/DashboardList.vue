@@ -50,7 +50,7 @@ export default defineComponent({
   },
   setup(_props) {},
   data() {
-    return { 
+    return {
       dashboardName: '',
       dashboardEditIndex: -1,
     }
@@ -70,17 +70,20 @@ export default defineComponent({
     editDashboardName(index: number, event: Event) {
       this.$data.dashboardEditIndex = index
       this.$data.dashboardName = (this.$props.boards as Board[])[index].name
-      
+
       const parent = (event.target as HTMLElement).parentElement
       setTimeout(() => {
         parent?.querySelector<HTMLElement>('.edit-form')?.focus()
       }, 50)
     },
     saveModifiedTodoItem() {
-      this.$emit('input', { name: this.$data.dashboardName, index: this.$data.dashboardEditIndex } )
+      this.$emit('input', {
+        name: this.$data.dashboardName,
+        index: this.$data.dashboardEditIndex,
+      })
       this.$data.dashboardEditIndex = -1
       this.$data.dashboardName = ''
-    }
+    },
   },
 })
 </script>

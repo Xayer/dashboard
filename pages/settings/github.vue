@@ -5,18 +5,17 @@
         <p v-if="authCode">Authenticating...</p>
         <a v-if="!isAuthorized" :href="authorizationUrl">Login with Github</a>
       </div>
-      <p v-if="isAuthorized && userInfo">
-        <pre>{{ userInfo }}</pre>
-      </p>
-      <pre v-if="debugEnabled">{{
-        {
-        userInfo,
-        token
-        }
-      }}
+      <pre v-if="isAuthorized && userInfo">{{ userInfo }}</pre>
+      <pre v-if="debugEnabled"
+        >{{
+          {
+            userInfo,
+            token,
+          }
+        }}
+      </pre>
       <Button @click="clearGithubData">Clear Data</Button>
       <Button @click="refetch">refetch</Button>
-      </pre>
     </client-only>
   </div>
 </template>

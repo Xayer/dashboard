@@ -31,10 +31,6 @@ export default class WidgetSettingEditor extends Vue {
 
   @Prop() title!: string
 
-  created() {
-    console.log('created')
-  }
-
   updateValue(key: string, value: any) {
     this.$emit('input', { ...this.settings, [key]: value })
   }

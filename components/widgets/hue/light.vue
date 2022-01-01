@@ -1,7 +1,8 @@
 <template>
   <div class="hue-light">
     <template v-if="light">
-      <i class="bulb bi"
+      <i
+        class="bulb bi"
         :class="light.state.on ? 'bi-lightbulb-fill' : 'bi-lightbulb-off-fill'"
         :style="{ color: light.state.on && light.state.hue ? hexColor : '' }"
         @click="light ? toggle(!light.state.on) : undefined"
@@ -25,7 +26,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { hexToRgb, rgbToHsl, rgbToXy } from "@/constants/color"
+import { hexToRgb, rgbToHsl, rgbToXy } from '@/constants/color'
 
 @Component({})
 export default class HueBridges extends Vue {
@@ -46,10 +47,10 @@ export default class HueBridges extends Vue {
   }
 
   colour() {
-    const hex = (this.$refs.color as HTMLInputElement).value;
-    const { r, g,b } = hexToRgb(hex);
-    const { l } = rgbToHsl({ r, g,b });
-    const [x,y] = rgbToXy(r,g,b);
+    const hex = (this.$refs.color as HTMLInputElement).value
+    const { r, g, b } = hexToRgb(hex)
+    const { l } = rgbToHsl({ r, g, b })
+    const [x, y] = rgbToXy(r, g, b)
 
     this.$store.dispatch('hue/toggleLight', {
       uniqueId: this.hueId,

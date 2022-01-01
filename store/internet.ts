@@ -3,10 +3,10 @@ const state = {
 }
 
 const getters = {
-  online: (state: any) => state.online
-};
+  online: (state: any) => state.online,
+}
 
-const actions = {};
+const actions = {}
 
 const mutations = {
   SET_CONNECTION_STATUS: (state: any, online: boolean) => {

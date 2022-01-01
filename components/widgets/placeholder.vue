@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <span>widget not found:</span>{{ type }}
-  </div>
+  <div><span>widget not found:</span>{{ type }}</div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator'
@@ -22,7 +20,10 @@ div {
   padding: 0;
   text-align: center;
 
-  span { font-weight: var(--weight-bold); color: var(--accent-danger); }
+  span {
+    font-weight: var(--weight-bold);
+    color: var(--accent-danger);
+  }
 
   i {
     font-size: 2rem;

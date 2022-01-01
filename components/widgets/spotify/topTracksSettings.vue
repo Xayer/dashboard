@@ -38,7 +38,7 @@ export default class TopTracksrSettings extends Vue {
 
   mounted() {
     if (this.settings.range) {
-      this.range = (this.settings.range as unknown) as TopTimeRange
+      this.range = this.settings.range as unknown as TopTimeRange
     }
   }
 

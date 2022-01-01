@@ -90,7 +90,12 @@ export default class HueAPI extends API {
     })
   }
 
-  toggleLight(uniqueid: string, on: boolean, xy?: { x: number, y: number}, bri = 100) {
+  toggleLight(
+    uniqueid: string,
+    on: boolean,
+    xy?: { x: number; y: number },
+    bri = 100
+  ) {
     return new Promise((resolve, reject) => {
       if (!this.findExistingToken()) {
         reject(Error('token missing'))
@@ -98,7 +103,7 @@ export default class HueAPI extends API {
 
       const toggleData = {
         on,
-        ...(xy && { xy: [xy.x, xy.y]}),
+        ...(xy && { xy: [xy.x, xy.y] }),
         bri: Math.round(bri),
       }
 

@@ -13,7 +13,11 @@
       >{{ lightLabel }} Lights</Button
     >
     <span class="m-r">
-      <input v-model="bridgeAddressFromInput" type="text" placeholder="Hue Bridge IP" />
+      <input
+        v-model="bridgeAddressFromInput"
+        type="text"
+        placeholder="Hue Bridge IP"
+      />
     </span>
     <Button
       v-if="!hueAvailable || !token"
@@ -82,12 +86,12 @@ export default class HueIntegration extends Vue {
 
   submitBridgeAddress() {
     this.errorMessage = ''
-    if(!this.bridgeAddressFromInput) {
+    if (!this.bridgeAddressFromInput) {
       this.errorMessage = 'no bridge address specified.'
-      return;
+      return
     }
-    this.bridgeAddress = this.bridgeAddressFromInput;
-    this.registerToken(this.bridgeAddress);
+    this.bridgeAddress = this.bridgeAddressFromInput
+    this.registerToken(this.bridgeAddress)
   }
 
   @Watch('bridgeAddressNotFound')

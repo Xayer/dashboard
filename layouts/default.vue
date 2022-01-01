@@ -113,7 +113,7 @@ export default defineComponent({
   --button-box-shadow: var(--box-shadow-general);
 
   --input-bg: var(--accent-0);
-  
+
   --widget-padding: 15px;
 }
 

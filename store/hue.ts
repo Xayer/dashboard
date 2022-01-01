@@ -102,7 +102,12 @@ const actions = {
       on,
       xy,
       bri,
-    }: { uniqueId: string; on: boolean; xy?: { x: number, y: number}, bri: number }
+    }: {
+      uniqueId: string
+      on: boolean
+      xy?: { x: number; y: number }
+      bri: number
+    }
   ) =>
     rootGetters['hue/instance'].toggleLight(uniqueId, on, xy, bri).then(() => {
       dispatch('getDevices')
