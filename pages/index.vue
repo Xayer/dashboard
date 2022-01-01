@@ -1,7 +1,7 @@
 <template>
   <div>
     <client-only>
-      <portal v-if="accountName" to="page-title"
+      <portal to="page-title"
         >Welcome back{{ accountName ? `, ${accountName}` : '' }}!</portal
       >
       <CardCollection>
@@ -33,6 +33,11 @@
           </template>
         </Card>
       </CardCollection>
+      <div class="vue-grid-item todo-wrapper">
+        <WidgetWrapper>
+          <TodoList />
+        </WidgetWrapper>
+      </div>
     </client-only>
   </div>
 </template>
@@ -45,6 +50,7 @@ import {
   Widget as WidgetWrapper,
   Location,
   Weather,
+  TodoList,
 } from '@/components/widgets'
 import { useFetchIpInfo } from '~/queries/ip-api'
 
@@ -57,6 +63,7 @@ export default defineComponent({
     Location,
     Button,
     Weather,
+    TodoList,
   },
   props: {
     settings: {
@@ -101,5 +108,11 @@ export default defineComponent({
   .value {
     text-transform: uppercase;
   }
+}
+
+.todo-wrapper {
+  width: 100%;
+  min-height: 30vh;
+  margin-top: var(--padding);
 }
 </style>
