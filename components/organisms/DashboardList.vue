@@ -2,7 +2,21 @@
   <div>
     <CardCollection v-if="!!boards.length">
       <Card v-for="(board, index) in boards" :key="`${index}-${board.name}`">
-        <template #title> {{ board.name }}</template>
+        <template #title>
+          <input
+            v-if="dashboardEditIndex === index"
+            v-model="dashboardName"
+            class="edit-form"
+            autofocus
+            type="text"
+            @blur="saveModifiedTodoItem"
+          />
+          <span
+            v-show="dashboardEditIndex !== index"
+            @click="editDashboardName(index, $event)"
+            >{{ board.name }}</span
+          >
+        </template>
         <template #action>
           <Button class="primary" @click="link(index)">view</Button>
           <Button class="danger" @click="deleteDashboard(index)">X</Button>
@@ -19,6 +33,7 @@
 import { defineComponent } from '@vue/composition-api'
 import { Button } from '~/components/atoms'
 import { Card, CardCollection } from '~/components/molecules'
+import { Board } from '~/types/dashboards'
 
 export default defineComponent({
   name: 'DashboardList',
@@ -34,6 +49,12 @@ export default defineComponent({
     },
   },
   setup(_props) {},
+  data() {
+    return { 
+      dashboardName: '',
+      dashboardEditIndex: -1,
+    }
+  },
   methods: {
     deleteDashboard(dashboardIndex: number) {
       this.$store.commit('userSettings/REMOVE_DASHBOARD', dashboardIndex)
@@ -46,6 +67,20 @@ export default defineComponent({
       this.$store.commit('userSettings/CREATE_NEW_DASHBOARD')
       this.$store.dispatch('userSettings/loadExistingSettings')
     },
+    editDashboardName(index: number, event: Event) {
+      this.$data.dashboardEditIndex = index
+      this.$data.dashboardName = (this.$props.boards as Board[])[index].name
+      
+      const parent = (event.target as HTMLElement).parentElement
+      setTimeout(() => {
+        parent?.querySelector<HTMLElement>('.edit-form')?.focus()
+      }, 50)
+    },
+    saveModifiedTodoItem() {
+      this.$emit('input', { name: this.$data.dashboardName, index: this.$data.dashboardEditIndex } )
+      this.$data.dashboardEditIndex = -1
+      this.$data.dashboardName = ''
+    }
   },
 })
 </script>
@@ -53,5 +88,15 @@ export default defineComponent({
 .help-message {
   text-align: center;
   font-weight: var(--weight-thin);
+}
+
+input {
+  // margin: calc(var(--padding) / 4) 0;
+  max-width: 100%;
+  margin-left: calc(var(--padding) / -4);
+  padding: calc(var(--padding) / 4) calc(var(--padding) / 4);
+  text-transform: uppercase;
+  font-weight: var(--weight-normal);
+  font-size: 12px;
 }
 </style>
