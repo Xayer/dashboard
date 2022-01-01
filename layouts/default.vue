@@ -97,7 +97,7 @@ export default defineComponent({
   --blur: 10px;
 
   /** General Global styling options */
-  --padding: 25px;
+  --padding: 15px;
   --radius: 5px;
   --transition: ease 150ms;
 
@@ -117,6 +117,12 @@ export default defineComponent({
   --widget-padding: 15px;
 }
 
+@media screen and (min-width: 1024px) {
+  :root {
+    --padding: 25px;
+  }
+}
+
 body,
 html {
   --layout-bg: var(--accent-0);
@@ -126,6 +132,8 @@ html {
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  margin: 0;
 }
 
 input {

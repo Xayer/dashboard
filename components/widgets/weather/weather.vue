@@ -2,6 +2,7 @@
   <div class="wrapper">
     <div class="weather">
       <template v-if="data">
+        <h3 v-if="label">{{ label }}</h3>
         <h1 class="temp">
           <i
             v-if="weatherIcon"
@@ -11,7 +12,6 @@
           <span v-if="temperature">{{ temperature }}</span>
           <span>{{ temperatureUnit }}</span>
         </h1>
-        <h3 v-if="label">{{ label }}</h3>
       </template>
       <Button
         class="refresh-button"

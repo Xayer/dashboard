@@ -180,16 +180,18 @@ export default defineComponent({
 })
 </script>
 <style lang="scss" scoped>
-.wrapper {
-  display: flex;
+div {
   height: 100%;
   width: 100%;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  position: relative;
-  z-index: 1;
-  transition: 250ms ease-out;
+  .wrapper {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    transition: 250ms ease-out;
+  }
 }
 
 .overlay {
@@ -322,7 +324,7 @@ export default defineComponent({
     display: grid !important;
     grid-template-columns: 1fr 1fr;
     &.columns {
-      grid-template-columns: repeat(8, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       width: 100%;
       .day {
         display: flex;
