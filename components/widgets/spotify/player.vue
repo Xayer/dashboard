@@ -25,12 +25,6 @@
         </div>
         <div class="stats" :class="isPlaying ? 'on' : 'off'" :style="trackProgressStyling"></div>
       </Card>
-      <Button
-        class="refresh-button"
-        :class="{ primary: isFetching }"
-        @click="refetch"
-        ><i class="bi bi-arrow-repeat" :class="{ spin: isFetching }"></i
-      ></Button>
     </template>
   </div>
 </template>
