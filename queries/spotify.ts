@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from 'vue-query'
 import { minutes, seconds } from '~/constants/time'
 import { getPlaybackState, getTopTracks } from '~/modules/apis/spotify'
-import { PlayerStateResponse } from '~/types/spotify/PlayerState'
+import { PlayerStateResponse } from '~/types/spotify/playerState'
 import { TopTracksResponse, TopTimeRange } from '~/types/spotify/topTracks'
 
 export function useTopTracks(
