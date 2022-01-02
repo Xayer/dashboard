@@ -27,8 +27,8 @@ export default defineComponent({
   },
   props: {
     settings: {
-      type: Object,
-      default: () => ({}),
+      type: Array,
+      default: () => ([]),
     },
   },
   setup(_props) {

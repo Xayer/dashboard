@@ -16,6 +16,7 @@ export const WidgetsAvailable = {
   EtherScanAddressBalance: 'EtherScanAddressBalance',
   Location: 'Location',
   SpotifyTopTracks: 'SpotifyTopTracks',
+  SpotifyPlayer: 'SpotifyPlayer',
 }
 
 export const WidgetTitles: { [key: string]: string } = {
@@ -32,6 +33,7 @@ export const WidgetTitles: { [key: string]: string } = {
   [WidgetsAvailable.EtherScanAddressBalance]: 'Ether Address Balance',
   [WidgetsAvailable.Location]: 'Location',
   [WidgetsAvailable.SpotifyTopTracks]: 'Top Tracks Spotify',
+  [WidgetsAvailable.SpotifyPlayer]: 'Spotify Player',
 }
 
 export const WidgetDefaultSettings: { [key: string]: Widget } = {
@@ -195,6 +197,16 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     settings: {
       range: 'medium_term',
     },
+    w: 2,
+    h: 1,
+    y: 0,
+    x: 0,
+    i: 0,
+  },
+  [WidgetsAvailable.SpotifyPlayer]: {
+    type: WidgetsAvailable.SpotifyPlayer,
+    title: WidgetTitles[WidgetsAvailable.SpotifyPlayer],
+    settings: {},
     w: 2,
     h: 1,
     y: 0,

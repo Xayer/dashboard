@@ -81,6 +81,7 @@ import {
   StockPrice,
   Location,
   SpotifyTopTracks,
+  SpotifyPlayer,
 } from '@/components/widgets'
 import { Board } from '~/types/dashboards'
 import { DashboardList } from '@/components/organisms'
@@ -106,6 +107,7 @@ import { DashboardList } from '@/components/organisms'
     StockPrice,
     Location,
     SpotifyTopTracks,
+    SpotifyPlayer,
   },
 })
 export default class Dashboard extends Vue {

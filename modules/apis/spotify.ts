@@ -4,8 +4,15 @@ import { TopTimeRange } from '~/types/spotify/topTracks'
 export const clientId = process.env.NUXT_ENV_SPOTIFY_CLIENT_ID
 export const clientSecret = process.env.NUXT_ENV_SPOTIFY_CLIENT_SECRET
 export const redirectUri = process.env.NUXT_ENV_SPOTIFY_REDIRECT_URI
-export const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=user-read-currently-playing%20
-user-top-read`
+export const authUrl = `https://accounts.spotify.com/authorize?${new URLSearchParams(
+  {
+    client_id: clientId as string,
+    response_type: 'code',
+    redirect_uri: redirectUri as string,
+    scope:
+      'user-read-currently-playing user-top-read streaming user-read-playback-position user-read-recently-played app-remote-control user-read-playback-state user-modify-playback-state user-read-currently-playing',
+  }
+)}`
 
 export const storageKey = 'spotify-refresh-token'
 export const integrationActiveStorageKey = 'integration-spotify-active'
@@ -13,6 +20,7 @@ export const integrationActiveStorageKey = 'integration-spotify-active'
 const basic = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
 const TOP_TRACKS_ENDPOINT = `https://api.spotify.com/v1/me/top/tracks`
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`
+const PLAYER_ENDPOINT = `https://api.spotify.com/v1/me/player`
 
 export const authenticateToken = async (code: string) => {
   const response = await fetch(TOKEN_ENDPOINT, {
@@ -69,6 +77,19 @@ export const getTopTracks = async (timeRange: TopTimeRange) => {
       },
     }
   )
+
+  return response.json()
+}
+
+export const getPlaybackState = async () => {
+  const { access_token: accessToken } = await getAccessToken()
+
+  const response = await fetch(`${PLAYER_ENDPOINT}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
 
   return response.json()
 }
