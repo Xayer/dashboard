@@ -23,7 +23,7 @@
             >
           </div>
         </div>
-        <div class="stats" :style="trackProgressStyling"></div>
+        <div class="stats" :class="isPlaying ? 'on' : 'off'" :style="trackProgressStyling"></div>
       </Card>
       <Button
         class="refresh-button"
@@ -84,6 +84,8 @@ export default defineComponent({
 
     const trackProgressStyling = computed(() => `--percentage: ${currentTrackPlayProgress.value}%`);
 
+    const isPlaying = computed(() => data.value?.pages[0].is_playing)
+
     return {
       authUrl,
       integrationActive,
@@ -93,6 +95,7 @@ export default defineComponent({
       playbackState,
       currentTrack,
       currentTrackPlayProgress,
+      isPlaying,
       trackProgressStyling,
       refetch,
     }
@@ -155,6 +158,9 @@ div[type="SpotifyPlayer"] {
     left: 0;
     background-color: var(--accent-success);
     border-radius: var(--radius);
+  }
+  &.off::before {
+      background-color: var(--accent-danger);
   }
 }
 </style>
