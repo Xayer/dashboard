@@ -8,7 +8,7 @@
         <a v-if="!integrationActive && !$route.query.code" :href="authUrl"
           >Authenticate with Spotify</a
         >
-        <Select v-else v-model="timeRange" :options="timeRanges"></Select>
+        <Select v-model="timeRange" :options="timeRanges"></Select>
         <Button class="m-l danger" @click="clearSpotifyIntegration">X</Button>
       </div>
     </div>
@@ -83,7 +83,7 @@ export default class SpotifyIntegrationPage extends Vue {
     return (
       JSON.parse(localStorage.getItem(
         integrationActiveStorageKey
-      ) as string) === true
+      ) as string || 'false') === true
     )
   }
 
@@ -95,6 +95,7 @@ export default class SpotifyIntegrationPage extends Vue {
     localStorage.removeItem(storageKey)
     localStorage.removeItem(integrationActiveStorageKey)
     this.$store.dispatch('userSettings/loadExistingSettings')
+    this.fetchTopTracks();
   }
 
   @Watch('integrationActive')
