@@ -104,9 +104,15 @@ export default class SpotifyIntegrationPage extends Vue {
     }
 
     let existingToken = localStorage.getItem(storageKey)
+    console.log('this.integrationActive', this.integrationActive)
+    console.log('this.$route.query.code', this.$route.query.code);
+
     if (!this.integrationActive) {
       if (this.$route.query.code) {
+        console.log('!existingToken', !existingToken);
+        console.log("existingToken === 'undefined'", existingToken === 'undefined');
         if (!existingToken || existingToken === 'undefined') {
+          console.log("authenticating with spotify");
           const response = await authenticateToken(
             this.$route.query.code as string
           )
@@ -121,6 +127,8 @@ export default class SpotifyIntegrationPage extends Vue {
               JSON.stringify(true)
             )
           } else {
+            console.log("response.error", response.error);
+
             localStorage.removeItem(storageKey)
             localStorage.removeItem(integrationActiveStorageKey)
           }
