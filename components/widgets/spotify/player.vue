@@ -34,12 +34,10 @@ import { integrationActiveStorageKey } from '@/modules/apis/spotify'
 import { authUrl as spotifyAuthUrl } from '~/modules/apis/spotify'
 import { usePlaybackState } from '@/queries/spotify'
 import { Card } from '@/components/molecules'
-import { Button } from '@/components/atoms'
 
 export default defineComponent({
   name: 'SpotifyPlayer',
   components: {
-    Button,
     Card,
   },
   props: {

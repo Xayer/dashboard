@@ -1,11 +1,19 @@
 <template>
   <div>
     <div class="setting-header">
-      <h3 class="m-b">Spotify</h3>
-      <a v-if="!integrationActive && !$route.query.code" :href="authUrl"
-        >Authenticate with Spotify</a
-      >
-      <Select v-else v-model="timeRange" :options="timeRanges"></Select>
+      <h3 class="m-b">Spotify <b :class="[integrationActive ? 'on' : 'off']">O</b></h3>
+      <div>
+        <a v-if="!integrationActive && !$route.query.code" :href="authUrl"
+          >Authenticate with Spotify</a
+        >
+        <template v-else>
+          <Select
+          v-model="timeRange"
+          :options="timeRanges"
+        ></Select>
+        <Button @click="clearSpotifyIntegration">Remove</Button>
+        </template>
+      </div>
     </div>
     <CardCollection v-if="topTracks" class="tracks">
       <Card v-for="(topTrack, index) in topTracks" :key="topTrack.id">
@@ -80,6 +88,12 @@ export default class SpotifyIntegrationPage extends Vue {
         localStorage.getItem(integrationActiveStorageKey) as string
       ) === true
     )
+  }
+
+  clearSpotifyIntegration() {
+    localStorage.removeItem(storageKey)
+    localStorage.removeItem(integrationActiveStorageKey)
+    this.$store.dispatch('userSettings/loadExistingSettings')
   }
 
   @Watch('integrationActive')
@@ -165,5 +179,12 @@ section.tracks {
   justify-content: space-between;
   align-items: center;
   padding-bottom: var(--padding);
+}
+
+.on {
+  color: var(--accent-success);
+}
+.off {
+  color: var(--accent-danger);
 }
 </style>
