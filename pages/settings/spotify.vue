@@ -8,7 +8,7 @@
         <a v-if="!integrationActive && !$route.query.code" :href="authUrl"
           >Authenticate with Spotify</a
         >
-        <Select v-if="integrationActive && $route.query.code" v-model="timeRange" :options="timeRanges"></Select>
+        <Select v-model="timeRange" :options="timeRanges"></Select>
         <Button class="m-l danger" @click="clearSpotifyIntegration">X</Button>
       </div>
     </div>

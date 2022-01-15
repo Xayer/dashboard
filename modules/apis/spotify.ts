@@ -93,3 +93,29 @@ export const getPlaybackState = async () => {
 
   return response.json()
 }
+
+export const pauseTrack = async () => {
+  const { access_token: accessToken } = await getAccessToken()
+
+  const response = await fetch(`${PLAYER_ENDPOINT}/pause`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    method: 'put',
+  })
+
+  return response
+}
+
+export const playTrack = async () => {
+  const { access_token: accessToken } = await getAccessToken()
+
+  const response = await fetch(`${PLAYER_ENDPOINT}/play`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    method: 'put',
+  })
+
+  return response
+}

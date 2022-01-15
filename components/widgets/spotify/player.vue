@@ -23,22 +23,41 @@
             >
           </div>
         </div>
-        <div class="stats" :class="isPlaying ? 'on' : 'off'" :style="trackProgressStyling"></div>
+        <div
+          class="stats"
+          :class="isPlaying ? 'on' : 'off'"
+          :style="trackProgressStyling"
+        ></div>
+
+        <Button
+          class="play-button"
+          :class="{ primary: isTogglingPlayState }"
+          @click="togglePlayState(isPlaying)"
+        >
+          <i v-if="isPlaying" class="icon bi bi-pause"></i>
+          <i v-else class="icon bi bi-play"></i>
+        </Button>
       </Card>
     </template>
   </div>
 </template>
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
-import { integrationActiveStorageKey } from '@/modules/apis/spotify'
-import { authUrl as spotifyAuthUrl } from '~/modules/apis/spotify'
+import {
+  integrationActiveStorageKey,
+  authUrl as spotifyAuthUrl,
+  pauseTrack,
+  playTrack,
+} from '@/modules/apis/spotify'
 import { usePlaybackState } from '@/queries/spotify'
 import { Card } from '@/components/molecules'
+import { Button } from '@/components/atoms'
 
 export default defineComponent({
   name: 'SpotifyPlayer',
   components: {
     Card,
+    Button,
   },
   props: {
     settings: {
@@ -64,17 +83,25 @@ export default defineComponent({
       data.value && data.value.pages[0].item ? data.value.pages[0].item : null
     )
 
-    const playStateProgress = computed(() => 
-        data.value && data.value.pages[0].progress_ms ? data.value.pages[0].progress_ms : 0
+    const playStateProgress = computed(() =>
+      data.value && data.value.pages[0].progress_ms
+        ? data.value.pages[0].progress_ms
+        : 0
     )
 
     const trackDuration = computed(() => currentTrack.value?.duration_ms || 0)
 
     const currentTrackPlayProgress = computed(() => {
-        return trackDuration && playStateProgress ? (100 - ((trackDuration.value - playStateProgress.value) * 100) / trackDuration.value) : 0
+      return trackDuration && playStateProgress
+        ? 100 -
+            ((trackDuration.value - playStateProgress.value) * 100) /
+              trackDuration.value
+        : 0
     })
 
-    const trackProgressStyling = computed(() => `--percentage: ${currentTrackPlayProgress.value}%`);
+    const trackProgressStyling = computed(
+      () => `--percentage: ${currentTrackPlayProgress.value}%`
+    )
 
     const isPlaying = computed(() => data.value?.pages[0].is_playing)
 
@@ -92,40 +119,55 @@ export default defineComponent({
       refetch,
     }
   },
+  data() {
+    return {
+      isTogglingPlayState: false,
+    }
+  },
+  methods: {
+    togglePlayState(isPlaying) {
+      const playStateCallback = isPlaying ? pauseTrack : playTrack
+      this.$data.isTogglingPlayState = true
+
+      playStateCallback.then(() => {
+        this.$data.isTogglingPlayState = false
+      })
+    },
+  },
 })
 </script>
 <style lang="scss" scoped>
-div[type="SpotifyPlayer"] {
-    display: flex;
-    justify-content: stretch;
-    align-items: stretch;
-    width: calc((var(--widget-padding) * 2) + 100%);
-    height: calc((var(--widget-padding) * 2) + 100%);
-    margin: calc(var(--widget-padding) * -1);
-    box-sizing: border-box;
+div[type='SpotifyPlayer'] {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  width: calc((var(--widget-padding) * 2) + 100%);
+  height: calc((var(--widget-padding) * 2) + 100%);
+  margin: calc(var(--widget-padding) * -1);
+  box-sizing: border-box;
 }
 .card {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--padding);
+  height: 100%;
+  width: 100%;
+  background-color: var(--accent-50);
+  padding: 0 calc(var(--padding) / 2);
+  padding-bottom: calc(var(--padding) / 4);
+  overflow-y: visible;
+  position: relative;
+  a {
+    color: var(--text-color);
+  }
+  .title {
+    font-size: 1.25rem;
+  }
+  .artists {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: var(--padding);
-    height: 100%;
-    width: 100%;
-    background-color: var(--accent-50);
-    padding: 0 calc(var(--padding) / 2);
-    padding-bottom: calc(var(--padding) / 4);
-    overflow-y: visible;
-    position: relative;
-    a {
-      color: var(--text-color);
-    }
-    .title {
-      font-size: 1.25rem;
-    }
-    .artists {
-      display: flex;
-      gap: calc(var(--padding) / 4);
-    }
+    gap: calc(var(--padding) / 4);
+  }
 }
 
 .stats {
@@ -152,7 +194,10 @@ div[type="SpotifyPlayer"] {
     border-radius: var(--radius);
   }
   &.off::before {
-      background-color: var(--accent-danger);
+    background-color: var(--accent-danger);
   }
+}
+.play-button {
+  font-size: 1.5rem;
 }
 </style>
