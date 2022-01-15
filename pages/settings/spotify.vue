@@ -1,18 +1,15 @@
 <template>
   <div>
     <div class="setting-header">
-      <h3 class="m-b">Spotify <b :class="[integrationActive ? 'on' : 'off']">O</b></h3>
+      <h3 class="m-b">
+        Spotify <b :class="[integrationActive ? 'on' : 'off']">O</b>
+      </h3>
       <div>
         <a v-if="!integrationActive && !$route.query.code" :href="authUrl"
           >Authenticate with Spotify</a
         >
-        <template v-else>
-          <Select
-          v-model="timeRange"
-          :options="timeRanges"
-        ></Select>
+        <Select v-model="timeRange" :options="timeRanges"></Select>
         <Button @click="clearSpotifyIntegration">Remove</Button>
-        </template>
       </div>
     </div>
     <CardCollection v-if="topTracks" class="tracks">
@@ -84,13 +81,17 @@ export default class SpotifyIntegrationPage extends Vue {
       return
     }
     return (
-      JSON.parse(
-        localStorage.getItem(integrationActiveStorageKey) as string
-      ) === true
+      (localStorage.getItem(
+        integrationActiveStorageKey
+      ) as unknown as boolean) === true
     )
   }
 
   clearSpotifyIntegration() {
+    if (!process.browser) {
+      return
+    }
+
     localStorage.removeItem(storageKey)
     localStorage.removeItem(integrationActiveStorageKey)
     this.$store.dispatch('userSettings/loadExistingSettings')
@@ -105,14 +106,17 @@ export default class SpotifyIntegrationPage extends Vue {
 
     let existingToken = localStorage.getItem(storageKey)
     console.log('this.integrationActive', this.integrationActive)
-    console.log('this.$route.query.code', this.$route.query.code);
+    console.log('this.$route.query.code', this.$route.query.code)
 
     if (!this.integrationActive) {
       if (this.$route.query.code) {
-        console.log('!existingToken', !existingToken);
-        console.log("existingToken === 'undefined'", existingToken === 'undefined');
+        console.log('!existingToken', !existingToken)
+        console.log(
+          "existingToken === 'undefined'",
+          existingToken === 'undefined'
+        )
         if (!existingToken || existingToken === 'undefined') {
-          console.log("authenticating with spotify");
+          console.log('authenticating with spotify')
           const response = await authenticateToken(
             this.$route.query.code as string
           )
@@ -127,7 +131,7 @@ export default class SpotifyIntegrationPage extends Vue {
               JSON.stringify(true)
             )
           } else {
-            console.log("response.error", response.error);
+            console.log('response.error', response.error)
 
             localStorage.removeItem(storageKey)
             localStorage.removeItem(integrationActiveStorageKey)
@@ -157,6 +161,7 @@ export default class SpotifyIntegrationPage extends Vue {
   }
 
   mounted() {
+    console.log(this.$route.query.code);
     this.fetchTopTracks()
   }
 }
