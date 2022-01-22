@@ -7,7 +7,7 @@
       @keyup.enter.native="addTodo"
     />
     <ol>
-      <li v-for="(todo) in todos" :key="todo.id">
+      <li v-for="(todo) in visibleTodoItems" :key="todo.id">
         <input
           v-model="todo.done"
           type="checkbox"
@@ -45,8 +45,16 @@
       </li>
     </ol>
     <div class="stats" :style="donePercentage">
-      <strong>{{ doneItems.length }} of {{ todos.length }}</strong> todos
+      <p>
+        <strong>{{ doneItems.length }} of {{ todos.length }}</strong> todos
       completed.
+      </p>
+      <span>
+        <input
+          v-model="hideCompletedItems"
+          type="checkbox"
+        /> hide completed.
+      </span>
     </div>
   </section>
 </template>
@@ -62,9 +70,13 @@ export default {
       todos: [],
       editGuid: null,
       existingTodo: '',
+      hideCompletedItems: false,
     }
   },
   computed: {
+    visibleTodoItems() {
+      return this.hideCompletedItems ? this.todos.filter((todo) => !todo.done) : this.todos;
+    },
     doneItems() {
       return this.todos.filter((todo) => todo.done)
     },
@@ -159,7 +171,6 @@ section {
 }
 
 input {
-  // margin: calc(var(--padding) / 4) 0;
   max-width: 100%;
   padding: calc(var(--padding) / 4) calc(var(--padding) / 4);
   margin-bottom: calc(var(--padding) / 4);
@@ -172,7 +183,8 @@ input {
   margin-left: calc(var(--widget-padding) * -0.5);
   margin-right: calc(var(--widget-padding) * -0.5);
   position: relative;
-  display: block;
+  display: flex;
+  justify-content: space-between;
   &::before {
     transition: width 0.25s ease;
     content: '';
