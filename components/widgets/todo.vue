@@ -7,7 +7,7 @@
       @keyup.enter.native="addTodo"
     />
     <ol>
-      <li v-for="(todo, todoIndex) in todos" :key="todo.id">
+      <li v-for="(todo) in todos" :key="todo.id">
         <input
           v-model="todo.done"
           type="checkbox"
@@ -15,7 +15,7 @@
         />
 
         <input
-          v-if="editIndex === todoIndex"
+          v-if="editGuid === todo.id"
           v-model="existingTodo"
           class="edit-form"
           autofocus
@@ -23,9 +23,9 @@
           @blur="saveModifiedTodoItem"
         />
         <span
-          v-show="editIndex !== todoIndex"
+          v-show="editGuid !== todo.id"
           :class="{ done: todo.done }"
-          @click="editTodo(todoIndex, $event)"
+          @click="editTodo(todo.id, $event)"
           >{{ todo.title }}</span
         >
         <Button class="sm" @click="removeTodo(todo)">
@@ -60,7 +60,7 @@ export default {
     return {
       newTodo: '',
       todos: [],
-      editIndex: null,
+      editGuid: null,
       existingTodo: '',
     }
   },
@@ -90,36 +90,49 @@ export default {
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
     },
-    editTodo(index, event) {
-      this.editIndex = index
-      this.existingTodo = this.todos[index].title
+    editTodo(id, event) {
+      const todoItem = this.todos.find((todo) => todo.id === id)
+      if(!todoItem) {
+        return
+      }
+      this.editGuid = id
+      this.existingTodo = todoItem.title
       const parent = event.target.parentElement
       setTimeout(() => {
         parent.querySelector('.edit-form').focus()
       }, 50)
     },
+    findTodoItem(guid) {
+      return this.todos.find((todo) => todo.id === guid)
+    },
+    findTodoItemIndex(todoItem) {
+      return this.todos.indexOf(todoItem);
+    },
     saveModifiedTodoItem() {
-      const existingTodoItem = this.todos[this.editIndex]
-      this.todos.splice(this.editIndex, 1, {
+      const existingTodoItem = this.findTodoItem(this.editGuid);
+      const existingTodoItemIndex = this.findTodoItemIndex(existingTodoItem);
+      this.todos.splice(existingTodoItemIndex, 1, {
         ...existingTodoItem,
         title: this.existingTodo,
       })
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
 
-      this.editIndex = -1
+      this.editGuid = null
       this.existingTodo = ''
     },
-    toggleDoneState(todo) {
-      this.todos.splice(this.todos.indexOf(todo), 1, {
-        ...todo,
-        done: !todo.done,
+    toggleDoneState(todoItem) {
+      const existingTodoItemIndex = this.findTodoItemIndex(this.findTodoItem(todoItem.id));
+      this.todos.splice(existingTodoItemIndex, 1, {
+        ...todoItem,
+        done: !todoItem.done,
       })
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
     },
-    removeTodo(todo) {
-      this.todos.splice(this.todos.indexOf(todo), 1)
+    removeTodo(todoItem) {
+      const existingTodoItemIndex = this.findTodoItemIndex(this.findTodoItem(todoItem.id));
+      this.todos.splice(existingTodoItemIndex, 1);
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
     },
