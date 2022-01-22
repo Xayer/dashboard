@@ -44,11 +44,11 @@
         </Button>
       </li>
     </ol>
-    <div class="stats" :style="donePercentage">
-      <p>
+    <div class="stats" :class="{completed: allCompleted}" :style="donePercentage">
+      <span>
         <strong>{{ doneItems.length }} of {{ todos.length }}</strong> todos
       completed.
-      </p>
+      </span>
       <span>
         <input
           v-model="hideCompletedItems"
@@ -87,6 +87,9 @@ export default {
         100 - ((this.todos.length - doneItems.length) * 100) / this.todos.length
       return `--percentage: ${percentage}%`
     },
+    allCompleted() {
+      return this.todos.length === this.doneItems.length
+    }
   },
   created() {
     this.loadTodosFromStorage()
@@ -158,6 +161,7 @@ export default {
 section {
   display: flex;
   max-width: 100%;
+  
   flex-direction: column;
   height: calc(100% - 0.65rem);
   position: absolute;
@@ -178,6 +182,7 @@ input {
 
 .stats {
   --percentage: 0%;
+  width: 100%;
   font-size: 0.65rem;
   padding: calc(var(--widget-padding) * 0.5);
   margin-left: calc(var(--widget-padding) * -0.5);
@@ -186,19 +191,29 @@ input {
   display: flex;
   justify-content: space-between;
   &::before {
-    transition: width 0.25s ease;
+    transition: all 0.25s ease;
     content: '';
     width: var(--percentage);
     height: calc(0.65rem / 4);
     position: absolute;
     bottom: 0;
     left: 0;
-    background-color: var(--accent-success);
+    background-color: var(--accent-primary);
+  }
+  &.completed::before {
+      background-color: var(--accent-success);
+  }
+  span {
+    margin: 0;
+    display: flex;
+    align-items: center;
   }
 }
 
 ol {
   display: flex;
+  overflow: hidden;
+  max-width: 100%;
   flex: var(--padding);
   margin: 0;
   padding: 0;
@@ -206,6 +221,7 @@ ol {
   overflow-y: scroll;
   gap: calc(var(--padding) / 4);
   li {
+    max-width: 100%;
     border-radius: var(--radius);
     border: 1px solid var(--accent-0);
     background-color: var(--accent-50);
@@ -220,6 +236,11 @@ ol {
     justify-content: stretch;
     align-items: center;
     gap: calc(var(--padding) / 4);
+    span {
+      display: block;
+      word-wrap: break-word;
+      text-overflow: ellipsis;
+    }
     input {
       &[type='checkbox'] {
         justify-self: stretch;
