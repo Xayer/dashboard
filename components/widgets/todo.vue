@@ -7,7 +7,7 @@
       @keyup.enter.native="addTodo"
     />
     <ol>
-      <li v-for="(todo, todoIndex) in todos" :key="todo.id">
+      <li v-for="(todo) in visibleTodoItems" :key="todo.id">
         <input
           v-model="todo.done"
           type="checkbox"
@@ -15,7 +15,7 @@
         />
 
         <input
-          v-if="editIndex === todoIndex"
+          v-if="editGuid === todo.id"
           v-model="existingTodo"
           class="edit-form"
           autofocus
@@ -23,9 +23,9 @@
           @blur="saveModifiedTodoItem"
         />
         <span
-          v-show="editIndex !== todoIndex"
+          v-show="editGuid !== todo.id"
           :class="{ done: todo.done }"
-          @click="editTodo(todoIndex, $event)"
+          @click="editTodo(todo.id, $event)"
           >{{ todo.title }}</span
         >
         <Button class="sm" @click="removeTodo(todo)">
@@ -44,9 +44,17 @@
         </Button>
       </li>
     </ol>
-    <div class="stats" :style="donePercentage">
-      <strong>{{ doneItems.length }} of {{ todos.length }}</strong> todos
+    <div class="stats" :class="{completed: allCompleted}" :style="donePercentage">
+      <span>
+        <strong>{{ doneItems.length }} of {{ todos.length }}</strong> todos
       completed.
+      </span>
+      <span>
+        <input
+          v-model="hideCompletedItems"
+          type="checkbox"
+        /> hide completed.
+      </span>
     </div>
   </section>
 </template>
@@ -60,11 +68,15 @@ export default {
     return {
       newTodo: '',
       todos: [],
-      editIndex: null,
+      editGuid: null,
       existingTodo: '',
+      hideCompletedItems: false,
     }
   },
   computed: {
+    visibleTodoItems() {
+      return this.hideCompletedItems ? this.todos.filter((todo) => !todo.done) : this.todos;
+    },
     doneItems() {
       return this.todos.filter((todo) => todo.done)
     },
@@ -75,6 +87,9 @@ export default {
         100 - ((this.todos.length - doneItems.length) * 100) / this.todos.length
       return `--percentage: ${percentage}%`
     },
+    allCompleted() {
+      return this.todos.length === this.doneItems.length
+    }
   },
   created() {
     this.loadTodosFromStorage()
@@ -90,36 +105,49 @@ export default {
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
     },
-    editTodo(index, event) {
-      this.editIndex = index
-      this.existingTodo = this.todos[index].title
+    editTodo(id, event) {
+      const todoItem = this.todos.find((todo) => todo.id === id)
+      if(!todoItem) {
+        return
+      }
+      this.editGuid = id
+      this.existingTodo = todoItem.title
       const parent = event.target.parentElement
       setTimeout(() => {
         parent.querySelector('.edit-form').focus()
       }, 50)
     },
+    findTodoItem(guid) {
+      return this.todos.find((todo) => todo.id === guid)
+    },
+    findTodoItemIndex(todoItem) {
+      return this.todos.indexOf(todoItem);
+    },
     saveModifiedTodoItem() {
-      const existingTodoItem = this.todos[this.editIndex]
-      this.todos.splice(this.editIndex, 1, {
+      const existingTodoItem = this.findTodoItem(this.editGuid);
+      const existingTodoItemIndex = this.findTodoItemIndex(existingTodoItem);
+      this.todos.splice(existingTodoItemIndex, 1, {
         ...existingTodoItem,
         title: this.existingTodo,
       })
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
 
-      this.editIndex = -1
+      this.editGuid = null
       this.existingTodo = ''
     },
-    toggleDoneState(todo) {
-      this.todos.splice(this.todos.indexOf(todo), 1, {
-        ...todo,
-        done: !todo.done,
+    toggleDoneState(todoItem) {
+      const existingTodoItemIndex = this.findTodoItemIndex(this.findTodoItem(todoItem.id));
+      this.todos.splice(existingTodoItemIndex, 1, {
+        ...todoItem,
+        done: !todoItem.done,
       })
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
     },
-    removeTodo(todo) {
-      this.todos.splice(this.todos.indexOf(todo), 1)
+    removeTodo(todoItem) {
+      const existingTodoItemIndex = this.findTodoItemIndex(this.findTodoItem(todoItem.id));
+      this.todos.splice(existingTodoItemIndex, 1);
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
     },
@@ -133,6 +161,7 @@ export default {
 section {
   display: flex;
   max-width: 100%;
+  
   flex-direction: column;
   height: calc(100% - 0.65rem);
   position: absolute;
@@ -146,7 +175,6 @@ section {
 }
 
 input {
-  // margin: calc(var(--padding) / 4) 0;
   max-width: 100%;
   padding: calc(var(--padding) / 4) calc(var(--padding) / 4);
   margin-bottom: calc(var(--padding) / 4);
@@ -154,26 +182,38 @@ input {
 
 .stats {
   --percentage: 0%;
+  width: 100%;
   font-size: 0.65rem;
   padding: calc(var(--widget-padding) * 0.5);
   margin-left: calc(var(--widget-padding) * -0.5);
   margin-right: calc(var(--widget-padding) * -0.5);
   position: relative;
-  display: block;
+  display: flex;
+  justify-content: space-between;
   &::before {
-    transition: width 0.25s ease;
+    transition: all 0.25s ease;
     content: '';
     width: var(--percentage);
     height: calc(0.65rem / 4);
     position: absolute;
     bottom: 0;
     left: 0;
-    background-color: var(--accent-success);
+    background-color: var(--accent-primary);
+  }
+  &.completed::before {
+      background-color: var(--accent-success);
+  }
+  span {
+    margin: 0;
+    display: flex;
+    align-items: center;
   }
 }
 
 ol {
   display: flex;
+  overflow: hidden;
+  max-width: 100%;
   flex: var(--padding);
   margin: 0;
   padding: 0;
@@ -181,6 +221,7 @@ ol {
   overflow-y: scroll;
   gap: calc(var(--padding) / 4);
   li {
+    max-width: 100%;
     border-radius: var(--radius);
     border: 1px solid var(--accent-0);
     background-color: var(--accent-50);
@@ -195,6 +236,11 @@ ol {
     justify-content: stretch;
     align-items: center;
     gap: calc(var(--padding) / 4);
+    span {
+      display: block;
+      word-wrap: break-word;
+      text-overflow: ellipsis;
+    }
     input {
       &[type='checkbox'] {
         justify-self: stretch;
