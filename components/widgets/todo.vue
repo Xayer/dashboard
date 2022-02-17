@@ -7,7 +7,7 @@
       @keyup.enter.native="addTodo"
     />
     <ol>
-      <li v-for="(todo) in visibleTodoItems" :key="todo.id">
+      <li v-for="todo in visibleTodoItems" :key="todo.id">
         <input
           v-model="todo.done"
           type="checkbox"
@@ -44,16 +44,17 @@
         </Button>
       </li>
     </ol>
-    <div class="stats" :class="{completed: allCompleted}" :style="donePercentage">
+    <div
+      class="stats"
+      :class="{ completed: allCompleted }"
+      :style="donePercentage"
+    >
       <span>
         <strong>{{ doneItems.length }} of {{ todos.length }}</strong> todos
-      completed.
+        completed.
       </span>
       <span>
-        <input
-          v-model="hideCompletedItems"
-          type="checkbox"
-        /> hide completed.
+        <input v-model="hideCompletedItems" type="checkbox" /> hide completed.
       </span>
     </div>
   </section>
@@ -76,7 +77,9 @@ export default {
   },
   computed: {
     visibleTodoItems() {
-      return this.hideCompletedItems ? this.todos.filter((todo) => !todo.done) : this.todos;
+      return this.hideCompletedItems
+        ? this.todos.filter((todo) => !todo.done)
+        : this.todos
     },
     doneItems() {
       return this.todos.filter((todo) => todo.done)
@@ -90,12 +93,15 @@ export default {
     },
     allCompleted() {
       return this.todos.length === this.doneItems.length
-    }
+    },
   },
   watch: {
     hideCompletedItems(hideCompletedItems) {
-      localStorage.setItem(todosHideCompletedKey,JSON.stringify(hideCompletedItems));
-    }
+      localStorage.setItem(
+        todosHideCompletedKey,
+        JSON.stringify(hideCompletedItems)
+      )
+    },
   },
   created() {
     this.loadTodosFromStorage()
@@ -113,7 +119,7 @@ export default {
     },
     editTodo(id, event) {
       const todoItem = this.todos.find((todo) => todo.id === id)
-      if(!todoItem) {
+      if (!todoItem) {
         return
       }
       this.editGuid = id
@@ -127,11 +133,11 @@ export default {
       return this.todos.find((todo) => todo.id === guid)
     },
     findTodoItemIndex(todoItem) {
-      return this.todos.indexOf(todoItem);
+      return this.todos.indexOf(todoItem)
     },
     saveModifiedTodoItem() {
-      const existingTodoItem = this.findTodoItem(this.editGuid);
-      const existingTodoItemIndex = this.findTodoItemIndex(existingTodoItem);
+      const existingTodoItem = this.findTodoItem(this.editGuid)
+      const existingTodoItemIndex = this.findTodoItemIndex(existingTodoItem)
       this.todos.splice(existingTodoItemIndex, 1, {
         ...existingTodoItem,
         title: this.existingTodo,
@@ -143,7 +149,9 @@ export default {
       this.existingTodo = ''
     },
     toggleDoneState(todoItem) {
-      const existingTodoItemIndex = this.findTodoItemIndex(this.findTodoItem(todoItem.id));
+      const existingTodoItemIndex = this.findTodoItemIndex(
+        this.findTodoItem(todoItem.id)
+      )
       this.todos.splice(existingTodoItemIndex, 1, {
         ...todoItem,
         done: !todoItem.done,
@@ -152,14 +160,18 @@ export default {
       this.loadTodosFromStorage()
     },
     removeTodo(todoItem) {
-      const existingTodoItemIndex = this.findTodoItemIndex(this.findTodoItem(todoItem.id));
-      this.todos.splice(existingTodoItemIndex, 1);
+      const existingTodoItemIndex = this.findTodoItemIndex(
+        this.findTodoItem(todoItem.id)
+      )
+      this.todos.splice(existingTodoItemIndex, 1)
       localStorage.setItem(todosStorageKey, JSON.stringify(this.todos))
       this.loadTodosFromStorage()
     },
     loadTodosFromStorage() {
       this.todos = JSON.parse(localStorage.getItem(todosStorageKey) || '[]')
-      this.hideCompletedItems = JSON.parse(localStorage.getItem(todosHideCompletedKey) || false);
+      this.hideCompletedItems = JSON.parse(
+        localStorage.getItem(todosHideCompletedKey) || false
+      )
     },
   },
 }
@@ -168,7 +180,7 @@ export default {
 section {
   display: flex;
   max-width: 100%;
-  
+
   flex-direction: column;
   height: calc(100% - 0.65rem);
   position: absolute;
@@ -208,7 +220,7 @@ input {
     background-color: var(--accent-primary);
   }
   &.completed::before {
-      background-color: var(--accent-success);
+    background-color: var(--accent-success);
   }
   span {
     margin: 0;
@@ -218,16 +230,18 @@ input {
 }
 
 ol {
-  display: flex;
-  max-width: 100%;
+  display: block;
+  width: 100%;
   flex: var(--padding);
   margin: 0;
   padding: 0;
   flex-direction: column;
   overflow-y: scroll;
-  gap: calc(var(--padding) / 4);
+  li + li {
+    margin-top: calc(var(--padding) / 2);
+  }
   li {
-    max-width: 100%;
+    width: 100%;
     border-radius: var(--radius);
     border: 1px solid var(--accent-0);
     background-color: var(--accent-50);
@@ -244,8 +258,16 @@ ol {
     gap: calc(var(--padding) / 4);
     span {
       display: block;
-      word-wrap: break-word;
-      text-overflow: ellipsis;
+      -ms-word-break: break-all;
+      word-break: break-all;
+
+      /* Non standard for WebKit */
+      word-break: break-word;
+
+      -webkit-hyphens: auto;
+      -moz-hyphens: auto;
+      hyphens: auto;
+      width: 100%;
     }
     input {
       &[type='checkbox'] {
