@@ -1,4 +1,5 @@
 import { AccessTokenResponse, RefreshTokenResponse } from '~/types/github/auth'
+import { Widget } from '~/types/widgets'
 
 export const githubStateStorageKey = 'github-state'
 export const githubTokenStorageKey = 'github-token'
@@ -17,6 +18,7 @@ export const githubAuthorizationUrl = () => {
       client_id: process.env.NUXT_ENV_GITHUB_CLIENT_ID as string,
       redirect_uri: process.env.NUXT_ENV_GITHUB_REDIRECT_URI as string,
       state,
+      scope: 'gist',
     }).toString()}`
   }
   return ''
@@ -68,6 +70,40 @@ export const githubGetUserInfo = async (userId?: string) => {
             : ''
         }`,
       },
+    }
+  )
+
+  return response.json()
+}
+
+export const githubSyncDashboardToGist = async (
+  widgets?: Widget[],
+  guid?: string,
+  dashboardName?: string
+) => {
+  const githubToken = localStorage.getItem(githubTokenStorageKey) as string
+
+  const response = await fetch(
+    `https://api.github.com/gists${guid ? `/${guid}` : ''}`,
+    {
+      headers: {
+        Authorization: `token ${process.browser ? githubToken : ''}`,
+        Accept: 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      method: guid ? 'PATCH' : 'POST',
+      body: JSON.stringify({
+        description: `Dashboard ${dashboardName}`,
+        public: true,
+        files: {
+          'dashboard.json': {
+            content: `${JSON.stringify({
+              name: dashboardName,
+              widgets: widgets || [],
+            })}`,
+          },
+        },
+      }),
     }
   )
 

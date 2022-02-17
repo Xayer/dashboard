@@ -53,6 +53,7 @@ export default defineComponent({
     return {
       dashboardName: '',
       dashboardEditIndex: -1,
+      dashboardGuid: '',
     }
   },
   methods: {
@@ -69,7 +70,9 @@ export default defineComponent({
     },
     editDashboardName(index: number, event: Event) {
       this.$data.dashboardEditIndex = index
-      this.$data.dashboardName = (this.$props.boards as Board[])[index].name
+      const board = (this.$props.boards as Board[])[index];
+      this.$data.dashboardName = board.name
+      this.$data.dashboardGuid = board.guid || ''
 
       const parent = (event.target as HTMLElement).parentElement
       setTimeout(() => {
@@ -80,6 +83,7 @@ export default defineComponent({
       this.$emit('input', {
         name: this.$data.dashboardName,
         index: this.$data.dashboardEditIndex,
+        guid: this.$data.dashboardGuid
       })
       this.$data.dashboardEditIndex = -1
       this.$data.dashboardName = ''

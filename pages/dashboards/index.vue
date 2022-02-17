@@ -85,6 +85,7 @@ import {
 } from '@/components/widgets'
 import { Board } from '~/types/dashboards'
 import { DashboardList } from '@/components/organisms'
+import { githubSyncDashboardToGist } from '~/modules/apis/github'
 
 @Component({
   components: {
@@ -184,13 +185,18 @@ export default class Dashboard extends Vue {
   updateDashboardName({
     name: dashboardName,
     index: dashboardEditIndex,
+    guid: dashboardGuid,
   }: {
     name: string
-    index: number
+    index: number, guid: string
   }) {
     const newDashboards = JSON.parse(JSON.stringify([...this.boards]))
 
     newDashboards[dashboardEditIndex].name = dashboardName
+
+    if (dashboardGuid) {
+      githubSyncDashboardToGist(newDashboards[dashboardEditIndex], dashboardGuid, dashboardName);
+    }
 
     localStorage.setItem(
       dasboardsLocalStorageKey,

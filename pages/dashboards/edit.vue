@@ -123,6 +123,7 @@ import { Widget } from '~/types/widgets'
 import { Board } from '~/types/dashboards'
 import HueGroupSettings from '~/components/widgets/hue/group/settings.vue'
 import { SpotifyTopTracksSettings } from '~/components/widgets'
+import { githubSyncDashboardToGist } from '~/modules/apis/github'
 
 @Component({
   components: {
@@ -226,10 +227,13 @@ export default class EditableDashboard extends Vue {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  saveWidgetLayout() {
-    if (!process.browser) {
+  async saveWidgetLayout() {
+    if (!process.browser || !this.currentBoard) {
       return
     }
+    
+    const { id } = await githubSyncDashboardToGist(this.DashboardWidgets, this.currentBoard?.guid, this.currentBoard?.name);
+
     const existingBoards = JSON.parse(
       localStorage.getItem(dasboardsLocalStorageKey) || JSON.stringify([])
     )
@@ -238,7 +242,9 @@ export default class EditableDashboard extends Vue {
     newBoards[this.$route.query.id as string] = {
       ...this.currentBoard,
       widgets: this.DashboardWidgets,
+      guid: id || null,
     }
+
     localStorage.setItem(dasboardsLocalStorageKey, JSON.stringify(newBoards))
   }
 
