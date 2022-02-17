@@ -60,7 +60,8 @@
 </template>
 <script>
 import { Button, Input } from '@/components/atoms'
-import { todosStorageKey } from '@/constants/todo'
+import { todosStorageKey, todosHideCompletedKey } from '@/constants/todo'
+import { Watch } from 'vue-property-decorator'
 
 export default {
   components: { Button, Input },
@@ -89,6 +90,11 @@ export default {
     },
     allCompleted() {
       return this.todos.length === this.doneItems.length
+    }
+  },
+  watch: {
+    hideCompletedItems(hideCompletedItems) {
+      localStorage.setItem(todosHideCompletedKey,JSON.stringify(hideCompletedItems));
     }
   },
   created() {
@@ -153,6 +159,7 @@ export default {
     },
     loadTodosFromStorage() {
       this.todos = JSON.parse(localStorage.getItem(todosStorageKey) || '[]')
+      this.hideCompletedItems = JSON.parse(localStorage.getItem(todosHideCompletedKey) || false);
     },
   },
 }
@@ -212,7 +219,6 @@ input {
 
 ol {
   display: flex;
-  overflow: hidden;
   max-width: 100%;
   flex: var(--padding);
   margin: 0;
