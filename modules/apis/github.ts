@@ -93,7 +93,9 @@ export const githubSyncDashboardToGist = async (
       },
       method: guid ? 'PATCH' : 'POST',
       body: JSON.stringify({
-        description: `Dashboard ${dashboardName}`,
+        description: `Dashboard ${dashboardName} - available at https://dashboard.rabol.co/dashboards${
+          guid ? `?gist=${guid}` : ''
+        }`,
         public: true,
         files: {
           'dashboard.json': {

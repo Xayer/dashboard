@@ -246,6 +246,8 @@ export default class EditableDashboard extends Vue {
     }
 
     localStorage.setItem(dasboardsLocalStorageKey, JSON.stringify(newBoards))
+
+    this.$store.dispatch('userSettings/loadExistingSettings')
   }
 
   removeWidget(widgetIndex: number) {
