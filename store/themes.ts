@@ -22,7 +22,13 @@ export default {
             '--accent-100': '#273243',
           },
         },
-        { name: 'light', icon: 'sun' },
+        { name: 'light', icon: 'sun', variables: {
+          '--accent-0': '#fff;',
+          '--accent-50': '#f6f8fa;',
+          '--accent-100': '#a9a9a9;',
+          '--text-color': '#24292f;',
+          '--button-text-color': '#ffffff;'
+        } },
         {
           name: 'red',
           icon: 'star',
