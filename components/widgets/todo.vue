@@ -62,7 +62,6 @@
 <script>
 import { Button, Input } from '@/components/atoms'
 import { todosStorageKey, todosHideCompletedKey } from '@/constants/todo'
-import { Watch } from 'vue-property-decorator'
 
 export default {
   components: { Button, Input },
@@ -94,6 +93,9 @@ export default {
     allCompleted() {
       return this.todos.length === this.doneItems.length
     },
+    userSettings() {
+      return this.$store.state.userSettings.userSettings
+    }
   },
   watch: {
     hideCompletedItems(hideCompletedItems) {
@@ -102,6 +104,9 @@ export default {
         JSON.stringify(hideCompletedItems)
       )
     },
+    userSettings() {
+      this.loadTodosFromStorage()
+    }
   },
   created() {
     this.loadTodosFromStorage()

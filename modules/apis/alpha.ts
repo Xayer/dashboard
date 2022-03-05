@@ -2,6 +2,14 @@ import { StockPriceDaily } from '~/types/alpha-vantage/stock'
 import { ValueProps } from '~/types/widgets/value'
 
 export function parseStockPrice(response: StockPriceDaily) {
+  if (!response['Meta Data']) {
+    return {
+      title: 'invalid data',
+      state: 'danger',
+      value: '0',
+      label: 'API unavailable',
+    } as ValueProps
+  }
   const symbol = response['Meta Data']['2. Symbol']
 
   const prices = Object.values(response['Time Series (Daily)'])

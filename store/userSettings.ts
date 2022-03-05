@@ -317,9 +317,12 @@ const mutations = {
     { settings: newSettings }: { settings: UserSettings }
   ) => {
     const { boards, settings } = newSettings
-    state.userSettings.boards = boards
 
-    state.userSettings.settings = settings
+    state.userSettings = {
+      ...state.userSettings,
+      boards,
+      settings,
+    }
   },
   SET_SETTINGS: (_state: StateType, newSettings: UserSettings) => {
     const { boards, settings } = newSettings

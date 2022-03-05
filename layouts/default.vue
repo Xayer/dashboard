@@ -49,6 +49,13 @@ export default defineComponent({
       window.addEventListener('online', () => {
         root.$store.commit('internet/SET_CONNECTION_STATUS', true)
       })
+
+      window.addEventListener('visibilitychange', () => {
+        console.log('called');
+        if(document.visibilityState === "visible") {
+          root.$store.dispatch('userSettings/loadExistingSettings')
+        }
+      })
     }
   },
 
