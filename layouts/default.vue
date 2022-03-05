@@ -80,9 +80,9 @@ export default defineComponent({
 </script>
 <style lang="scss">
 :root {
-  --accent-0: #e2d8cc;
-  --accent-50: #ddd2c4;
-  --accent-100: #d8cdbc;
+  --accent-0: #fff;
+  --accent-50: #f6f8fa;
+  --accent-100: #a9a9a9;
   --accent-primary: #445eee;
   --accent-danger: #ee4444;
   --accent-warning: #ff7300;
