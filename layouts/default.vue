@@ -51,7 +51,6 @@ export default defineComponent({
       })
 
       window.addEventListener('visibilitychange', () => {
-        console.log('called');
         if(document.visibilityState === "visible") {
           root.$store.dispatch('userSettings/loadExistingSettings')
         }
@@ -145,6 +144,12 @@ html {
 
 input {
   font-family: var(--font-display);
+}
+
+label { 
+  font-size: .75rem;
+  display: inline-block;
+  font-weight: var(--weight-thin);
 }
 
 main {

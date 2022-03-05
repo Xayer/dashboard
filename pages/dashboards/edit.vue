@@ -18,6 +18,7 @@
         <Button key="addWidget" class="m-l m-b" @click="addWidget"
           >Add Widget</Button
         >
+        <Label><input v-model="publishToGithub" type="checkbox" /> Sync to Github</Label>
         <Button
           key="saveDashboard"
           class="primary m-l m-b"
@@ -123,7 +124,7 @@ import { Widget } from '~/types/widgets'
 import { Board } from '~/types/dashboards'
 import HueGroupSettings from '~/components/widgets/hue/group/settings.vue'
 import { SpotifyTopTracksSettings } from '~/components/widgets'
-import { githubSyncDashboardToGist } from '~/modules/apis/github'
+import { githubRemoveDashboardGist, githubSyncDashboardToGist } from '~/modules/apis/github'
 
 @Component({
   components: {
@@ -153,6 +154,8 @@ export default class EditableDashboard extends Vue {
 
   settingsOpen = false
 
+  publishToGithub = false
+
   widgetOptions = Object.values(WidgetsAvailable).map((widget) => ({
     text: widget,
     value: widget,
@@ -160,6 +163,7 @@ export default class EditableDashboard extends Vue {
 
   created() {
     this.DashboardWidgets = this.getDashboardWidgets(this.currentBoard?.widgets)
+    this.publishToGithub = !!this.currentBoard?.guid
   }
 
   get boards() {
@@ -185,6 +189,7 @@ export default class EditableDashboard extends Vue {
       return []
     }
     this.DashboardWidgets = this.getDashboardWidgets(currentBoard?.widgets)
+    this.publishToGithub = !!currentBoard?.guid
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -231,8 +236,16 @@ export default class EditableDashboard extends Vue {
     if (!process.browser || !this.currentBoard) {
       return
     }
+
+    let gistId = null
     
-    const { id } = await githubSyncDashboardToGist(this.DashboardWidgets, this.currentBoard?.guid, this.currentBoard?.name);
+
+    if(this.publishToGithub) {
+      const { id } = await githubSyncDashboardToGist(this.DashboardWidgets, this.currentBoard?.guid, this.currentBoard?.name);
+      gistId = id;
+    } else if(!this.publishToGithub && this.currentBoard.guid) {
+        await githubRemoveDashboardGist(this.currentBoard.guid)
+    }
 
     const existingBoards = JSON.parse(
       localStorage.getItem(dasboardsLocalStorageKey) || JSON.stringify([])
@@ -242,7 +255,7 @@ export default class EditableDashboard extends Vue {
     newBoards[this.$route.query.id as string] = {
       ...this.currentBoard,
       widgets: this.DashboardWidgets,
-      guid: id || null,
+      guid: gistId || null,
     }
 
     localStorage.setItem(dasboardsLocalStorageKey, JSON.stringify(newBoards))
