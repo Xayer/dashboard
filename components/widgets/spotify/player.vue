@@ -129,7 +129,7 @@ export default defineComponent({
       const playStateCallback = isPlaying ? pauseTrack : playTrack
       this.$data.isTogglingPlayState = true
 
-      playStateCallback.then(() => {
+      playStateCallback().then(() => {
         this.$data.isTogglingPlayState = false
       })
     },
