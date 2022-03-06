@@ -1,48 +1,10 @@
 <template>
-  <div v-if="$route.query.id">
+  <div v-if="$route.query.id || $route.query.gist">
     <client-only>
-      <template v-if="currentBoard">
-        <portal v-if="currentBoard.name" to="page-title">{{
-          currentBoard.name
-        }}</portal>
-        <portal to="page-actions">
+      <portal v-if="$route.query.id" to="page-actions">
           <Button class="primary m-b" @click="editDashboard">Edit</Button>
-        </portal>
-        <grid-layout
-          v-if="getDashboardWidgets"
-          :layout.sync="DashboardWidgets"
-          :cols="defaultSettings.columns"
-          :row-height="defaultSettings.columnHeight"
-          :is-draggable="false"
-          :is-resizable="false"
-          :margin="defaultSettings.margin"
-          :use-css-transforms="true"
-          :responsive="true"
-        >
-          <grid-item
-            v-for="item in DashboardWidgets"
-            :key="item.i"
-            :i="item.i"
-            :w="item.w"
-            :h="item.h"
-            :x="item.x"
-            :y="item.y"
-            :min-w="item.minW || 1"
-            :min-h="item.minH || 1"
-            :max-w="item.maxW || Infinity"
-            :max-h="item.maxH || Infinity"
-          >
-            <widget-wrapper>
-              <component
-                :is="getWidget(item.type)"
-                :type="item.type"
-                :settings="item.settings"
-                :dimensions="{ w: item.w, h: item.h }"
-              ></component>
-            </widget-wrapper>
-          </grid-item>
-        </grid-layout>
-      </template>
+      </portal>
+      <DashboardViewer v-if="currentBoard" :dashboard-widgets="DashboardWidgets" :name="currentBoard.name" />
       <portal v-else to="page-title">Board not found :(</portal>
     </client-only>
   </div>
@@ -65,27 +27,9 @@ import {
 import { Button } from '@/components/atoms'
 import { Card, CardCollection } from '@/components/molecules'
 import { Widget } from '~/types/widgets'
-import {
-  Widget as WidgetWrapper,
-  Text,
-  Weather,
-  Forecast,
-  TodoList,
-  RejseplanenDeparture,
-  PriceRunnerProductInfo,
-  HueGroup,
-  HueLight,
-  HueBridges,
-  EtherScanAddressBalance,
-  Placeholder,
-  StockPrice,
-  Location,
-  SpotifyTopTracks,
-  SpotifyPlayer,
-} from '@/components/widgets'
 import { Board } from '~/types/dashboards'
-import { DashboardList } from '@/components/organisms'
-import { githubSyncDashboardToGist } from '~/modules/apis/github'
+import { DashboardList, DashboardViewer } from '@/components/organisms'
+import { githubFetchDashboardWidgetsFromGist, githubSyncDashboardToGist } from '~/modules/apis/github'
 
 @Component({
   components: {
@@ -93,22 +37,7 @@ import { githubSyncDashboardToGist } from '~/modules/apis/github'
     DashboardList,
     Card,
     CardCollection,
-    TextWidget: Text,
-    HueBridges,
-    HueLight,
-    HueGroup,
-    RejseplanenDeparture,
-    WidgetWrapper,
-    TodoList,
-    Weather,
-    Forecast,
-    PriceRunnerProductInfo,
-    EtherScanAddressBalance,
-    Placeholder,
-    StockPrice,
-    Location,
-    SpotifyTopTracks,
-    SpotifyPlayer,
+    DashboardViewer,
   },
 })
 export default class Dashboard extends Vue {
@@ -116,21 +45,41 @@ export default class Dashboard extends Vue {
 
   DashboardWidgets: any = null
 
+  currentBoard: Board | null = null
+
   get boards() {
     return this.$store.getters['userSettings/boards']
   }
 
-  get currentBoard(): Board | null {
-    const currentBoard = this.$route.query.id as string
-    if (!currentBoard && !this.boards[currentBoard]) {
-      return null
+  get gistId() {
+    return this.$route.query.gist
+  }
+
+  get boardId() {
+    return this.$route.query.id
+  }
+
+  @Watch('gistId')
+  @Watch('boardId')
+  async fetchBoard() {
+    if(this.boardId) {
+      const currentBoard = this.boardId as string
+      if (!currentBoard && !this.boards[currentBoard]) {
+        return null
+      }
+      this.currentBoard = this.boards[currentBoard]
+      return;
     }
-    return this.boards[currentBoard]
+    if(this.gistId) {
+      this.currentBoard = await this.fetchDashboardWidgetsFromGist(this.gistId as string);
+      return;
+    }
+    this.currentBoard = null
   }
 
   mounted() {
     this.$store.dispatch('userSettings/loadExistingSettings')
-    this.loadWidgetsBasedOnId(this.currentBoard)
+    this.fetchBoard()
   }
 
   @Watch('currentBoard')
@@ -139,6 +88,20 @@ export default class Dashboard extends Vue {
       return []
     }
     this.DashboardWidgets = this.getDashboardWidgets(currentBoard?.widgets)
+  }
+
+  async fetchDashboardWidgetsFromGist(gist: string): Promise<Board|null> {
+    const { files } = await githubFetchDashboardWidgetsFromGist(gist)
+    if(!files || !files["dashboard.json"]?.content) {
+      return null;
+    }
+    const dashboard = await JSON.parse(files["dashboard.json"]?.content);
+
+    return {
+      widgets: dashboard.widgets,
+      guid: dashboard.guid,
+      name: dashboard.name
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this

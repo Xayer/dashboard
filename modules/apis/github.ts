@@ -129,3 +129,21 @@ export const githubRemoveDashboardGist = async (guid?: string) => {
 
   return response
 }
+
+export const githubFetchDashboardWidgetsFromGist = async (guid?: string) => {
+  const githubToken = localStorage.getItem(githubTokenStorageKey) as string
+
+  const response = await fetch(
+    `https://api.github.com/gists${guid ? `/${guid}` : ''}`,
+    {
+      headers: {
+        Authorization: `token ${process.browser ? githubToken : ''}`,
+        Accept: 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      method: 'GET',
+    }
+  )
+
+  return response.json()
+}
