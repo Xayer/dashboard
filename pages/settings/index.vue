@@ -26,6 +26,10 @@ import { Button } from '@/components/atoms'
   },
 })
 export default class Settings extends Vue {
+  head = {
+    title: 'Settings',
+  };
+  
   routes = ['account', 'github', 'spotify', 'hue']
 
   link(route: string) {

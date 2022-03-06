@@ -140,6 +140,10 @@ import { githubRemoveDashboardGist, githubSyncDashboardToGist } from '~/modules/
   },
 })
 export default class EditableDashboard extends Vue {
+  head = {
+    title: 'Edit Dashboard',
+  }
+
   defaultSettings = defaultSettings
 
   errorMessage = ''

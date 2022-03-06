@@ -43,7 +43,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from 'nuxt-property-decorator'
+import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator'
 import {
   Widget as WidgetWrapper,
   Text,
@@ -91,7 +91,16 @@ export default class DashboardViewer extends Vue {
   @Prop() DashboardWidgets: Widget[] | undefined
   @Prop() name!: string
 
-  created() {}
+  created() {
+      this.updatePageTitle();
+  }
+
+  @Watch('name')
+  updatePageTitle() {
+    if (this.name) {
+      document.title = `${this.name} - Dashboard`
+    }
+  }
 
   getWidget(widget: string) {
     if (

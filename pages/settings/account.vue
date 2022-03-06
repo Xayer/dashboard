@@ -73,6 +73,10 @@ import { userInfoStorageKey } from '~/constants/account'
   },
 })
 export default class Login extends Vue {
+  head = {
+    title: 'Account Settings',
+  }
+
   password = ''
 
   username = ''

@@ -49,6 +49,10 @@ import { hueBridgeAddressStorageKey } from '@/constants/hue'
   },
 })
 export default class HueIntegration extends Vue {
+  head = {
+    title: 'Hue Settings',
+  };
+
   token!: string
 
   hueAvailable!: boolean

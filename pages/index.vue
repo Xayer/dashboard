@@ -95,6 +95,9 @@ export default defineComponent({
       refetch,
     }
   },
+  head: {
+    title: 'Dashboard Home',
+  },
   methods: {
     link(path: string) {
       this.$router.push({ path })

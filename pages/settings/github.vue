@@ -110,6 +110,9 @@ export default defineComponent({
       refetch,
     }
   },
+  head: {
+    title: 'Github Settings',
+  },
   methods: {
     clearGithubData() {
       if (!process.browser) {

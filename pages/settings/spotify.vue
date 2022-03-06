@@ -62,6 +62,10 @@ import { Card, CardCollection } from '@/components/molecules'
   },
 })
 export default class SpotifyIntegrationPage extends Vue {
+  head = {
+    title: 'Spotify Settings',
+  };
+
   topTracks = []
   timeRange = 'medium_term'
   timeRanges = [
