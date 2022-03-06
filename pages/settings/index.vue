@@ -30,7 +30,7 @@ export default class Settings extends Vue {
     title: 'Settings',
   };
   
-  routes = ['account', 'github', 'spotify', 'hue']
+  routes = ['github', 'spotify', 'hue', 'location']
 
   link(route: string) {
     this.$router.push({ path: `settings/${route}` })

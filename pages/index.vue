@@ -6,11 +6,6 @@
       >
       <CardCollection>
         <div class="vue-grid-item">
-          <WidgetWrapper>
-            <Location />
-          </WidgetWrapper>
-        </div>
-        <div class="vue-grid-item">
           <WidgetWrapper v-if="city">
             <Weather :settings="{ units: 'metric', city }" />
           </WidgetWrapper>
@@ -21,14 +16,6 @@
           <template #action>
             <Button class="primary" @click="link('/dashboards')"
               >Explore</Button
-            >
-          </template>
-        </Card>
-        <Card>
-          <template #title>Setup Account </template>
-          <template #action>
-            <Button class="primary" @click="link('/settings/account')"
-              >Setup</Button
             >
           </template>
         </Card>
@@ -48,11 +35,11 @@ import { Button } from '@/components/atoms'
 import { userInfoStorageKey } from '~/constants/account'
 import {
   Widget as WidgetWrapper,
-  Location,
   Weather,
   TodoList,
 } from '@/components/widgets'
 import { useFetchIpInfo } from '~/queries/ip-api'
+import { cityStorageKey } from '~/constants/location'
 
 export default defineComponent({
   name: 'Home',
@@ -60,7 +47,6 @@ export default defineComponent({
     Card,
     CardCollection,
     WidgetWrapper,
-    Location,
     Button,
     Weather,
     TodoList,
@@ -84,9 +70,17 @@ export default defineComponent({
       return accountDetails && accountDetails?.name ? accountDetails?.name : ''
     })
 
+    const cityFromSettings = computed(() => {
+      if (!process.browser) {
+        return {}
+      }
+
+      return JSON.parse(localStorage.getItem(cityStorageKey) || '""');
+    });
+
     const { data, isFetching, refetch } = useFetchIpInfo()
 
-    const city = computed(() => data.value?.city)
+    const city = computed(() => cityFromSettings.value || data.value?.city)
 
     return {
       accountName,
@@ -115,7 +109,7 @@ export default defineComponent({
 
 .todo-wrapper {
   width: 100%;
-  min-height: 30vh;
+  height: calc(100vh - 272px);
   margin-top: var(--padding);
 }
 </style>

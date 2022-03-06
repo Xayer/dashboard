@@ -16,6 +16,7 @@ import { todosStorageKey } from '@/constants/todo'
 import { themeStorageKey } from '~/constants/themes'
 import { dasboardsLocalStorageKey } from '~/constants/dashboard'
 import { Board } from '~/types/dashboards'
+import { cityStorageKey } from '~/constants/location'
 
 type StateType = {
   isAuthenticated: boolean
@@ -142,6 +143,10 @@ const actions = {
             localStorage.getItem(todosStorageKey) || JSON.stringify([])
           ),
         },
+        {
+          key: cityStorageKey,
+          value: JSON.parse(localStorage.getItem(cityStorageKey) || '""'),
+        },
       ],
     }
 
@@ -259,6 +264,10 @@ const actions = {
           value: JSON.parse(
             localStorage.getItem(todosStorageKey) || JSON.stringify([])
           ),
+        },
+        {
+          key: cityStorageKey,
+          value: JSON.parse(localStorage.getItem(cityStorageKey) || '""'),
         },
       ],
     }
