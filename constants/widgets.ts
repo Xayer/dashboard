@@ -61,7 +61,7 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     y: 1,
     x: 0,
     i: 0,
-    minW: 2,
+    minW: 1,
     minH: 1,
   },
   [WidgetsAvailable.Forecast]: {
@@ -76,8 +76,8 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     y: 1,
     x: 0,
     i: 0,
-    minW: 3,
-    minH: 2,
+    minW: 1,
+    minH: 1,
   },
   [WidgetsAvailable.HueBridges]: {
     type: WidgetsAvailable.HueBridges,
@@ -110,8 +110,8 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     y: 0,
     x: 0,
     i: 1,
-    minW: 3,
-    minH: 3,
+    minW: 2,
+    minH: 2,
   },
   [WidgetsAvailable.RejseplanenDeparture]: {
     type: WidgetsAvailable.RejseplanenDeparture,
@@ -143,14 +143,14 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     type: WidgetsAvailable.StockPrice,
     title: WidgetTitles[WidgetsAvailable.StockPrice],
     settings: {
-      stockName: 'IBM',
+      stockName: 'AAPL',
     },
     w: 2,
     h: 1,
     y: 0,
     x: 0,
     i: 1,
-    minW: 2,
+    minW: 1,
   },
   [WidgetsAvailable.EtherScanAddressBalance]: {
     type: WidgetsAvailable.EtherScanAddressBalance,
@@ -163,7 +163,7 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
     y: 0,
     x: 0,
     i: 1,
-    minW: 2,
+    minW: 1,
   },
   [WidgetsAvailable.PriceRunnerProductInfo]: {
     type: WidgetsAvailable.PriceRunnerProductInfo,

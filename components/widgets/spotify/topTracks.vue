@@ -89,11 +89,13 @@ export default defineComponent({
   },
 })
 </script>
-<style lang="scss" scoped>
-div {
+<style lang="scss">
+.widget div[type='SpotifyTopTracks'] {
+  height: inherit;
   overflow-y: scroll;
-  height: 100%;
 }
+</style>
+<style lang="scss" scoped>
 section.tracks {
   display: flex;
   flex-direction: column;

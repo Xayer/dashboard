@@ -40,7 +40,6 @@
         :margin="defaultSettings.margin"
         :use-css-transforms="true"
         :responsive="true"
-        @breakpoint-changed="breakpointChangedEvent"
       >
         <grid-item
           v-for="(item, itemIndex) in DashboardWidgets"
