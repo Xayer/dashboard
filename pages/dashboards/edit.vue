@@ -18,7 +18,10 @@
         <Button key="addWidget" class="m-l m-b" @click="addWidget"
           >Add Widget</Button
         >
-        <Label><input v-model="publishToGithub" type="checkbox" /> Sync to Github</Label>
+        <Label
+          ><input v-model="publishToGithub" type="checkbox" /> Sync to
+          Github</Label
+        >
         <Button
           key="saveDashboard"
           class="primary m-l m-b"
@@ -29,8 +32,10 @@
       <grid-layout
         v-if="DashboardWidgets"
         :layout.sync="DashboardWidgets"
+        :breakpoints="defaultSettings.breakpoints"
         :cols="defaultSettings.columns"
         :row-height="defaultSettings.columnHeight"
+        @breakpoint-changed="breakpointChangedEvent"
         :is-draggable="true"
         :is-resizable="true"
         :margin="defaultSettings.margin"
@@ -124,7 +129,10 @@ import { Widget } from '~/types/widgets'
 import { Board } from '~/types/dashboards'
 import HueGroupSettings from '~/components/widgets/hue/group/settings.vue'
 import { SpotifyTopTracksSettings } from '~/components/widgets'
-import { githubRemoveDashboardGist, githubSyncDashboardToGist } from '~/modules/apis/github'
+import {
+  githubRemoveDashboardGist,
+  githubSyncDashboardToGist,
+} from '~/modules/apis/github'
 
 @Component({
   components: {
@@ -242,13 +250,16 @@ export default class EditableDashboard extends Vue {
     }
 
     let gistId = null
-    
 
-    if(this.publishToGithub) {
-      const { id } = await githubSyncDashboardToGist(this.DashboardWidgets, this.currentBoard?.guid, this.currentBoard?.name);
-      gistId = id;
-    } else if(!this.publishToGithub && this.currentBoard.guid) {
-        await githubRemoveDashboardGist(this.currentBoard.guid)
+    if (this.publishToGithub) {
+      const { id } = await githubSyncDashboardToGist(
+        this.DashboardWidgets,
+        this.currentBoard?.guid,
+        this.currentBoard?.name
+      )
+      gistId = id
+    } else if (!this.publishToGithub && this.currentBoard.guid) {
+      await githubRemoveDashboardGist(this.currentBoard.guid)
     }
 
     const existingBoards = JSON.parse(
@@ -311,6 +322,15 @@ export default class EditableDashboard extends Vue {
     if (!visible) {
       this.currentSettings = ''
     }
+  }
+
+  breakpointChangedEvent(newBreakpoint: unknown, newLayout: unknown) {
+    console.log(
+      'BREAKPOINT CHANGED breakpoint=',
+      newBreakpoint,
+      ', layout: ',
+      newLayout
+    )
   }
 }
 </script>

@@ -6,6 +6,13 @@ export const defaultSettings = {
     xs: 4,
     xxs: 2,
   },
+  breakpoints: {
+    lg: 2650,
+    md: 1920,
+    sm: 1440,
+    xs: 768,
+    xxs: 0,
+  },
   columnHeight: 100,
   margin: [15, 15],
 }
