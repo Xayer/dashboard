@@ -14,7 +14,6 @@
           :margin="defaultSettings.margin"
           :use-css-transforms="true"
           :responsive="true"
-          @breakpoint-changed="breakpointChangedEvent"
         >
           <grid-item
             v-for="item in DashboardWidgets"
@@ -112,15 +111,6 @@ export default class DashboardViewer extends Vue {
       return widget
     }
     return 'Placeholder'
-  }
-
-  breakpointChangedEvent(newBreakpoint: unknown, newLayout: unknown) {
-    console.log(
-      'BREAKPOINT CHANGED breakpoint=',
-      newBreakpoint,
-      ', layout: ',
-      newLayout
-    )
   }
 }
 </script>

@@ -35,12 +35,12 @@
         :breakpoints="defaultSettings.breakpoints"
         :cols="defaultSettings.columns"
         :row-height="defaultSettings.columnHeight"
-        @breakpoint-changed="breakpointChangedEvent"
         :is-draggable="true"
         :is-resizable="true"
         :margin="defaultSettings.margin"
         :use-css-transforms="true"
         :responsive="true"
+        @breakpoint-changed="breakpointChangedEvent"
       >
         <grid-item
           v-for="(item, itemIndex) in DashboardWidgets"
@@ -322,15 +322,6 @@ export default class EditableDashboard extends Vue {
     if (!visible) {
       this.currentSettings = ''
     }
-  }
-
-  breakpointChangedEvent(newBreakpoint: unknown, newLayout: unknown) {
-    console.log(
-      'BREAKPOINT CHANGED breakpoint=',
-      newBreakpoint,
-      ', layout: ',
-      newLayout
-    )
   }
 }
 </script>
