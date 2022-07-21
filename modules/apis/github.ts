@@ -5,6 +5,9 @@ export const githubStateStorageKey = 'github-state'
 export const githubTokenStorageKey = 'github-token'
 export const githubUserInfoStorageKey = 'github-user-info'
 
+export const githubToken = () =>
+  localStorage.getItem(githubTokenStorageKey) as string
+
 export const githubProxy = `${
   process.env.NUXT_ENV_GITHUB_PROXY_URL as string
 }access_token/`
