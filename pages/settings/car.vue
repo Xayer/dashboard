@@ -1,6 +1,7 @@
 <template>
   <div>
     <client-only>
+      <pre>{{ carDetails }}</pre>
       <form ref="form" @submit.stop.prevent="submitForm">
         <label for="tankSize"
           >Tank Size:
@@ -17,24 +18,22 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from '@nuxtjs/composition-api'
 import { Button } from '@/components/atoms'
 import { FormInput } from '@/components/molecules'
 import { useFetchCarDetails } from '~/queries/car'
 export default defineComponent({
-  name: 'GithubSettings',
+  name: 'CarSettings',
   components: {
     Button,
     FormInput,
   },
   setup() {
     const { data: carDetails, refetch } = useFetchCarDetails()
-    const tankSize = computed(() => carDetails)
 
     return {
       carDetails,
       refetch,
-      tankSize,
     }
   },
   head: {

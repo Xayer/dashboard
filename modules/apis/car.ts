@@ -23,9 +23,9 @@ export const getCarDetails = async () => {
   }
   // 488c52dd87d576305f6d6cd1a931841e
 
-  const response = await fetch(`${baseUrl}/${guid}`, {
+  const response = await fetch(`${baseUrl}/${guid}/car-details`, {
     headers: {
-      Authorization: `token ${process.browser ? token : ''}`,
+      Authorization: token,
     },
     method: 'GET',
   })
