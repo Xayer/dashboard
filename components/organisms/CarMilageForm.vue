@@ -17,7 +17,10 @@
               <FormInput v-model="stat.refillAmount" class="form-field m-b" />
             </label>
             <template #action>
-              <Button class="danger" @click.prevent="removeStatItem(statIndex)"
+              <Button
+                v-if="stats.length > 1"
+                class="danger"
+                @click.prevent="removeStatItem(statIndex)"
                 >remove</Button
               >
             </template>
