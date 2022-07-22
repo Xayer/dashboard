@@ -28,9 +28,9 @@ import { Button } from '@/components/atoms'
 export default class Settings extends Vue {
   head = {
     title: 'Settings',
-  };
-  
-  routes = ['github', 'spotify', 'hue', 'location']
+  }
+
+  routes = ['github', 'spotify', 'hue', 'location', 'car']
 
   link(route: string) {
     this.$router.push({ path: `settings/${route}` })
