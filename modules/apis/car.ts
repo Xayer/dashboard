@@ -1,19 +1,13 @@
 import { githubToken } from './github'
-import { carDetails } from '~/types/car/carDetails'
+import { CarDetails, FuelStats } from '~/types/car/carDetails'
 
 const baseUrl = process.env.NUXT_ENV_GITHUB_API_URL
 
 export const carDetailsGuidStorageKey = 'car-details-gist'
-const gistGuid = () =>
-  process.browser
-    ? '488c52dd87d576305f6d6cd1a931841e'
-    : // (localStorage.getItem(carDetailsGuidStorageKey) as string)
-      null
 
-export const getCarDetails = async () => {
-  const guid = gistGuid()
-  if (!guid) {
-    throw new Error('missing gistUuuid')
+export const getCarDetails = async ({ gistGuid }: { gistGuid: string }) => {
+  if (!gistGuid) {
+    throw new Error('missing gistUuid')
   }
 
   const token = githubToken()
@@ -21,14 +15,96 @@ export const getCarDetails = async () => {
   if (!token) {
     throw new Error('missing token')
   }
-  // 488c52dd87d576305f6d6cd1a931841e
 
-  const response = await fetch(`${baseUrl}/${guid}/car-details`, {
+  const response = await fetch(`${baseUrl}/${gistGuid}/car-details`, {
     headers: {
       Authorization: token,
     },
     method: 'GET',
   })
 
-  return (await response.json()) as carDetails
+  return (await response.json()) as CarDetails
+}
+
+export const createOrUpdateCarDetails = async ({
+  gistGuid,
+  details,
+}: {
+  gistGuid?: string
+  details: CarDetails
+}) => {
+  const token = githubToken()
+
+  if (!token) {
+    throw new Error('missing token')
+  }
+
+  const response = await fetch(
+    `${baseUrl}${gistGuid ? `/${gistGuid}` : ''}/car-details`,
+    {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      method: gistGuid ? 'PATCH' : 'POST',
+      body: JSON.stringify(details, undefined, 2),
+    }
+  )
+
+  return (await response.json()) as CarDetails
+}
+
+export const getFuelStats = async ({ gistGuid }: { gistGuid: string }) => {
+  if (!gistGuid) {
+    throw new Error('missing gistUuid')
+  }
+
+  const token = githubToken()
+
+  if (!token) {
+    throw new Error('missing token')
+  }
+
+  const response = await fetch(`${baseUrl}/${gistGuid}/fuel-stats`, {
+    headers: {
+      Authorization: token,
+    },
+    method: 'GET',
+  })
+
+  if (!response.ok) {
+    throw new Error('not found')
+  }
+
+  return (await response.json()) as CarDetails
+}
+
+export const createOrUpdateFuelStats = async ({
+  gistGuid,
+  stats,
+  createNew = false,
+}: {
+  gistGuid?: string
+  stats: FuelStats
+  createNew: boolean
+}) => {
+  const token = githubToken()
+
+  if (!token) {
+    throw new Error('missing token')
+  }
+
+  const response = await fetch(
+    `${baseUrl}${gistGuid ? `/${gistGuid}` : ''}/fuel-stats`,
+    {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      method: createNew ? 'POST' : 'PATCH',
+      body: JSON.stringify(stats, undefined, 2),
+    }
+  )
+
+  return (await response.json()) as FuelStats
 }

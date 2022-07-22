@@ -1,13 +1,32 @@
 import { useQuery } from 'vue-query'
-import { minutes } from '~/constants/time'
-import { getCarDetails } from '~/modules/apis/car'
-import { carDetails } from '~/types/car/carDetails'
+import { getCarDetails, getFuelStats } from '~/modules/apis/car'
+import { CarDetails } from '~/types/car/carDetails'
 
-export function useFetchCarDetails() {
+export function useFetchCarDetails({
+  gistGuid,
+  enabled,
+}: {
+  gistGuid: string
+  enabled: boolean
+}) {
   const { isLoading, isError, isFetching, data, error, refetch } =
-    useQuery<carDetails>('carDetails', () => getCarDetails(), {
-      enabled: true,
-      staleTime: minutes(5),
+    useQuery<CarDetails>('carDetails', () => getCarDetails({ gistGuid }), {
+      enabled,
+    })
+
+  return { isLoading, isError, isFetching, data, error, refetch }
+}
+
+export function useFuelStats({
+  gistGuid,
+  enabled,
+}: {
+  gistGuid: string
+  enabled: boolean
+}) {
+  const { isLoading, isError, isFetching, data, error, refetch } =
+    useQuery<CarDetails>('fuelStats', () => getFuelStats({ gistGuid }), {
+      enabled,
     })
 
   return { isLoading, isError, isFetching, data, error, refetch }
