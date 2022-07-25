@@ -1,7 +1,7 @@
 import { githubToken } from './github'
 import { CarDetails, FuelStats } from '~/types/car/carDetails'
 
-const baseUrl = process.env.NUXT_ENV_GITHUB_API_URL
+const baseUrl = process.env.NUXT_ENV_GIST_API_URL
 
 export const carDetailsGuidStorageKey = 'car-details-gist'
 
