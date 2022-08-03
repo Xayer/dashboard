@@ -49,7 +49,7 @@ import { defineComponent } from '@nuxtjs/composition-api'
 import { useQueryClient } from 'vue-query'
 import { Button } from '@/components/atoms'
 import { FormInput, Card, CardCollection } from '@/components/molecules'
-import { useFuelStats } from '~/queries/car'
+import { useFetchCarDetails, useFuelStats } from '~/queries/car'
 import {
   carDetailsGuidStorageKey,
   createOrUpdateFuelStats,
@@ -68,6 +68,11 @@ export default defineComponent({
       ? (localStorage.getItem(carDetailsGuidStorageKey) as string)
       : ''
 
+    const { data: carDetails } = useFetchCarDetails({
+      enabled: !!gistGuid,
+      gistGuid,
+    })
+
     const {
       data: fuelStats,
       isLoading,
@@ -84,6 +89,7 @@ export default defineComponent({
       isLoading,
       isError,
       gistGuid,
+      carDetails,
       queryClient,
     }
   },
