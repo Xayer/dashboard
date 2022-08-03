@@ -1,21 +1,33 @@
 <template>
   <div>
     <client-only>
-      <pre>{{ carDetails }}</pre>
-      <form ref="form" @submit.stop.prevent="submitForm">
-        <label for="tankSize"
-          >Tank Size:
-          <FormInput v-model="tankSize" class="form-field m-b" />
-        </label>
-        <label for="name"
-          >Car Name:
-          <FormInput v-model="name" class="form-field m-b" />
-        </label>
-        <Button class="primary" :disabled="isLoading" @submit="submitForm"
-          >Save</Button
-        >
-      </form>
-      <CarMilageForm />
+      <template v-if="!!gistGuid">
+        <Button class="danger" @click="removeGistId">disconnect</Button>
+        <pre>{{ carDetails }}</pre>
+        <form ref="form" @submit.stop.prevent="submitForm">
+          <label for="tankSize"
+            >Tank Size:
+            <FormInput v-model="tankSize" class="form-field m-b" />
+          </label>
+          <label for="name"
+            >Car Name:
+            <FormInput v-model="name" class="form-field m-b" />
+          </label>
+          <Button class="primary" :disabled="isLoading" @submit="submitForm"
+            >Save</Button
+          >
+        </form>
+        <CarMilageForm />
+      </template>
+      <template v-else>
+        <form ref="form" @submit.stop.prevent="setGistId">
+          <FormInput
+            v-model="newGistGuid"
+            aria-placeholder="gist uuid"
+            class="form-field m-b"
+          /><Button class="primary" @submit="setGistId">Save</Button>
+        </form>
+      </template>
     </client-only>
   </div>
 </template>
@@ -60,6 +72,7 @@ export default defineComponent({
     return {
       tankSize: '0',
       name: '',
+      newGistGuid: '',
     }
   },
   head: {
@@ -87,6 +100,14 @@ export default defineComponent({
       }).then(() => {
         this.queryClient.invalidateQueries('carDetails')
       })
+    },
+    removeGistId() {
+      localStorage.removeItem(carDetailsGuidStorageKey)
+      window.location.reload()
+    },
+    setGistId() {
+      localStorage.setItem(carDetailsGuidStorageKey, this.newGistGuid)
+      window.location.reload()
     },
   },
 })
