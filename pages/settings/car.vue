@@ -2,22 +2,22 @@
   <div>
     <client-only>
       <template v-if="!!gistGuid">
-        <Button class="danger" @click="removeGistId">disconnect</Button>
-        <pre>{{ carDetails }}</pre>
-        <form ref="form" @submit.stop.prevent="submitForm">
-          <label for="tankSize"
-            >Tank Size:
-            <FormInput v-model="tankSize" class="form-field m-b" />
-          </label>
-          <label for="name"
-            >Car Name:
-            <FormInput v-model="name" class="form-field m-b" />
-          </label>
-          <Button class="primary" :disabled="isLoading" @submit="submitForm"
-            >Save</Button
-          >
-        </form>
-        <CarMilageForm />
+        <CarMilageForm>
+          <form ref="form" class="form" @submit.stop.prevent="submitForm">
+            <label for="tankSize"
+              >Tank Size:
+              <FormInput v-model="tankSize" class="form-field m-b" />
+            </label>
+            <label for="name"
+              >Car Name:
+              <FormInput v-model="name" class="form-field m-b" />
+            </label>
+            <Button class="primary" :disabled="isLoading" @submit="submitForm"
+              >Save</Button
+            >
+            <Button class="danger" @click="removeGistId">disconnect</Button>
+          </form>
+        </CarMilageForm>
       </template>
       <template v-else>
         <form ref="form" @submit.stop.prevent="setGistId">

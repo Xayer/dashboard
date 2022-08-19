@@ -2,44 +2,60 @@
   <div>
     <client-only>
       <form ref="form" @submit.stop.prevent="submitForm">
-        <CardCollection
-          v-for="(stat, statIndex) in stats"
-          :key="`${statIndex}-${stat.drivenDistance}-${stat.refillAmount}`"
-        >
+        <portal to="page-title">Car</portal>
+        <portal to="page-actions">
+          <Button
+            class="primary"
+            :disabled="isLoading"
+            type="submit"
+            @submit="submitForm"
+            >Save</Button
+          >
+        </portal>
+        <CardCollection>
           <Card>
-            <pre>{{ stat }}</pre>
-            <label for="name">
-              Driven Distance:
-              <FormInput v-model="stat.drivenDistance" class="form-field m-b" />
-            </label>
-            <label for="name">
-              Refill Amount:
-              <FormInput v-model="stat.refillAmount" class="form-field m-b" />
-            </label>
-            <template #action>
-              <Button
-                v-if="stats.length > 1"
-                class="danger"
-                @click.prevent="removeStatItem(statIndex)"
-                >remove</Button
-              >
-            </template>
-            <p v-if="carDetails && carDetails.tankSize">
-              {{
-                parseFloat(stat.drivenDistance / stat.refillAmount).toFixed(2)
-              }}
-              km/l
-            </p>
+            <slot />
           </Card>
+          <CardCollection>
+            <Card v-for="(stat, statIndex) in stats" :key="`${statIndex}`">
+              <template #title>
+                <div class="form">
+                  <label for="name">
+                    Driven Distance:
+                    <FormInput
+                      v-model="stat.drivenDistance"
+                      class="form-field m-b"
+                    />
+                  </label>
+                  <label for="name">
+                    Refill Amount:
+                    <FormInput
+                      v-model="stat.refillAmount"
+                      class="form-field m-b"
+                    />
+                  </label>
+                </div>
+              </template>
+              <p v-if="carDetails && carDetails.tankSize" class="consumption">
+                {{
+                  parseFloat(stat.drivenDistance / stat.refillAmount).toFixed(2)
+                }}
+                km/l
+              </p>
+              <template #action>
+                <Button
+                  v-if="stats.length > 1"
+                  class="danger"
+                  @click.prevent="removeStatItem(statIndex)"
+                  >remove</Button
+                >
+              </template>
+            </Card>
+            <div class="new-item-wrapper">
+              <Button class="primary" @click.prevent="addNewStatItem">+</Button>
+            </div>
+          </CardCollection>
         </CardCollection>
-        <Button class="primary" @click.prevent="addNewStatItem">+</Button>
-        <Button
-          class="primary"
-          :disabled="isLoading"
-          type="submit"
-          @submit="submitForm"
-          >Save</Button
-        >
       </form>
     </client-only>
   </div>
@@ -146,3 +162,24 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  label {
+    gap: 0;
+    & + label {
+      margin-top: 0;
+    }
+  }
+}
+.new-item-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+</style>
