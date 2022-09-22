@@ -48,6 +48,24 @@
                   parseFloat(stat.drivenDistance / stat.refillAmount).toFixed(2)
                 }}
                 km/l
+                <template
+                  v-if="stats[statIndex - 1] && stats[statIndex - 1].refillDate"
+                >
+                  {{
+                    new Date(
+                      stats[statIndex - 1].refillDate
+                    ).toLocaleDateString()
+                  }}
+                  -
+                  {{ new Date(stat.refillDate).toLocaleDateString() }}
+                  ({{
+                    dateDiffInDays(
+                      stats[statIndex - 1].refillDate,
+                      stat.refillDate
+                    )
+                  }}
+                  days)
+                </template>
               </p>
               <template #action>
                 <Button
@@ -78,6 +96,7 @@ import {
   createOrUpdateFuelStats,
 } from '~/modules/apis/car'
 import { FuelStats } from '~/types/car/carDetails'
+import { dateDiffInDays } from '~/constants/time'
 export default defineComponent({
   name: 'CarMilageForm',
   components: {
@@ -172,6 +191,7 @@ export default defineComponent({
     removeStatItem(itemIndex: number) {
       this.stats.splice(itemIndex, 1)
     },
+    dateDiffInDays,
   },
 })
 </script>
