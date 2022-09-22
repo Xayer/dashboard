@@ -76,7 +76,7 @@ export const getFuelStats = async ({ gistGuid }: { gistGuid: string }) => {
     throw new Error('not found')
   }
 
-  return (await response.json()) as CarDetails
+  return (await response.json()) as FuelStats
 }
 
 export const createOrUpdateFuelStats = async ({

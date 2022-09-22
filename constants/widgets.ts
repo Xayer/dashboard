@@ -17,6 +17,7 @@ export const WidgetsAvailable = {
   Location: 'Location',
   SpotifyTopTracks: 'SpotifyTopTracks',
   SpotifyPlayer: 'SpotifyPlayer',
+  carTotalDistance: 'carTotalDistance',
 }
 
 export const WidgetTitles: { [key: string]: string } = {
@@ -34,6 +35,7 @@ export const WidgetTitles: { [key: string]: string } = {
   [WidgetsAvailable.Location]: 'Location',
   [WidgetsAvailable.SpotifyTopTracks]: 'Top Tracks Spotify',
   [WidgetsAvailable.SpotifyPlayer]: 'Spotify Player',
+  [WidgetsAvailable.carTotalDistance]: 'Car Total Distance',
 }
 
 export const WidgetDefaultSettings: { [key: string]: Widget } = {
@@ -206,6 +208,16 @@ export const WidgetDefaultSettings: { [key: string]: Widget } = {
   [WidgetsAvailable.SpotifyPlayer]: {
     type: WidgetsAvailable.SpotifyPlayer,
     title: WidgetTitles[WidgetsAvailable.SpotifyPlayer],
+    settings: {},
+    w: 2,
+    h: 1,
+    y: 0,
+    x: 0,
+    i: 0,
+  },
+  [WidgetsAvailable.carTotalDistance]: {
+    type: WidgetsAvailable.carTotalDistance,
+    title: WidgetTitles[WidgetsAvailable.carTotalDistance],
     settings: {},
     w: 2,
     h: 1,

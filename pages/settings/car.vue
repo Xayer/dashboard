@@ -2,22 +2,35 @@
   <div>
     <client-only>
       <template v-if="!!gistGuid">
-        <CarMilageForm>
-          <form ref="form" class="form" @submit.stop.prevent="submitForm">
-            <label for="tankSize"
-              >Tank Size:
-              <FormInput v-model="tankSize" class="form-field m-b" />
-            </label>
-            <label for="name"
-              >Car Name:
-              <FormInput v-model="name" class="form-field m-b" />
-            </label>
-            <Button class="primary" :disabled="isLoading" @submit="submitForm"
-              >Save</Button
-            >
-            <Button class="danger" @click="removeGistId">disconnect</Button>
-          </form>
-        </CarMilageForm>
+        <CardCollection>
+          <Card>
+            <Widget>
+              <CarTotalDistance />
+            </Widget>
+          </Card>
+          <Card>
+            <Widget>
+              <form ref="form" class="form" @submit.stop.prevent="submitForm">
+                <label for="tankSize"
+                  >Tank Size:
+                  <FormInput v-model="tankSize" class="form-field m-b" />
+                </label>
+                <label for="name"
+                  >Car Name:
+                  <FormInput v-model="name" class="form-field m-b" />
+                </label>
+                <Button
+                  class="primary"
+                  :disabled="isLoading"
+                  @submit="submitForm"
+                  >Save</Button
+                >
+                <Button class="danger" @click="removeGistId">disconnect</Button>
+              </form>
+            </Widget>
+          </Card>
+        </CardCollection>
+        <CarMilageForm />
       </template>
       <template v-else>
         <form ref="form" @submit.stop.prevent="setGistId">
@@ -35,19 +48,24 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 import { useQueryClient } from 'vue-query'
 import { Button } from '@/components/atoms'
-import { FormInput } from '@/components/molecules'
+import { FormInput, Card, CardCollection } from '@/components/molecules'
 import { CarMilageForm } from '@/components/organisms'
 import { useFetchCarDetails } from '~/queries/car'
 import {
   carDetailsGuidStorageKey,
   createOrUpdateCarDetails,
 } from '~/modules/apis/car'
+import { CarTotalDistance, Widget } from '~/components/widgets'
 export default defineComponent({
   name: 'CarSettings',
   components: {
     Button,
     FormInput,
     CarMilageForm,
+    Card,
+    CardCollection,
+    CarTotalDistance,
+    Widget,
   },
   setup() {
     const gistGuid = process.browser

@@ -62,6 +62,7 @@ import {
   Location,
   SpotifyTopTracks,
   SpotifyPlayer,
+  CarTotalDistance,
 } from '@/components/widgets'
 import { Widget } from '~/types/widgets'
 import { defaultSettings } from '~/constants/dashboard'
@@ -84,6 +85,7 @@ import { defaultSettings } from '~/constants/dashboard'
     Location,
     SpotifyTopTracks,
     SpotifyPlayer,
+    carTotalDistance: CarTotalDistance,
   },
 })
 export default class DashboardViewer extends Vue {

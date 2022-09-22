@@ -3,9 +3,10 @@ export type CarDetails = {
   name: string
 }
 
-type FuelStat = {
+export type FuelStat = {
   drivenDistance: number
   refillAmount: number
+  refillDate: string
 }
 
 export type FuelStats = FuelStat[]

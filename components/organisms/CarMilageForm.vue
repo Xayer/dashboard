@@ -2,35 +2,42 @@
   <div>
     <client-only>
       <form ref="form" @submit.stop.prevent="submitForm">
-        <portal to="page-title">Car</portal>
+        <portal to="page-title"
+          ><i class="icon bi bi-car-front-fill"></i> Car</portal
+        >
         <portal to="page-actions">
           <Button
             class="primary"
             :disabled="isLoading"
             type="submit"
-            @submit="submitForm"
+            @submit.prevent="submitForm"
+            @click="submitForm"
             >Save</Button
           >
         </portal>
-        <CardCollection>
-          <Card>
-            <slot />
-          </Card>
+        <div>
           <CardCollection>
             <Card v-for="(stat, statIndex) in stats" :key="`${statIndex}`">
               <template #title>
                 <div class="form">
-                  <label for="name">
+                  <label for="drivenDistance">
                     Driven Distance:
                     <FormInput
                       v-model="stat.drivenDistance"
                       class="form-field m-b"
                     />
                   </label>
-                  <label for="name">
+                  <label for="refillAmount">
                     Refill Amount:
                     <FormInput
                       v-model="stat.refillAmount"
+                      class="form-field m-b"
+                    />
+                  </label>
+                  <label for="refillAmount">
+                    Refill Date:
+                    <FormInput
+                      v-model="stat.refillDate"
                       class="form-field m-b"
                     />
                   </label>
@@ -47,15 +54,15 @@
                   v-if="stats.length > 1"
                   class="danger"
                   @click.prevent="removeStatItem(statIndex)"
-                  >remove</Button
-                >
+                  ><i class="icon bi bi-x"></i
+                ></Button>
               </template>
             </Card>
             <div class="new-item-wrapper">
               <Button class="primary" @click.prevent="addNewStatItem">+</Button>
             </div>
           </CardCollection>
-        </CardCollection>
+        </div>
       </form>
     </client-only>
   </div>
@@ -115,6 +122,7 @@ export default defineComponent({
         {
           drivenDistance: '0',
           refillAmount: '0',
+          refillDate: new Date().toISOString(),
         },
       ],
       name: '',
@@ -127,9 +135,10 @@ export default defineComponent({
     fuelStats(stats: FuelStats) {
       if (stats.length >= 1) {
         this.$data.stats = [
-          ...stats.map(({ drivenDistance, refillAmount }) => ({
+          ...stats.map(({ drivenDistance, refillAmount, refillDate }) => ({
             drivenDistance: drivenDistance.toString(),
             refillAmount: refillAmount.toString(),
+            refillDate: refillDate.toString(),
           })),
         ]
       }
@@ -140,10 +149,13 @@ export default defineComponent({
       createOrUpdateFuelStats({
         gistGuid: this.gistGuid,
         stats: [
-          ...(this.stats.map(({ drivenDistance, refillAmount }) => ({
-            drivenDistance: Number.parseFloat(drivenDistance),
-            refillAmount: Number.parseFloat(refillAmount),
-          })) as FuelStats),
+          ...(this.stats.map(
+            ({ drivenDistance, refillAmount, refillDate }) => ({
+              drivenDistance: Number.parseFloat(drivenDistance),
+              refillAmount: Number.parseFloat(refillAmount),
+              refillDate,
+            })
+          ) as FuelStats),
         ],
         createNew: this.isError,
       }).then(() => {
@@ -154,6 +166,7 @@ export default defineComponent({
       this.stats.push({
         drivenDistance: '0',
         refillAmount: '0',
+        refillDate: new Date().toISOString(),
       })
     },
     removeStatItem(itemIndex: number) {

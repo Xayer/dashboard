@@ -1,6 +1,6 @@
 import { useQuery } from 'vue-query'
 import { getCarDetails, getFuelStats } from '~/modules/apis/car'
-import { CarDetails } from '~/types/car/carDetails'
+import { CarDetails, FuelStats } from '~/types/car/carDetails'
 
 export function useFetchCarDetails({
   gistGuid,
@@ -24,10 +24,10 @@ export function useFuelStats({
   gistGuid: string
   enabled: boolean
 }) {
-  const { isLoading, isError, isFetching, data, error, refetch } =
-    useQuery<CarDetails>('fuelStats', () => getFuelStats({ gistGuid }), {
+  const { isLoading, isError, isFetching, data, error, refetch, isSuccess } =
+    useQuery<FuelStats>('fuelStats', () => getFuelStats({ gistGuid }), {
       enabled,
     })
 
-  return { isLoading, isError, isFetching, data, error, refetch }
+  return { isLoading, isError, isFetching, data, error, refetch, isSuccess }
 }

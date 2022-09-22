@@ -23,3 +23,5 @@ export { default as SpotifyTopTracks } from '@/components/widgets/spotify/topTra
 export { default as SpotifyTopTracksSettings } from '@/components/widgets/spotify/topTracksSettings.vue'
 
 export { default as SpotifyPlayer } from '@/components/widgets/spotify/player.vue'
+
+export { default as CarTotalDistance } from '@/components/widgets/car/carTotalDistance.vue'
