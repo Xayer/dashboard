@@ -49,7 +49,7 @@ export async function getRecentStocks(stock: string, _interval = '5min') {
   const response = await fetch(
     `https://www.alphavantage.co/query?${new URLSearchParams({
       // function: 'TIME_SERIES_INTRADAY',
-      function: 'TIME_SERIES_DAILY',
+      function: 'TIME_SERIES_DAILY_ADJUSTED',
       symbol: stock,
       // interval,
       apikey: process.env.NUXT_ENV_ALPHA_API as string,
