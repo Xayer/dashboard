@@ -58,7 +58,7 @@
                   }}
                   -
                   {{ new Date(stat.refillDate).toLocaleDateString() }}
-                  ({{
+                  {{
                     dateDiffInDays(
                       stats[statIndex - 1].refillDate,
                       stat.refillDate

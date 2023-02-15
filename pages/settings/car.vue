@@ -5,11 +5,6 @@
         <CardCollection>
           <Card>
             <Widget>
-              <CarTotalDistance />
-            </Widget>
-          </Card>
-          <Card>
-            <Widget>
               <form ref="form" class="form" @submit.stop.prevent="submitForm">
                 <label for="tankSize"
                   >Tank Size:
@@ -29,7 +24,11 @@
               </form>
             </Widget>
           </Card>
+          <Card>
+            <CarTotalDistance />
+          </Card>
         </CardCollection>
+        <CarMilageTable />
         <CarMilageForm />
       </template>
       <template v-else>
@@ -49,7 +48,7 @@ import { defineComponent } from '@nuxtjs/composition-api'
 import { useQueryClient } from 'vue-query'
 import { Button } from '@/components/atoms'
 import { FormInput, Card, CardCollection } from '@/components/molecules'
-import { CarMilageForm } from '@/components/organisms'
+import { CarMilageForm, CarMilageTable } from '@/components/organisms'
 import { useFetchCarDetails } from '~/queries/car'
 import {
   carDetailsGuidStorageKey,
@@ -64,6 +63,7 @@ export default defineComponent({
     CarMilageForm,
     Card,
     CardCollection,
+    CarMilageTable,
     CarTotalDistance,
     Widget,
   },
