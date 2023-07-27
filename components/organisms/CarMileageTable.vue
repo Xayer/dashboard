@@ -15,8 +15,10 @@
         </td>
         <td for="drivenDistance">{{ stat.drivenDistance }}km</td>
         <td>
-          {{ parseFloat(stat.drivenDistance / stat.refillAmount).toFixed(2) }}
-          km/l
+          <template v-if="stat && stat.drivenDistance && stat.refillAmount">
+            {{ parseFloat(stat.drivenDistance / stat.refillAmount).toFixed(2) }}
+            km/l
+          </template>
         </td>
         <td v-if="stats[statIndex - 1] && stats[statIndex - 1].refillDate">
           {{ dateDiffInDays(stats[statIndex - 1].refillDate, stat.refillDate) }}

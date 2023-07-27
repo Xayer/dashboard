@@ -28,8 +28,8 @@
             <CarTotalDistance />
           </Card>
         </CardCollection>
-        <CarMilageTable />
-        <CarMilageForm />
+        <CarMileageTable />
+        <CarMileageForm />
       </template>
       <template v-else>
         <form ref="form" @submit.stop.prevent="setGistId">
@@ -48,7 +48,7 @@ import { defineComponent } from '@nuxtjs/composition-api'
 import { useQueryClient } from 'vue-query'
 import { Button } from '@/components/atoms'
 import { FormInput, Card, CardCollection } from '@/components/molecules'
-import { CarMilageForm, CarMilageTable } from '@/components/organisms'
+import { CarMileageForm, CarMileageTable } from '@/components/organisms'
 import { useFetchCarDetails } from '~/queries/car'
 import {
   carDetailsGuidStorageKey,
@@ -60,10 +60,10 @@ export default defineComponent({
   components: {
     Button,
     FormInput,
-    CarMilageForm,
+    CarMileageForm,
     Card,
     CardCollection,
-    CarMilageTable,
+    CarMileageTable,
     CarTotalDistance,
     Widget,
   },
