@@ -51,7 +51,7 @@ export default defineComponent({
       })
 
       window.addEventListener('visibilitychange', () => {
-        if(document.visibilityState === "visible") {
+        if (document.visibilityState === 'visible') {
           root.$store.dispatch('userSettings/loadExistingSettings')
         }
       })
@@ -85,6 +85,8 @@ export default defineComponent({
 })
 </script>
 <style lang="scss">
+@import '../node_modules/ag-grid-community/styles/ag-grid.css';
+@import '../node_modules/ag-grid-community/styles/ag-theme-alpine.css';
 :root {
   --accent-0: #fff;
   --accent-50: #f6f8fa;
@@ -129,6 +131,17 @@ export default defineComponent({
   }
 }
 
+// AG Grid
+body .ag-theme-alpine-dark {
+  --ag-background-color: var(--accent-0);
+  --ag-header-background-color: var(--accent-50);
+  --ag-even-row-background-color: var(--accent-50);
+  --ag-odd-row-background-color: var(--accent-50);
+  --ag-borders: none;
+  --ag-row-border-color: var(--accent-100);
+  --ag-font-family: var(--font-display);
+}
+
 body,
 html {
   --layout-bg: var(--accent-0);
@@ -146,8 +159,8 @@ input {
   font-family: var(--font-display);
 }
 
-label { 
-  font-size: .75rem;
+label {
+  font-size: 0.75rem;
   display: inline-block;
   font-weight: var(--weight-thin);
 }
