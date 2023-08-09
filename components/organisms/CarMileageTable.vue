@@ -1,40 +1,12 @@
 <template>
-  <table>
-    <thead>
-      <th>Refill</th>
-      <th>Distance</th>
-      <th>km/l</th>
-      <th>Days</th>
-      <th>From Date</th>
-      <th>To Date</th>
-    </thead>
-    <tbody>
-      <tr v-for="(stat, statIndex) in stats" :key="`${statIndex}`">
-        <td>
-          <span class="form-field m-b">{{ stat.refillAmount }} l</span>
-        </td>
-        <td for="drivenDistance">{{ stat.drivenDistance }}km</td>
-        <td>
-          {{ parseFloat(stat.drivenDistance / stat.refillAmount).toFixed(2) }}
-          km/l
-        </td>
-        <td v-if="stats[statIndex - 1] && stats[statIndex - 1].refillDate">
-          {{ dateDiffInDays(stats[statIndex - 1].refillDate, stat.refillDate) }}
-          days
-        </td>
-        <td>
-          {{
-            stats[statIndex - 1] && stats[statIndex - 1].refillDate
-              ? new Date(stats[statIndex - 1].refillDate).toLocaleDateString()
-              : ''
-          }}
-        </td>
-        <td>
-          {{ new Date(stat.refillDate).toLocaleDateString() }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <ag-grid-vue
+    style="width: 100%; height: 100vh"
+    class="ag-theme-alpine-dark"
+    :column-defs="columnDefs"
+    :row-data="fuelStats"
+    :defaultColDef="defaultColDef"
+  >
+  </ag-grid-vue>
 </template>
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
@@ -88,6 +60,87 @@ export default defineComponent({
         },
       ],
       name: '',
+      defaultColDef: {
+        flex: 1,
+        minWidth: 100,
+        sortable: true,
+        filter: true,
+      },
+      columnDefs: [
+        {
+          field: 'refillAmount',
+          header: 'Refill',
+          cellRenderer: ({ data }) => {
+            return data && data.drivenDistance
+              ? new Intl.NumberFormat('da-DK', {
+                  style: 'unit',
+                  unit: 'liter',
+                }).format(data.drivenDistance / 10)
+              : ''
+          },
+        },
+        {
+          field: 'drivenDistance',
+          header: 'Distance',
+          cellRenderer: ({ data }) => {
+            return data && data.drivenDistance
+              ? new Intl.NumberFormat('da-DK', {
+                  style: 'unit',
+                  unit: 'kilometer',
+                }).format(data.drivenDistance)
+              : ''
+          },
+        },
+        {
+          field: 'km/l',
+          header: 'km/l',
+          valueGetter: ({ data }) => {
+            return parseFloat(data.drivenDistance / data.refillAmount).toFixed(
+              2
+            )
+          },
+        },
+        {
+          field: 'Days',
+          header: 'Days',
+          valueGetter: ({ data, api, node }) => {
+            const statIndex = node.rowIndex
+            const previousRow = api.getDisplayedRowAtIndex(statIndex - 1)
+
+            if (!previousRow) {
+              return ''
+            }
+
+            return previousRow && previousRow.data.refillDate && data.refillDate
+              ? dateDiffInDays(previousRow.data.refillDate, data.refillDate)
+              : ''
+          },
+        },
+        {
+          field: 'From',
+          header: 'From',
+          valueGetter: ({ data, api, node }) => {
+            const statIndex = node.rowIndex
+            const previousRow = api.getDisplayedRowAtIndex(statIndex - 1)
+
+            if (!previousRow) {
+              return ''
+            }
+
+            return previousRow && previousRow.data.refillDate
+              ? new Date(previousRow.data.refillDate).toLocaleDateString()
+              : ''
+          },
+        },
+        {
+          field: 'To',
+          header: 'To',
+          valueGetter: ({ data }) =>
+            data.refillDate
+              ? new Date(data.refillDate).toLocaleDateString()
+              : '',
+        },
+      ],
     }
   },
   head: {

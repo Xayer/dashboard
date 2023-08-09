@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@ag-grid-community/vue@^29.3.5":
+  version "29.3.5"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/vue/-/vue-29.3.5.tgz#6ef6a61b6d2de3cfe7a8f7599dd62497bf50cd33"
+  integrity sha512-KnUcK4TkYrB+kaAtIT6QkFcZhVQiQa9mmhUS2+aAgrZZTSb3/1OyTbxW2TOmrQphZHi6/neEZu9zu/k4vP0rug==
+
 "@babel/code-frame@7.12.11":
   version "7.12.11"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.11.tgz#f4ad435aa263db935b8f10f2c552d23fb716a63f"
@@ -2655,6 +2660,16 @@ acorn@^8.0.4, acorn@^8.2.4:
   version "8.4.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.4.1.tgz#56c36251fc7cabc7096adc18f05afe814321a28c"
   integrity sha512-asabaBSkEKosYKMITunzX177CXxQ4Q8BSSzMTKD+FefUhipQC70gfW5SiUDhYQ3vk8G+81HqQk7Fv9OXwwn9KA==
+
+ag-grid-community@^29.3.5:
+  version "29.3.5"
+  resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-29.3.5.tgz#16897896d10fa3ecac79279aad50d3aaa17c5f33"
+  integrity sha512-LxUo21f2/CH31ACEs1C7Q/ggGGI1fQPSTB4aY5OThmM+lBkygZ7QszBE8jpfgWOIjvjdtcdIeQbmbjkHeMsA7A==
+
+ag-grid-vue@^29.3.5:
+  version "29.3.5"
+  resolved "https://registry.yarnpkg.com/ag-grid-vue/-/ag-grid-vue-29.3.5.tgz#9f12958649db475750413d2958f56bd85e7f64f5"
+  integrity sha512-SzPKumnC0wAGn3gPF2Mu66v5z7sOiIfRFAeHTS4HU2XUguPviQAVmEg+G/Hri5pHun+LlcwMXWKB3JMDa/U5WA==
 
 agent-base@6:
   version "6.0.2"

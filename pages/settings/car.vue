@@ -3,13 +3,13 @@
     <client-only>
       <template v-if="!!gistGuid">
         <CardCollection>
-          <Card>
-            <Widget>
-              <form ref="form" class="form" @submit.stop.prevent="submitForm">
-                <label for="tankSize"
-                  >Tank Size:
-                  <FormInput v-model="tankSize" class="form-field m-b" />
-                </label>
+          <Widget>
+            <form ref="form" class="form" @submit.stop.prevent="submitForm">
+              <label for="tankSize"
+                >Tank Size:
+                <FormInput v-model="tankSize" class="form-field m-b" />
+              </label>
+              <div>
                 <label for="name"
                   >Car Name:
                   <FormInput v-model="name" class="form-field m-b" />
@@ -21,15 +21,14 @@
                   >Save</Button
                 >
                 <Button class="danger" @click="removeGistId">disconnect</Button>
-              </form>
-            </Widget>
-          </Card>
-          <Card>
-            <CarTotalDistance />
-          </Card>
+              </div>
+            </form>
+          </Widget>
+
+          <CarTotalDistance />
         </CardCollection>
-        <CarMilageTable />
-        <CarMilageForm />
+        <CarMileageTable />
+        <!-- <CarMileageForm /> -->
       </template>
       <template v-else>
         <form ref="form" @submit.stop.prevent="setGistId">
@@ -48,7 +47,7 @@ import { defineComponent } from '@nuxtjs/composition-api'
 import { useQueryClient } from 'vue-query'
 import { Button } from '@/components/atoms'
 import { FormInput, Card, CardCollection } from '@/components/molecules'
-import { CarMilageForm, CarMilageTable } from '@/components/organisms'
+import { CarMileageTable } from '@/components/organisms'
 import { useFetchCarDetails } from '~/queries/car'
 import {
   carDetailsGuidStorageKey,
@@ -60,10 +59,9 @@ export default defineComponent({
   components: {
     Button,
     FormInput,
-    CarMilageForm,
     Card,
     CardCollection,
-    CarMilageTable,
+    CarMileageTable,
     CarTotalDistance,
     Widget,
   },
@@ -130,3 +128,8 @@ export default defineComponent({
   },
 })
 </script>
+<style lang="scss" scoped>
+.form {
+  display: flex;
+}
+</style>

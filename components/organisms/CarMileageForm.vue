@@ -98,7 +98,7 @@ import {
 import { FuelStats } from '~/types/car/carDetails'
 import { dateDiffInDays } from '~/constants/time'
 export default defineComponent({
-  name: 'CarMilageForm',
+  name: 'CarMileageForm',
   components: {
     Button,
     FormInput,
