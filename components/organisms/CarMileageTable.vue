@@ -18,7 +18,7 @@ import {
 } from '~/modules/apis/car'
 import { FuelStats, FuelStat } from '~/types/car/carDetails'
 import { dateDiffInDays } from '~/constants/time'
-import { ICellRendererParams, ValueGetterParams } from 'ag-grid-community'
+import { ValueFormatterParams, ValueGetterParams } from 'ag-grid-community'
 export default defineComponent({
   name: 'CarMilageTable',
   setup() {
@@ -70,23 +70,20 @@ export default defineComponent({
       columnDefs: [
         {
           field: 'refillAmount',
-          header: 'Refill',
-          cellRenderer: ({ data }: ICellRendererParams<FuelStat>) => {
-            return data && data.drivenDistance
+          headerName: 'Refill',
+          valueFormatter: ({ data }: ValueFormatterParams<FuelStat>) => {
+            return data && data.refillAmount
               ? new Intl.NumberFormat('da-DK', {
                   style: 'unit',
                   unit: 'liter',
                 }).format(data.refillAmount)
               : ''
           },
-          valueGetter: ({ data }: ValueGetterParams<FuelStat>) => {
-            return data ? data.refillAmount : 0
-          },
         },
         {
           field: 'drivenDistance',
-          header: 'Distance',
-          cellRenderer: ({ data }: ICellRendererParams<FuelStat>) => {
+          headerName: 'Distance',
+          valueFormatter: ({ data }: ValueFormatterParams<FuelStat>) => {
             return data && data.drivenDistance
               ? new Intl.NumberFormat('da-DK', {
                   style: 'unit',
@@ -94,22 +91,22 @@ export default defineComponent({
                 }).format(data.drivenDistance)
               : ''
           },
-          valueGetter: ({ data }: ValueGetterParams<FuelStat>) => {
-            return data ? data.drivenDistance : 0
-          },
         },
         {
-          field: 'km/l',
-          header: 'km/l',
-          valueGetter: ({ data }: ValueGetterParams<FuelStat>) => {
+          headerName: 'km/l',
+          valueFormatter: ({ data }: ValueGetterParams<FuelStat>) => {
             return data && data.drivenDistance && data.refillAmount
               ? (data.drivenDistance / data.refillAmount).toFixed(2)
               : 0
           },
+          valueGetter: ({ data }: ValueGetterParams<FuelStat>) => {
+            return data && data.drivenDistance && data.refillAmount
+              ? data.drivenDistance / data.refillAmount
+              : 0
+          },
         },
         {
-          field: 'Days',
-          header: 'Days',
+          headerName: 'Days',
           valueGetter: ({ data, api, node }: ValueGetterParams<FuelStat>) => {
             if (!node || !data) {
               return 0
@@ -124,15 +121,45 @@ export default defineComponent({
               return 0
             }
 
-            return previousRow && previousRow.data.refillDate && data.refillDate
-              ? dateDiffInDays(previousRow.data.refillDate, data.refillDate)
-              : 0
+            if (previousRow && previousRow.data.refillDate && data.refillDate) {
+              const diff = dateDiffInDays(
+                previousRow.data.refillDate,
+                data.refillDate
+              )
+              return diff
+            }
+            return 0
           },
         },
         {
-          field: 'From',
-          header: 'From',
-          valueGetter: ({ data, api, node }: ValueGetterParams<FuelStat>) => {
+          headerName: 'From',
+          valueGetter: ({
+            data,
+            api,
+            node,
+          }: ValueFormatterParams<FuelStat>) => {
+            if (!node || !data) {
+              return 0
+            }
+            const statIndex = node.rowIndex
+            if (statIndex === 0 || statIndex === null) {
+              return 0
+            }
+            const previousRow = api.getDisplayedRowAtIndex(statIndex - 1)
+
+            if (!previousRow || !previousRow.data) {
+              return 0
+            }
+
+            return previousRow && previousRow.data.refillDate
+              ? new Date(previousRow.data.refillDate)
+              : 0
+          },
+          valueFormatter: ({
+            data,
+            api,
+            node,
+          }: ValueFormatterParams<FuelStat>) => {
             if (!node || !data) {
               return ''
             }
@@ -152,9 +179,9 @@ export default defineComponent({
           },
         },
         {
-          field: 'To',
-          header: 'To',
-          valueGetter: ({ data }: ValueGetterParams<FuelStat>) =>
+          field: 'refillDate',
+          headerName: 'To',
+          valueFormatter: ({ data }: ValueFormatterParams<FuelStat>) =>
             data && data.refillDate
               ? new Date(data.refillDate).toLocaleDateString()
               : '',
