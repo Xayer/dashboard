@@ -76,8 +76,11 @@ export default defineComponent({
               ? new Intl.NumberFormat('da-DK', {
                   style: 'unit',
                   unit: 'liter',
-                }).format(data.drivenDistance / 10)
+                }).format(data.refillAmount / 10)
               : ''
+          },
+          valueGetter: ({ data }: ValueGetterParams<FuelStat>) => {
+            return data ? data.refillAmount : 0
           },
         },
         {
@@ -90,6 +93,9 @@ export default defineComponent({
                   unit: 'kilometer',
                 }).format(data.drivenDistance)
               : ''
+          },
+          valueGetter: ({ data }: ValueGetterParams<FuelStat>) => {
+            return data ? data.drivenDistance : 0
           },
         },
         {
@@ -106,21 +112,21 @@ export default defineComponent({
           header: 'Days',
           valueGetter: ({ data, api, node }: ValueGetterParams<FuelStat>) => {
             if (!node || !data) {
-              return ''
+              return 0
             }
             const statIndex = node.rowIndex
             if (statIndex === 0 || statIndex === null) {
-              return ''
+              return 0
             }
             const previousRow = api.getDisplayedRowAtIndex(statIndex - 1)
 
             if (!previousRow || !previousRow.data) {
-              return ''
+              return 0
             }
 
             return previousRow && previousRow.data.refillDate && data.refillDate
               ? dateDiffInDays(previousRow.data.refillDate, data.refillDate)
-              : ''
+              : 0
           },
         },
         {
