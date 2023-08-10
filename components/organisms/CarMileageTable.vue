@@ -16,8 +16,9 @@ import {
   carDetailsGuidStorageKey,
   createOrUpdateFuelStats,
 } from '~/modules/apis/car'
-import { FuelStats } from '~/types/car/carDetails'
+import { FuelStats, FuelStat } from '~/types/car/carDetails'
 import { dateDiffInDays } from '~/constants/time'
+import { ICellRendererParams, ValueGetterParams } from 'ag-grid-community'
 export default defineComponent({
   name: 'CarMilageTable',
   setup() {
@@ -70,7 +71,7 @@ export default defineComponent({
         {
           field: 'refillAmount',
           header: 'Refill',
-          cellRenderer: ({ data }) => {
+          cellRenderer: ({ data }: ICellRendererParams<FuelStat>) => {
             return data && data.drivenDistance
               ? new Intl.NumberFormat('da-DK', {
                   style: 'unit',
@@ -82,7 +83,7 @@ export default defineComponent({
         {
           field: 'drivenDistance',
           header: 'Distance',
-          cellRenderer: ({ data }) => {
+          cellRenderer: ({ data }: ICellRendererParams<FuelStat>) => {
             return data && data.drivenDistance
               ? new Intl.NumberFormat('da-DK', {
                   style: 'unit',
@@ -94,20 +95,26 @@ export default defineComponent({
         {
           field: 'km/l',
           header: 'km/l',
-          valueGetter: ({ data }) => {
-            return parseFloat(data.drivenDistance / data.refillAmount).toFixed(
-              2
-            )
+          valueGetter: ({ data }: ValueGetterParams<FuelStat>) => {
+            return data && data.drivenDistance && data.refillAmount
+              ? (data.drivenDistance / data.refillAmount).toFixed(2)
+              : 0
           },
         },
         {
           field: 'Days',
           header: 'Days',
-          valueGetter: ({ data, api, node }) => {
+          valueGetter: ({ data, api, node }: ValueGetterParams<FuelStat>) => {
+            if (!node || !data) {
+              return ''
+            }
             const statIndex = node.rowIndex
+            if (statIndex === 0 || statIndex === null) {
+              return ''
+            }
             const previousRow = api.getDisplayedRowAtIndex(statIndex - 1)
 
-            if (!previousRow) {
+            if (!previousRow || !previousRow.data) {
               return ''
             }
 
@@ -119,11 +126,17 @@ export default defineComponent({
         {
           field: 'From',
           header: 'From',
-          valueGetter: ({ data, api, node }) => {
+          valueGetter: ({ data, api, node }: ValueGetterParams<FuelStat>) => {
+            if (!node || !data) {
+              return ''
+            }
             const statIndex = node.rowIndex
+            if (statIndex === 0 || statIndex === null) {
+              return ''
+            }
             const previousRow = api.getDisplayedRowAtIndex(statIndex - 1)
 
-            if (!previousRow) {
+            if (!previousRow || !previousRow.data) {
               return ''
             }
 
@@ -135,8 +148,8 @@ export default defineComponent({
         {
           field: 'To',
           header: 'To',
-          valueGetter: ({ data }) =>
-            data.refillDate
+          valueGetter: ({ data }: ValueGetterParams<FuelStat>) =>
+            data && data.refillDate
               ? new Date(data.refillDate).toLocaleDateString()
               : '',
         },
