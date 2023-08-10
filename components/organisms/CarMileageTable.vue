@@ -76,7 +76,7 @@ export default defineComponent({
               ? new Intl.NumberFormat('da-DK', {
                   style: 'unit',
                   unit: 'liter',
-                }).format(data.refillAmount / 10)
+                }).format(data.refillAmount)
               : ''
           },
           valueGetter: ({ data }: ValueGetterParams<FuelStat>) => {
