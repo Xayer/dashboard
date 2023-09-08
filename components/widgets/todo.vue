@@ -47,11 +47,17 @@
     <div
       class="stats"
       :class="{ completed: allCompleted }"
-      :style="donePercentage"
+      :style="`--percentage: ${donePercentage}%`"
     >
       <span>
-        <strong>{{ doneItems.length }} of {{ todos.length }}</strong> todos
-        completed.
+        <template v-if="hideCompletedItems">
+          <strong>{{ visibleTodoItems.length }}</strong
+          >&nbsp;items left ({{ 100 - donePercentage }}%)
+        </template>
+        <template v-else>
+          <strong>{{ doneItems.length }} of {{ todos.length }}</strong
+          >&nbsp;items completed. ({{ donePercentage }}%)
+        </template>
       </span>
       <span>
         <input v-model="hideCompletedItems" type="checkbox" /> hide completed.
@@ -88,14 +94,14 @@ export default {
 
       const percentage =
         100 - ((this.todos.length - doneItems.length) * 100) / this.todos.length
-      return `--percentage: ${percentage}%`
+      return percentage.toFixed(0)
     },
     allCompleted() {
       return this.todos.length === this.doneItems.length
     },
     userSettings() {
       return this.$store.state.userSettings.userSettings
-    }
+    },
   },
   watch: {
     hideCompletedItems(hideCompletedItems) {
@@ -106,7 +112,7 @@ export default {
     },
     userSettings() {
       this.loadTodosFromStorage()
-    }
+    },
   },
   created() {
     this.loadTodosFromStorage()
