@@ -26,8 +26,8 @@
           v-show="editGuid !== todo.id"
           :class="{ done: todo.done }"
           @click="editTodo(todo.id, $event)"
-          >{{ todo.title }}</span
-        >
+          v-dompurify-html="formatTodoTitle(todo.title)"
+        />
         <Button class="sm" @click="removeTodo(todo)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -68,6 +68,7 @@
 <script>
 import { Button, Input } from '@/components/atoms'
 import { todosStorageKey, todosHideCompletedKey } from '@/constants/todo'
+import marked from 'marked'
 
 export default {
   components: { Button, Input },
@@ -118,6 +119,9 @@ export default {
     this.loadTodosFromStorage()
   },
   methods: {
+    formatTodoTitle(title) {
+      return marked.parse(title)
+    },
     addTodo() {
       this.todos.push({
         id: Date.now(),
@@ -129,10 +133,14 @@ export default {
       this.loadTodosFromStorage()
     },
     editTodo(id, event) {
+      if (event.target.tagName === 'A') {
+        return
+      }
       const todoItem = this.todos.find((todo) => todo.id === id)
       if (!todoItem) {
         return
       }
+      event.preventDefault()
       this.editGuid = id
       this.existingTodo = todoItem.title
       const parent = event.target.parentElement
@@ -271,7 +279,12 @@ ol {
       display: block;
       -ms-word-break: break-all;
       word-break: break-all;
-
+      padding: 0px !important;
+      margin: 0px !important;
+      p {
+        padding: 0px;
+        margin: 0px !important;
+      }
       /* Non standard for WebKit */
       word-break: break-word;
 
@@ -314,5 +327,11 @@ ol {
       }
     }
   }
+}
+</style>
+<style>
+ol li span p {
+  margin: 0;
+  padding: 0;
 }
 </style>

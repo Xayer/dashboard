@@ -4609,6 +4609,11 @@ domhandler@^4.2.2:
   dependencies:
     domelementtype "^2.2.0"
 
+dompurify@^2.3.4:
+  version "2.4.7"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.4.7.tgz#277adeb40a2c84be2d42a8bcd45f582bfa4d0cfc"
+  integrity sha512-kxxKlPEDa6Nc5WJi+qRgPbOAbgTpSULL+vI3NUXsZMlkJxTqYI9wg5ZTay2sFrdZRWHPWNi+EdAhcJf81WtoMQ==
+
 domutils@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/domutils/-/domutils-1.7.0.tgz#56ea341e834e06e6748af7a1cb25da67ea9f8c2a"
@@ -7458,6 +7463,11 @@ map-visit@^1.0.0:
   integrity sha1-7Nyo8TFE5mDxtb1B8S80edmN+48=
   dependencies:
     object-visit "^1.0.0"
+
+marked@4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.3.0.tgz#796362821b019f734054582038b116481b456cf3"
+  integrity sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==
 
 match-sorter@^6.0.2, match-sorter@^6.3.0:
   version "6.3.1"
@@ -11250,6 +11260,13 @@ vue-demi@^0.10.1:
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.10.1.tgz#229b81395510f02f4ee255344557a12cc0120930"
   integrity sha512-L6Oi+BvmMv6YXvqv5rJNCFHEKSVu7llpWWJczqmAQYOdmPPw5PNYoz1KKS//Fxhi+4QP64dsPjtmvnYGo1jemA==
+
+vue-dompurify-html@2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/vue-dompurify-html/-/vue-dompurify-html-2.5.2.tgz#f547d4eacae4640f95eb0e9308e7ef8e223887c6"
+  integrity sha512-G6I135+BhlACJ9xftqK7fvhXyjNrgHCI594qHnUW5e2Bmp8BOTV1kz7cxwI37b4BJnHkj9IY10RwMPOtJqw+pw==
+  dependencies:
+    dompurify "^2.3.4"
 
 vue-eslint-parser@^7.1.1, vue-eslint-parser@^7.10.0:
   version "7.10.0"

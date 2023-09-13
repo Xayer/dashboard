@@ -37,6 +37,7 @@ export default {
   plugins: [
     { src: '~/plugins/vue-grid-layout', ssr: false },
     { src: '~/plugins/ag-grid', ssr: false },
+    { src: '~/plugins/dom-purify', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

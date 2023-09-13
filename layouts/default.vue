@@ -7,7 +7,7 @@
     </div>
     <Nuxt />
     <client-only>
-      <VueQueryDevTools :initial-is-open="true" />
+      <VueQueryDevTools />
     </client-only>
   </main>
 </template>
