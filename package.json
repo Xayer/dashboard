@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
-  "engines": {
-    "node": "14.21.3"
-  },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
