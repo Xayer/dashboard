@@ -91,6 +91,9 @@ export default {
       return this.todos.filter((todo) => todo.done)
     },
     donePercentage() {
+      if (!this.todos || this.todos.length === 0) {
+        return 0
+      }
       const doneItems = this.todos.filter((todo) => todo.done)
 
       const percentage =
@@ -98,6 +101,9 @@ export default {
       return percentage.toFixed(0)
     },
     allCompleted() {
+      if (this.todos.length === 0) {
+        return false
+      }
       return this.todos.length === this.doneItems.length
     },
     userSettings() {
