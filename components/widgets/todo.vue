@@ -218,6 +218,15 @@ section {
   text-decoration: line-through;
 }
 
+code {
+  background-color: var(--accent-primary);
+  padding: calc(var(--padding) / 12);
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  font-weight: var(--weight-thin);
+  color: var(--text-color);
+}
+
 input {
   max-width: 100%;
   padding: calc(var(--padding) / 4) calc(var(--padding) / 4);
