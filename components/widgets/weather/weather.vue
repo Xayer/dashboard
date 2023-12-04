@@ -9,7 +9,7 @@
             class="weather-icon bi"
             :class="`bi-${weatherIcon}`"
           ></i>
-          <span v-if="temperature">{{ temperature }}</span>
+          <span v-if="temperature !== null">{{ temperature }}</span>
           <span>{{ temperatureUnit }}</span>
         </h1>
       </template>
