@@ -1,0 +1,1 @@
+__NUXT_JSONP__("/settings/spotify", {data:[{}],fetch:{},mutations:[]});

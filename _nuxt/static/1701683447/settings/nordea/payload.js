@@ -1,0 +1,1 @@
+__NUXT_JSONP__("/settings/nordea", {data:[{}],fetch:{},mutations:[]});

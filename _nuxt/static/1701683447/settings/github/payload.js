@@ -1,0 +1,1 @@
+__NUXT_JSONP__("/settings/github", {data:[{}],fetch:{},mutations:[]});
