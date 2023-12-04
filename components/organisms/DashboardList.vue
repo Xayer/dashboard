@@ -70,7 +70,7 @@ export default defineComponent({
     },
     editDashboardName(index: number, event: Event) {
       this.$data.dashboardEditIndex = index
-      const board = (this.$props.boards as Board[])[index];
+      const board = (this.$props.boards as Board[])[index]
       this.$data.dashboardName = board.name
       this.$data.dashboardGuid = board.guid || ''
 
@@ -83,7 +83,7 @@ export default defineComponent({
       this.$emit('input', {
         name: this.$data.dashboardName,
         index: this.$data.dashboardEditIndex,
-        guid: this.$data.dashboardGuid
+        guid: this.$data.dashboardGuid,
       })
       this.$data.dashboardEditIndex = -1
       this.$data.dashboardName = ''
@@ -102,7 +102,6 @@ input {
   max-width: 100%;
   margin-left: calc(var(--padding) / -4);
   padding: calc(var(--padding) / 4) calc(var(--padding) / 4);
-  text-transform: uppercase;
   font-weight: var(--weight-normal);
   font-size: 12px;
 }
